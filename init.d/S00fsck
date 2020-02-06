@@ -1,0 +1,38 @@
+#!/bin/sh
+#
+# fsck
+#
+
+NAME="fsck"
+EXEC=$(which $NAME)
+
+[ -x "$EXEC" ] || exit 0
+
+. /etc/init.d/functions
+
+start() {
+	$EXEC -A -P -T -y
+	if [ $? -ne 0 ]; then
+		sleep 5
+		reboot -f
+		exit 0
+	fi
+	echo
+}
+
+stop() {
+	:
+}
+
+case "$1" in
+  start)
+	start
+	;;
+  stop)
+	stop
+	;;
+  *)
+	echo "Usage: $0 {start|stop}" >&2
+	exit 1
+	;;
+esac

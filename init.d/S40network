@@ -1,0 +1,48 @@
+#!/bin/sh
+#
+# ifupdown
+#
+
+IFUP=$(which ifup)
+IFDOWN=$(which ifdown)
+
+[ -x "$IFUP" ] || exit 0
+[ -x "$IFDOWN" ] || exit 0
+
+. /etc/init.d/functions
+
+# Debian ifupdown needs the /run/network lock directory
+mkdir -p /run/network
+
+start() {
+	printf "Starting network ... "
+	$IFUP -a > /dev/null 2>&1
+	check_status
+}
+
+stop() {
+	printf "Stopping network ... "
+	$IFDOWN -a > /dev/null 2>&1
+	check_status
+}
+
+restart() {
+	stop
+	sleep 1
+	start
+}
+
+case "$1" in
+  start)
+	start
+	;;
+  stop)
+	stop
+	;;
+  restart|reload)
+	restart
+	;;
+  *)
+	echo "Usage: $0 {start|stop|restart}" >&2
+	exit 1
+esac

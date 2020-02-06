@@ -1,0 +1,31 @@
+# Common Routines
+
+# Check status and print
+# OK or FAIL
+status_ok()
+{
+	if [ -z "$CROND" ] ; then
+		printf "\\033[65G\\033[1;32mOK\\033[0;39m\n"
+	else
+		printf "  OK\n"
+	fi
+}
+
+status_fail()
+{
+	if [ -z "$CROND" ] ; then
+		printf "\\033[65G\\033[1;31mFAIL\\033[0;39m\n"
+	else
+		printf "  FAIL\n"
+	fi
+}
+
+check_status()
+{
+	local ERR=$?
+	if [ $ERR = 0 ]; then
+		status_ok
+	else
+		status_fail
+	fi
+}

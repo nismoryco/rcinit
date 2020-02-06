@@ -1,0 +1,97 @@
+#!/bin/sh
+#
+# nfs
+#
+
+[ -x /usr/sbin/rpc.statd ] || exit 0
+[ -x /usr/sbin/rpc.nfsd ] || exit 0
+[ -x /usr/sbin/rpc.mountd ] || exit 0
+[ -x /usr/sbin/exportfs ] || exit 0
+
+mkdir -p /var/lib/nfs/v4recovery
+mkdir -p /var/lock/subsys
+mkdir -p /run/nfs/sm
+mkdir -p /run/nfs/sm.bak
+touch /run/nfs/rmtab
+touch /run/nfs/xtab
+
+CFG_FILE=/etc/default/nfsd
+
+NR_THREADS=2
+if [ -f "${CFG_FILE}" ]; then
+	. "${CFG_FILE}"
+fi
+
+. /etc/init.d/functions
+
+start() {
+	# Start daemons.
+	printf "Starting nfs statd ... "
+	rpc.statd
+	check_status
+	touch /var/lock/subsys/nfslock
+
+	printf "Starting nfs services ... "
+	/usr/sbin/exportfs -r
+	check_status
+
+	printf "Starting nfs daemon ... "
+	rpc.nfsd ${NR_THREADS}
+	check_status
+
+	printf "Starting nfs mountd ... "
+	rpc.mountd
+	check_status
+	touch /var/lock/subsys/nfs
+}
+
+stop() {
+	# Stop daemons.
+	printf "Shutting down nfs mountd ... "
+	killall -q rpc.mountd 2> /dev/null
+	check_status
+
+	printf "Shutting down nfs daemon ... "
+	killall -q nfsd 2> /dev/null
+	check_status
+
+	printf "Shutting down nfs services ... "
+	/usr/sbin/exportfs -au
+	check_status
+
+	printf "Stopping nfs statd ... "
+	killall -q rpc.statd 2> /dev/null
+	check_status
+	rm -f /var/lock/subsys/nfs
+	rm -f /var/run/rpc.statd.pid
+	rm -f /var/lock/subsys/nfslock
+}
+
+restart() {
+	stop
+	sleep 1
+	start
+}
+
+reload() {
+	/usr/sbin/exportfs -r
+	touch /var/lock/subsys/nfs
+}
+
+case "$1" in
+  start)
+	start
+	;;
+  stop)
+	stop
+	;;
+  restart)
+	restart
+	;;
+  reload)
+	reload
+	;;
+  *)
+	echo "Usage: $0 {start|stop|restart|reload}"
+	exit 1
+esac

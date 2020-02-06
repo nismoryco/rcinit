@@ -1,0 +1,50 @@
+#!/bin/sh
+#
+# fail2ban
+#
+
+NAME="fail2ban"
+EXEC=$(which $NAME-server)
+VARDIR="/var/run/fail2ban"
+PIDFILE="/var/run/fail2ban/fail2ban.pid"
+ARGS="-xf start"
+
+[ -x "$EXEC" ] || exit 0
+
+. /etc/init.d/functions
+
+start() {
+	printf "Starting $NAME ... "
+	mkdir -p $VARDIR
+	start-stop-daemon -S -q -m -p $PIDFILE \
+		-b -x $EXEC -- $ARGS
+	check_status
+}
+
+stop() {
+	printf "Stopping $NAME ... "
+	start-stop-daemon -K -q -p $PIDFILE
+	check_status
+}
+
+restart() {
+	stop
+	sleep 1
+	start
+}
+
+case "$1" in
+  start)
+	start
+	;;
+  stop)
+	stop
+	;;
+  restart|reload)
+	restart
+	;;
+  *)
+	echo "Usage: $0 {start|stop|restart}"
+	exit 1
+	;;
+esac

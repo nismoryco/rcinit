@@ -1,0 +1,39 @@
+#!/bin/sh
+#
+# hwclock
+#
+
+NAME="hwclock"
+EXEC=$(which $NAME)
+DEV_RTC="/dev/rtc0"
+
+[ -x "$EXEC" ] || exit 0
+[ -e "$DEV_RTC" ] || exit 0
+
+. /etc/init.d/functions
+
+mkdir -pv /var/lib/hwclock 2> /dev/null
+
+start() {
+	printf "Setting system clock ... "
+	$EXEC -s -u > /dev/null 2>&1
+	check_status
+}
+
+stop() {
+	printf "Syncing hardware clock ... "
+	$EXEC -w -u > /dev/null 2>&1
+	check_status
+}
+
+case "$1" in
+  start)
+	start
+	;;
+  stop)
+	stop
+	;;
+  *)
+	echo "Usage: $0 {start|stop}"
+	exit 1
+esac

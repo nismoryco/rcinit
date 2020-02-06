@@ -1,0 +1,39 @@
+#!/bin/sh
+#
+# remount
+#
+
+EXEC=$(which mount)
+
+[ -x "$EXEC" ] || exit 0
+
+. /etc/init.d/functions
+
+[ -r /etc/default/rootmount ] && . /etc/default/rootmount
+
+start() {
+	printf "Remounting rootfs read/write ..."
+	if [ -z "$MOUNTOPTS" ]; then
+		$EXEC -o remount,rw /
+	else
+		$EXEC -o remount,rw,$MOUNTOPTS /
+	fi
+	check_status
+}
+
+stop() {
+	:
+}
+
+case "$1" in
+  start)
+	start
+	;;
+  stop)
+	stop
+	;;
+  *)
+	echo "Usage: $0 {start|stop}" >&2
+	exit 1
+	;;
+esac

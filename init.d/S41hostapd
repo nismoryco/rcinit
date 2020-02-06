@@ -1,0 +1,78 @@
+#!/bin/sh
+#
+# hostapd
+#
+
+NAME="hostapd"
+EXEC=$(which $NAME)
+PIDFILE="/var/run/hostapd.pid"
+CONFFILE="/etc/hostapd.conf"
+LOGFILE="/var/log/hostapd.log"
+
+IFACE="wlan0"
+[ -r "/etc/default/hostapd" ] && . /etc/default/hostapd
+[ -z "$ARGS" ] && ARGS="-B -P $PIDFILE -f $LOGFILE $CONFFILE"
+
+[ -x "$EXEC" ] || exit 0
+[ -r "$CONFFILE" ] || exit 0
+
+. /etc/init.d/functions
+
+wait_for_iface() {
+	# In case we have a slow-to-appear interface (e.g. eth-over-USB),
+	# and we need to configure it, wait until it appears, but not too
+	# long either. IF_WAIT_DELAY is in seconds.
+
+	IF_WAIT_DELAY=5
+
+	if [ "$IF_WAIT_DELAY" -a ! -e "/sys/class/net/$IFACE" ]; then
+		printf "Waiting for interface %s to appear " "$IFACE"
+		while [ $IF_WAIT_DELAY -gt 0 ]; do
+			if [ -e "/sys/class/net/$IFACE" ]; then
+				printf "\n"
+				return 0
+			fi
+			sleep 1
+			printf "."
+			: $((IF_WAIT_DELAY -= 1))
+		done
+		printf "timeout!\n"
+		exit 1
+	fi
+}
+
+start() {
+	wait_for_iface
+	printf "Starting $NAME ... "
+	start-stop-daemon -S -q -p "$PIDFILE" -x "$EXEC" -- $ARGS
+	check_status
+}
+
+stop() {
+	printf "Stopping $NAME ... "
+	start-stop-daemon -K -q -p "$PIDFILE"
+	check_status
+}
+
+restart() {
+	stop
+	sleep 1
+	start
+}
+
+case "$1" in
+  start)
+	start
+	;;
+  stop)
+	stop
+	;;
+  restart|reload)
+	restart
+	;;
+  *)
+	echo "Usage: $0 {start|stop|restart}" >&2
+	exit 1
+	;;
+esac
+

@@ -1,0 +1,52 @@
+#!/bin/sh
+#
+# xendomains
+#
+
+. /etc/init.d/functions
+
+# run this script only in dom0:
+# no capabilities file in xenlinux domU kernel
+# empty capabilities file in pv_ops domU kernel
+if test -f /proc/xen/capabilities && \
+   ! grep -q "control_d" /proc/xen/capabilities ; then
+	exit 0
+fi
+
+start() {
+	printf "Starting xen domains ... \n"
+	for f in $(ls /etc/xen/auto/*.cfg 2> /dev/null); do
+		DOM=$(cat $f | grep name | awk '{print $3}' | sed -e 's/"//g')
+		printf "   %s " "$DOM"
+		xl create $f > /dev/null 2>&1
+		check_status
+		sleep 1
+	done
+}
+
+stop() {
+	printf "Stopping xen domains ... "
+	xl shutdown --all --wait > /dev/null 2>&1
+	check_status
+}
+
+restart() {
+	stop
+	sleep 1
+	start
+}
+
+case "$1" in
+  start)
+	start
+	;;
+  stop)
+	stop
+	;;
+  restart|reload)
+	restart
+	;;
+  *)
+	echo "Usage: $0 {start|stop|restart}" >&2
+	exit 1
+esac

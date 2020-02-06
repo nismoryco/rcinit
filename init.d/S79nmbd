@@ -1,0 +1,54 @@
+#!/bin/sh
+#
+# nmbd
+#
+
+NAME="nmbd"
+EXEC=$(which $NAME)
+ARGS="-D"
+CONF="/etc/samba/smb.conf"
+
+[ -x "$EXEC" ] || exit 0
+[ -f "$CONF" ] || exit 0
+
+. /etc/init.d/functions
+
+start() {
+	printf "Starting $NAME ... "
+	mkdir -p /var/cache/samba
+	mkdir -p /var/log/samba
+	mkdir -p /var/lock/subsys
+	mkdir -p /var/run/samba
+	$EXEC $ARGS > /dev/null 2>&1
+	check_status
+}
+
+stop() {
+	printf "Stopping $NAME ... "
+	kill -9 `pidof $NAME` > /dev/null 2>&1
+	check_status
+	rm -f /var/run/samba/nmbd.pid
+}
+
+restart() {
+	stop
+	sleep 1
+	start
+}
+
+case "$1" in
+  start)
+	start
+	;;
+  stop)
+	stop
+	;;
+  restart|reload)
+	restart
+	;;
+  *)
+	echo "Usage: $0 {start|stop|restart}"
+	exit 1
+esac
+
+exit 0

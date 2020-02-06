@@ -1,0 +1,47 @@
+#!/bin/sh
+#
+# apache
+#
+
+NAME="apache"
+EXEC=$(which apachectl)
+
+[ -x "$EXEC" ] || exit 0
+
+. /etc/init.d/functions
+
+start() {
+	printf "Starting $NAME ... "
+	mkdir -p /var/run/httpd
+	mkdir -p /var/log/httpd
+	$EXEC -k start > /dev/null 2>&1
+	check_status
+}
+
+stop() {
+	printf "Stopping $NAME ... "
+	$EXEC -k stop > /dev/null 2>&1
+	check_status
+}
+
+restart() {
+	printf "Restarting $NAME ... "
+	$EXEC -k restart > /dev/null 2>&1
+	check_status
+}
+
+case "$1" in
+  start)
+	start
+	;;
+  stop)
+	stop
+	;;
+  restart|reload)
+	restart
+	;;
+  *)
+	echo "Usage: $0 {start|stop|restart}"
+	exit 1
+	;;
+esac

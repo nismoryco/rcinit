@@ -1,0 +1,36 @@
+#!/bin/sh
+#
+# hostname
+#
+
+NAME="hostname"
+EXEC=$(which $NAME)
+CONF="/etc/hostname"
+
+[ -x "$EXEC" ] || exit 0
+[ -r "$CONF" ] || exit 0
+
+. /etc/init.d/functions
+
+start() {
+	printf "Setting $NAME ..."
+	$EXEC -F $CONF
+	check_status
+}
+
+stop() {
+	:
+}
+
+case "$1" in
+  start)
+	start
+	;;
+  stop)
+	stop
+	;;
+  *)
+	echo "Usage: $0 {start|stop}" >&2
+	exit 1
+	;;
+esac

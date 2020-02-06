@@ -1,0 +1,56 @@
+#!/bin/sh
+#
+# rngd
+#
+
+NAME="rngd"
+EXEC=$(which $NAME)
+ARGS=""
+CFG_FILE="/etc/default/$NAME"
+PID_FILE="/var/run/$NAME.pid"
+
+[ -x "$EXEC" ] || exit 0
+[ -r "$CFG_FILE" ] && . "$CFG_FILE"
+
+. /etc/init.d/functions
+
+start() {
+	printf "Starting $NAME ... "
+	start-stop-daemon -S -q -x "$EXEC" -- $ARGS > /dev/null 2>&1
+	check_status
+}
+
+stop() {
+	printf "Stopping $NAME ... "
+	# This daemon does not exit properly with the default TERM signal unless
+	# it's forced to work by something reading /dev/random. Killing it and
+	# removing its PID file is more straightforward.
+	if start-stop-daemon -K -q -s KILL -p "$PID_FILE" -n "$NAME"; then
+		rm -f "$PID_FILE"
+		status_ok
+	else
+		status_fail
+	fi
+}
+
+restart() {
+	stop
+	sleep 1
+	start
+}
+
+case "$1" in
+  start)
+	start
+	;;
+  stop)
+	stop
+	;;
+  restart|reload)
+	restart
+	;;
+  *)
+	echo "Usage: $0 {start|stop|restart}" >&2
+	exit 1
+	;;
+esac

@@ -1,0 +1,65 @@
+#!/bin/sh
+#
+# smbd
+#
+
+NAME="smbd"
+EXEC=$(which $NAME)
+ARGS="-D"
+CONF="/etc/samba/smb.conf"
+
+. /etc/init.d/functions
+
+[ -x "$EXEC" ] || exit 0
+[ -f "$CONF" ] || exit 0
+
+start() {
+	printf "Starting $NAME ... "
+	mkdir -p /var/cache/samba
+	mkdir -p /var/log/samba
+	mkdir -p /var/lock/subsys
+	mkdir -p /var/run/samba
+	$EXEC $ARGS > /dev/null 2>&1
+	check_status
+	touch /var/lock/subsys/smb
+}
+
+stop() {
+	printf "Stopping $NAME ... "
+	kill -9 `pidof $NAME` > /dev/null 2>&1
+	check_status
+	rm -f /var/run/samba/smbd.pid
+	rm -f /var/lock/subsys/smb
+}
+
+restart() {
+	stop
+	sleep 1
+	start
+}
+
+reload() {
+	printf "Reloading $NAME ... "
+	kill -HUP `pidof smbd` > /dev/null 2>&1
+	check_status
+}
+
+case "$1" in
+  start)
+	start
+	;;
+  stop)
+	stop
+	;;
+  restart)
+	restart
+	;;
+  reload)
+	reload
+	;;
+  *)
+	echo "Usage: $0 {start|stop|restart|reload}"
+	exit 1
+esac
+
+exit 0

@@ -1,0 +1,48 @@
+#!/bin/sh
+#
+# udev
+#
+
+NAME="udevd"
+EXEC=$(which $NAME)
+CONF="/etc/udev/udev.conf"
+ARGS="-d"
+
+[ -x "$EXEC" ] || exit 0
+[ -r "$CONF" ] || exit 0
+
+. $CONF
+. /etc/init.d/functions
+
+start() {
+	printf "Populating ${udev_root:-/dev} using udev ... "
+	[ -e /proc/sys/kernel/hotplug ] && printf '\000\000\000\000' > /proc/sys/kernel/hotplug
+	$EXEC $ARGS || (status_fail && exit 1)
+	udevadm trigger --type=subsystems --action=add
+	udevadm trigger --type=devices --action=add
+	udevadm settle --timeout=30 || (status_fail && exit 1)
+	status_ok
+}
+
+stop() {
+	printf "Stopping udev ... "
+	udevadm control --stop-exec-queue
+	check_status
+	killall $NAME 2> /dev/null
+}
+
+case "$1" in
+  start)
+	start
+	;;
+  stop)
+	stop
+	;;
+  *)
+	echo "Usage: $0 {start|stop}"
+	exit 1
+	;;
+esac
+
+
+exit 0

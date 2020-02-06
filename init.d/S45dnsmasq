@@ -1,0 +1,51 @@
+#!/bin/sh
+#
+# dnsmasq
+#
+
+NAME="dnsmasq"
+EXEC=$(which $NAME)
+CONFFILE=/etc/dnsmasq.conf
+PIDFILE=/var/run/dnsmasq.pid
+
+[ -x "$EXEC" ] || exit 0
+[ -f "$CONFFILE" ] || exit 0
+
+. /etc/init.d/functions
+
+mkdir -p /var/lib/dnsmasq
+
+start() {
+	printf "Starting $NAME ... "
+	start-stop-daemon -S -q -p "$PIDFILE" -x "$EXEC"
+	check_status
+}
+
+stop() {
+	printf "Stopping $NAME ... "
+	start-stop-daemon -K -q -p "$PIDFILE"
+	check_status
+}
+
+restart() {
+	stop
+	sleep 1
+	start
+}
+
+case "$1" in
+  start)
+	start
+	;;
+  stop)
+	stop
+	;;
+  restart|reload)
+	restart
+	;;
+  *)
+	echo "Usage: $0 {start|stop|restart}"
+	exit 1
+esac
+
+exit 0

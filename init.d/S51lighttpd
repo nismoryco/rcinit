@@ -1,0 +1,57 @@
+#!/bin/sh
+#
+# lighttpd
+#
+
+NAME=lighttpd
+EXEC=$(which $NAME)
+PID_FILE="/var/run/$NAME.pid"
+CONF_FILE="/etc/$NAME/$NAME.conf"
+ARGS="-f $CONF_FILE"
+ERROR_LOG="/var/log/lighttpd-error.log"
+ACCESS_LOG="/var/log/lighttpd-access.log"
+USER="www-data"
+GROUP="www-data"
+
+[ -x "$EXEC" ] || exit 0
+
+[ -r /etc/default/$NAME ] && . /etc/default/$NAME
+
+. /etc/init.d/functions
+
+start() {
+	printf "Starting $NAME ... "
+	touch $ERROR_LOG ; chown $USER:$GROUP $ERROR_LOG
+	touch $ACCESS_LOG ; chown $USER:$GROUP $ACCESS_LOG
+	start-stop-daemon -S -q -p $PID_FILE --exec $EXEC -- $ARGS
+	check_status
+}
+
+stop() {
+	printf "Stopping $NAME ... "
+	start-stop-daemon -K -q -p $PID_FILE
+	check_status
+}
+
+restart() {
+	stop
+	sleep 1
+	start
+}
+
+case "$1" in
+  start)
+	start
+	;;
+  stop)
+	stop
+	;;
+  restart|reload)
+	restart
+	;;
+  *)
+	echo "Usage: $0 {start|stop|restart}"
+	exit 1
+esac
+
+exit $?

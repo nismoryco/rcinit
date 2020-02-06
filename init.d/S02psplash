@@ -1,0 +1,30 @@
+#!/bin/sh
+#
+# psplash
+#
+
+NAME="psplash"
+EXEC=$(which $NAME)
+
+[ -x "$EXEC" ] || exit 0
+
+start() {
+	$EXEC --no-progress &
+}
+
+stop() {
+	:
+}
+
+case "$1" in
+  start)
+	start
+	;;
+  stop)
+	stop
+	;;
+  *)
+	echo "Usage: $0 {start|stop}" >&2
+	exit 1
+	;;
+esac

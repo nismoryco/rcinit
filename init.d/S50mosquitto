@@ -1,0 +1,65 @@
+#!/bin/sh
+#
+# mosquitto
+#
+
+NAME="mosquitto"
+EXEC=$(which $NAME)
+ARGS="-c /etc/mosquitto/mosquitto.conf"
+USER="mosquitto"
+GROUP="nogroup"
+PIDFILE="/var/run/mosquitto.pid"
+
+[ -x "$EXEC" ] || exit 0
+
+[ -r "/etc/default/$NAME" ] && . /etc/default/$NAME
+
+. /etc/init.d/functions
+
+start() {
+	printf "Starting $NAME ... "
+	# passwd file
+	touch /etc/mosquitto/passwd
+	chown $USER:$GROUP /etc/mosquitto/passwd
+	chmod 0600 /etc/mosquitto/passwd
+	# database directory
+	mkdir -p /var/lib/mosquitto
+	chown $USER:$GROUP /var/lib/mosquitto
+	# log file
+	touch /var/log/mosquitto.log
+	chmod 0600 /var/log/mosquitto.log
+	chown $USER:$GROUP /var/log/mosquitto.log
+	start-stop-daemon -S -q -b -m -p $PIDFILE \
+		--exec $EXEC -- $ARGS
+	check_status
+}
+
+stop() {
+	printf "Stopping mosquitto ... "
+	start-stop-daemon -K --remove-pidfile -q \
+		-p $PIDFILE > /dev/null 2>&1
+	check_status
+}
+
+restart() {
+	stop
+	sleep 1
+	start
+}
+
+case "$1" in
+  start)
+	start
+	;;
+  stop)
+	stop
+	;;
+  restart|reload)
+	restart
+	;;
+  *)
+	echo "Usage: $0 {start|stop|restart}"
+	exit 1
+esac
+
+exit $?

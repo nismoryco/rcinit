@@ -1,0 +1,45 @@
+#!/bin/sh
+#
+# fake-hwclock
+#
+
+HWCLOCK_FILE="/etc/fake-hwclock.data"
+HWCLOCK_EPOCH="2016-04-15 00:00:00"
+HWCLOCK_EPOCH_SEC="1460678400"
+
+. /etc/init.d/functions
+
+start() {
+	if [ -e $HWCLOCK_FILE ]; then
+		SAVED=$(cat $HWCLOCK_FILE)
+		SAVED_SEC=$(date -u -d "$SAVED" '+%s')
+		NOW_SEC=$(date -u '+%s')
+		if [ $NOW_SEC -le $SAVED_SEC ]; then
+			printf "Setting fake system clock ... "
+			date -u -s "$SAVED" > /dev/null 2>&1
+			check_status
+		fi
+	fi
+}
+
+stop() {
+	touch $HWCLOCK_FILE 2>/dev/null || exit 0
+	NOW_SEC=$(date -u '+%s')
+	if [ $NOW_SEC -ge $HWCLOCK_EPOCH_SEC ]; then
+		printf "Saving fake hardware clock ... "
+		date -u '+%Y-%m-%d %H:%M:%S' > $HWCLOCK_FILE 2> /dev/null
+		check_status
+	fi
+}
+
+case "$1" in
+  start|load)
+	start
+	;;
+  stop|save)
+	stop
+	;;
+  *)
+	echo "Usage: $0 {start|stop}"
+	exit 1
+esac

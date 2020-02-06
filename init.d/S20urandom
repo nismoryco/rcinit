@@ -1,0 +1,47 @@
+#! /bin/sh
+#
+# urandom
+#
+
+DEV="/dev/urandom"
+SEED="/etc/random-seed"
+
+[ -c "$DEV" ] || exit 0
+
+# Check for read only file system
+touch "$SEED" 2>/dev/null || exit 0
+
+. /etc/init.d/functions
+
+start() {
+	printf "Initializing random number generator ... "
+	# Load and then save 512 bytes, which is the size of the entropy pool
+	cat "$SEED" > /dev/urandom
+	rm -f "$SEED"
+	umask 077
+	dd if=$DEV of=$SEED count=1 > /dev/null 2>&1
+	check_status
+	umask 022
+}
+
+stop() {
+	# Carry a random seed from shut-down to start-up;
+	# see documentation in linux/drivers/char/random.c
+	printf "Saving random seed ... "
+	umask 077
+	dd if=$DEV of=$SEED count=1 > /dev/null 2>&1
+	check_status
+}
+
+case "$1" in
+  start)
+	start
+	;;
+  stop)
+	stop
+	;;
+  *)
+	echo "Usage: urandom {start|stop}" >&2
+	exit 1
+	;;
+esac

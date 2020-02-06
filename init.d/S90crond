@@ -1,0 +1,46 @@
+#!/bin/sh
+#
+# crond
+#
+
+NAME="crond"
+EXEC=$(which $NAME)
+SPOOLDIR="/var/spool/cron/crontabs"
+
+[ -x "$EXEC" ] || exit 0
+
+. /etc/init.d/functions
+
+start() {
+	printf "Starting $NAME ... "
+	mkdir -p $SPOOLDIR
+	$EXEC > /dev/null 2>&1
+	check_status
+}
+
+stop() {
+	printf "Stopping $NAME ... "
+	killall $NAME 2> /dev/null
+	check_status
+}
+
+restart() {
+	stop
+	sleep 1
+	start
+}
+
+case "$1" in
+  start)
+	start
+	;;
+  stop)
+	stop
+	;;
+  restart|reload)
+	restart
+	;;
+  *)
+	echo "Usage: $0 {start|stop|restart}"
+	exit 1
+esac

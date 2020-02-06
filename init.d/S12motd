@@ -1,0 +1,34 @@
+#!/bin/sh
+#
+# motd
+#
+
+[ -r /etc/os-release ] && . /etc/os-release
+
+[ -n "$NAME" ] || exit 0
+[ -n "$VERSION" ] || exit 0
+
+. /etc/init.d/functions
+
+start() {
+	printf "Writing motd ... "
+	printf "Welcome to %s %s (%s %s %s)\n" "$NAME" "$VERSION" "$(uname -o)" "$(uname -r)" "$(uname -m)" > /var/run/motd 2> /dev/null
+	check_status
+}
+
+stop() {
+	:
+}
+
+case "$1" in
+  start)
+	start
+	;;
+  stop)
+	stop
+	;;
+  *)
+	echo "Usage: $0 {start|stop}" >&2
+	exit 1
+	;;
+esac

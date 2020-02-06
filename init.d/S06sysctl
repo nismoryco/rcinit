@@ -1,0 +1,35 @@
+#!/bin/sh
+#
+# sysctl
+#
+
+EXEC=$(which sysctl)
+CONF="/etc/sysctl.conf"
+
+[ -x "$EXEC" ] || exit 0
+[ -r "$CONF" ] || exit 0
+
+. /etc/init.d/functions
+
+start() {
+	printf "Configuring kernel parameters ..."
+	$EXEC -p $CONF > /dev/null 2>&1
+	check_status
+}
+
+stop() {
+	:
+}
+
+case "$1" in
+  start)
+	start
+	;;
+  stop)
+	stop
+	;;
+  *)
+	echo "Usage: $0 {start|stop}" >&2
+	exit 1
+	;;
+esac

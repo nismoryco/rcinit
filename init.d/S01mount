@@ -1,0 +1,35 @@
+#!/bin/sh
+#
+# mount
+#
+
+NAME="mount"
+EXEC=$(which mount)
+
+[ -x "$EXEC" ] || exit 0
+
+. /etc/init.d/functions
+
+start() {
+	printf "Mounting file systems ..."
+	$EXEC -a
+	check_status
+	mkdir -p /run/lock
+}
+
+stop() {
+	:
+}
+
+case "$1" in
+  start)
+	start
+	;;
+  stop)
+	stop
+	;;
+  *)
+	echo "Usage: $0 {start|stop}" >&2
+	exit 1
+	;;
+esac

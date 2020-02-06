@@ -1,0 +1,43 @@
+#!/bin/sh
+#
+# modules
+#
+
+EXEC=$(which modprobe)
+MODS="/etc/modules.conf"
+
+[ -x "$EXEC" ] || exit 0
+[ -e "$MODS" ] || exit 0
+
+. /etc/init.d/functions
+
+start() {
+	FAIL="no"
+	printf "Loading kernel modules ... "
+	while read p; do
+		if [ -n "$p" ]; then
+			$EXEC "$p" > /dev/null 2>&1
+			if [ $? != "0" ]; then
+				FAIL="yes"
+			fi
+		fi
+	done < "$MODS"
+	[ $FAIL = "yes" ] && status_fail || status_ok
+}
+
+stop() {
+	:
+}
+
+case "$1" in
+  start)
+	start
+	;;
+  stop)
+	stop
+	;;
+  *)
+	echo "Usage: $0 {start|stop}"
+	exit 1
+esac
+

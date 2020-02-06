@@ -1,0 +1,43 @@
+#!/bin/sh
+
+NAME="acpid"
+EXEC=$(which $NAME)
+ARGS="-n"
+PIDFILE="/var/run/acpid.pid"
+
+[ -x "$EXEC" ] || exit 0
+
+. /etc/init.d/functions
+
+start() {
+	printf "Starting $NAME ... "
+	$EXEC $ARGS > /dev/null 2>&1
+	check_status
+}
+
+stop() {
+	printf "Stopping $NAME ... "
+	killall $NAME 2> /dev/null
+	check_status
+}
+
+restart () {
+	stop
+	sleep 1
+	start
+}
+
+case "$1" in
+  start)
+	start
+	;;
+  stop)
+	stop
+	;;
+  restart)
+	restart
+	;;
+  *)
+	echo "Usage: $0 {start|stop|restart}"
+	;;
+esac

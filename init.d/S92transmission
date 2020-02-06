@@ -1,0 +1,54 @@
+#!/bin/sh
+#
+# transmission-daemon
+#
+
+. /etc/init.d/functions
+
+PIDFILE="/var/run/transmission-daemon.pid"
+CONFDIR="/var/lib/transmission/info"
+LOGFILE="/var/log/transmission.log"
+DAEMON="transmission-daemon"
+DAEMON_BIN="/usr/bin/$DAEMON"
+USER="transmission"
+
+start() {
+	echo -n "Starting transmission-daemon ... "
+	if [ ! -f "$CONFDIR/settings.json" ]; then
+		status_fail
+		exit 1
+	fi
+	touch $LOGFILE
+	chown transmission:transmission $LOGFILE
+	start-stop-daemon -S -c $USER -x $DAEMON_BIN -p $PIDFILE -b -- -f --pid-file $PIDFILE --config-dir $CONFDIR --logfile $LOGFILE > /dev/null 2>&1
+	check_status
+}
+
+stop() {
+	echo -n "Stopping transmission-daemon ... "
+	killall $DAEMON 2> /dev/null
+	check_status
+}
+
+restart() {
+	stop
+	sleep 1
+	start
+}
+
+case "$1" in
+  start)
+	start
+	;;
+  stop)
+	stop
+	;;
+  restart|reload)
+	restart
+	;;
+  *)
+	echo "Usage: $0 {start|stop|restart}"
+	exit 1
+esac
+
+exit 0
