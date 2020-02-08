@@ -12,7 +12,7 @@ DEV_RTC="/dev/rtc0"
 
 . /etc/init.d/functions
 
-mkdir -pv /var/lib/hwclock 2> /dev/null
+mkdir -p /var/lib/hwclock 2> /dev/null
 
 start() {
 	printf "Setting system clock ... "
