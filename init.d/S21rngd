@@ -5,7 +5,7 @@
 
 NAME="rngd"
 EXEC=$(which $NAME)
-ARGS=""
+ARGS="--quiet"
 CFG_FILE="/etc/default/$NAME"
 PID_FILE="/var/run/$NAME.pid"
 
