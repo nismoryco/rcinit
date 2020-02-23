@@ -30,14 +30,19 @@ case "$VERB" in
             printf "Starting ifplugd for %s ... " "${IF}"
             A="`eval echo \$\{ARGS_${IF}\}`"
             [ -z "$A" ] && A="$ARGS"
-            $IFPLUGD -i $IF $A
-            check_status
+            $IFPLUGD -i $IF $A > /dev/null 2>&1
+            RET=$?
+            if [ $RET -eq 0 -o $RET -eq 2 -o $RET -eq 3 ]; then
+                status_ok
+            else
+                status_fail
+            fi
         done
         ;;
     stop)
         for IF in $INTERFACES ; do
             printf "Stopping ifplugd for %s ... " "${IF}"
-            $IFPLUGD -k -i $IF
+            $IFPLUGD -k -i $IF > /dev/null 2>&1
             check_status
         done
         ;;
