@@ -17,13 +17,13 @@ mkdir -p /var/lib/dnsmasq
 
 start() {
 	printf "Starting $NAME ... "
-	start-stop-daemon -S -q -p "$PIDFILE" -x "$EXEC"
+	$EXEC > /dev/null 2>&1
 	check_status
 }
 
 stop() {
 	printf "Stopping $NAME ... "
-	start-stop-daemon -K -q -p "$PIDFILE"
+	killall $NAME 2> /dev/null
 	check_status
 }
 
