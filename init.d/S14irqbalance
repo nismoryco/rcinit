@@ -5,8 +5,9 @@
 
 NAME="irqbalance"
 EXEC=$(which irqbalance)
-ARGS=""
-PIDFILE="/var/run/irqbalance.pid"
+RUNDIR="/run/irqbalance"
+PIDFILE="$RUNDIR/irqbalance.pid"
+ARGS="--pid $PIDFILE"
 
 [ -x "$EXEC" ] || exit 0
 
@@ -14,14 +15,14 @@ PIDFILE="/var/run/irqbalance.pid"
 
 start() {
 	printf "Starting $NAME ... "
+	mkdir -p $RUNDIR 2> /dev/null
 	$EXEC $ARGS > /dev/null 2>&1
 	check_status
-	pidof $NAME > $PIDFILE 2> /dev/null
 }
 
 stop() {
 	printf "Stopping $NAME ... "
-	[ -f "$PIDFILE" ] && kill `cat $PIDFILE` 2> /dev/null
+	killall $NAME 2> /dev/null
 	check_status
 }
 
