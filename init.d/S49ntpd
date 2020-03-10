@@ -2,6 +2,7 @@
 
 NAME="ntpd"
 EXEC=$(which $NAME)
+ARGS="-g -l /var/log/ntpd.log -p /run/ntpd.pid"
 
 [ -x "$EXEC" ] || exit 0
 
@@ -13,14 +14,14 @@ EXEC=$(which $NAME)
 start() {
 	printf 'Starting %s ... ' "$NAME"
 	# Create ntp directory
-	mkdir -p /var/lib/ntp
-	start-stop-daemon -S -q -x $EXEC -- -g
+	mkdir -p /var/lib/ntp 2> /dev/null
+	$EXEC $ARGS > /dev/null 2>&1
 	check_status
 }
 
 stop() {
 	printf 'Stopping %s ... ' "$NAME"
-	start-stop-daemon -K -q -n $NAME
+	killall $NAME 2> /dev/null
 	check_status
 }
 
