@@ -5,7 +5,7 @@
 
 NAME="syslogd"
 EXEC=$(which $NAME)
-ARGS="-m 0"
+ARGS="-s -m 0"
 
 [ -x "$EXEC" ] || exit 0
 
