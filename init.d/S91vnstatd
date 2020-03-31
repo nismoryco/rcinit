@@ -10,7 +10,7 @@ VARDIR="/var/lib/vnstat"
 PIDFILE="/var/run/vnstat/vnstat.pid"
 
 # Exit if the package is not installed
-[ -x "$NAME" ] || exit 1
+[ -x "$EXEC" ] || exit 1
 
 . /etc/init.d/functions
 
