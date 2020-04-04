@@ -6,9 +6,11 @@
 NAME="redis"
 EXEC=$(which $NAME-server)
 CONF="/etc/redis.conf"
+DBDIR="/var/lib/redis"
 
 [ -x "$EXEC" ] || exit 0
 [ -f "$CONF" ] || exit 0
+[ -d "$DBDIR" ] || exit 0
 
 . /etc/init.d/functions
 
@@ -20,7 +22,7 @@ start() {
 	ulimit -n 10240
 	umask 077
 	start-stop-daemon -S -q -c redis:redis -b \
-		--exec $EXEC -- $CONF
+		-d $DBDIR --exec $EXEC -- $CONF
 	check_status
 }
 
