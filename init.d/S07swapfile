@@ -3,31 +3,45 @@
 # swapfile
 #
 
-. /etc/init.d/functions
-
-SWAPFILE=/etc/swapfile
+NAME="swapfile"
+SWAPFILE="/etc/swapfile"
 SWAPSIZE=100
+
+# shellcheck source=/dev/null
+[ -r "/etc/default/$NAME" ] && . "/etc/default/$NAME"
+
+. /etc/init.d/functions
 
 start() {
 	if [ ! -f "$SWAPFILE" ]; then
 		# check for read only file system
 		touch $SWAPFILE 2>/dev/null || exit 0
 
-		printf "Creating swap file ... "
+		printf "Creating $NAME ... "
 		dd if=/dev/zero of=$SWAPFILE bs=1M count=$SWAPSIZE > /dev/null 2>&1 || (status_fail && exit 1)
 		chmod 0600 $SWAPFILE > /dev/null 2>&1 || (status_fail && exit 1)
 		mkswap $SWAPFILE > /dev/null 2>&1 || (status_fail && exit 1)
 		status_ok
+	else
+		# check for read only file system
+		touch $SWAPFILE 2>/dev/null || exit 0
 	fi
-	printf "Activating swap file ... "
+
+	printf "Activating $NAME ... "
 	swapon $SWAPFILE > /dev/null 2>&1
 	check_status
 }
 
 stop() {
-	printf "Deactivating swap file ... "
+	printf "Deactivating $NAME ... "
 	swapoff -a > /dev/null 2>&1
 	check_status
+}
+
+restart() {
+	stop
+	rm -f $SWAPFILE
+	start
 }
 
 case "$1" in
@@ -36,6 +50,9 @@ case "$1" in
 	;;
   stop)
 	stop
+	;;
+  restart)
+	restart
 	;;
   *)
 	echo "Usage: $0 {start|stop}" >&2
