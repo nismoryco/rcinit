@@ -12,8 +12,6 @@ SWAPSIZE=100
 # shellcheck source=/dev/null
 [ -r "/etc/default/$NAME" ] && . "/etc/default/$NAME"
 
-[ "$SWAPFILE_ENABLED" -ne 1 ] && exit 0
-
 . /etc/init.d/functions
 
 start() {
