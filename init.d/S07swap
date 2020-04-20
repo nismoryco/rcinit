@@ -1,0 +1,73 @@
+#!/bin/sh
+#
+# swap
+#
+
+NAME="swap"
+
+SWAPFILE_ENABLED=1
+SWAPFILE="/etc/swapfile"
+SWAPSIZE=100
+
+# shellcheck source=/dev/null
+[ -r "/etc/default/$NAME" ] && . "/etc/default/$NAME"
+
+[ "$SWAPFILE_ENABLED" -ne 1 ] && exit 0
+
+. /etc/init.d/functions
+
+start() {
+	if [ "$SWAPFILE_ENABLED" -eq 1 ]; then
+		if [ ! -f "$SWAPFILE" ]; then
+			# check for read only file system
+			touch $SWAPFILE 2>/dev/null || exit 0
+
+			printf "Creating $NAME ... "
+			dd if=/dev/zero of=$SWAPFILE bs=1M count=$SWAPSIZE > /dev/null 2>&1 || (status_fail && exit 1)
+			chmod 0600 $SWAPFILE > /dev/null 2>&1 || (status_fail && exit 1)
+			mkswap $SWAPFILE > /dev/null 2>&1 || (status_fail && exit 1)
+			status_ok
+		else
+			# check for read only file system
+			touch $SWAPFILE 2>/dev/null || exit 0
+		fi
+		printf "Activating $NAME ... "
+		swapon $SWAPFILE > /dev/null 2>&1
+		check_status
+	else
+		printf "Activating $NAME ... "
+		swapon -a > /dev/null 2>&1
+		check_status
+	fi
+}
+
+stop() {
+	printf "Deactivating $NAME ... "
+	swapoff -a > /dev/null 2>&1
+	check_status
+}
+
+restart() {
+	stop
+	sleep 1
+	if [ "$SWAPFILE_ENABLED" -eq 1 ]; then
+		rm -f $SWAPFILE
+	fi
+	start
+}
+
+case "$1" in
+  start)
+	start
+	;;
+  stop)
+	stop
+	;;
+  restart)
+	restart
+	;;
+  *)
+	echo "Usage: $0 {start|stop|restart}" >&2
+	exit 1
+	;;
+esac
