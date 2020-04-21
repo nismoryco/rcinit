@@ -1,0 +1,36 @@
+#!/bin/sh
+
+[ -r /etc/os-release ] && . /etc/os-release
+
+# Set path used for startup scripts
+export PATH=@PATH@
+
+# Limit kernel messages on console
+dmesg -n 1
+
+# Set user mask for startup scripts
+umask 0002
+
+# Welcome message
+echo ' _    ___ ___     ___             '
+echo '| |  | __/ __|___| _ \_  _ __ ___ '
+echo '| |__| _|\__ \___|   / || / _/ _ \'
+echo '|____|_| |___/   |_|_\\_, \__\___/'
+echo '                      |__/        '
+echo
+echo "$PRETTY_NAME"
+echo
+
+# Basic mounts
+mount -t proc proc /proc
+mkdir -p /dev/pts
+mkdir -p /dev/shm
+
+# Start all init scripts in /etc/init.d
+# executing them in numerical order.
+for i in /etc/init.d/S??* ;do
+	[ ! -f "$i" -o ! -x "$i" ] && continue
+	$i start
+done
+
+[ -x "/etc/rc.local" ] && /etc/rc.local
