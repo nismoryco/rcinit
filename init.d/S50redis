@@ -7,6 +7,7 @@ NAME="redis"
 EXEC=$(which $NAME-server)
 CONF="/etc/redis.conf"
 DBDIR="/var/lib/redis"
+PIDFILE="/var/run/redis/redis.pid"
 
 [ -x "$EXEC" ] || exit 0
 [ -f "$CONF" ] || exit 0
@@ -16,13 +17,14 @@ DBDIR="/var/lib/redis"
 
 start() {
 	printf "Starting $NAME ... "
-	install -d -o redis -g redis -m 0777 /var/run/redis
-	touch /var/log/redis.log
-	chown redis:redis /var/log/redis.log
+	install -d -o redis -g redis -m 0777 /var/run/$NAME
+	install -d -o redis -g redis -m 0770 /var/log/$NAME
+	touch $PIDFILE
+	chown redis:redis $PIDFILE
 	ulimit -n 10240
-	umask 077
-	start-stop-daemon -S -q -c redis:redis -b \
-		-d $DBDIR --exec $EXEC -- $CONF
+	start-stop-daemon -S -q -b -c redis:redis        \
+		-d $DBDIR --umask 007 --pidfile $PIDFILE \
+		--exec $EXEC -- $CONF
 	check_status
 }
 
