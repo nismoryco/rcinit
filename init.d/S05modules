@@ -7,19 +7,22 @@ EXEC=$(which modprobe)
 MODS="/etc/modules.conf"
 
 [ -x "$EXEC" ] || exit 0
-[ -e "$MODS" ] || exit 0
+[ -e "/proc/modules" ] || exit 0
+[ -r "$MODS" ] || exit 0
+egrep -qv '^($|#)' $MODS || exit 0
 
 . /etc/init.d/functions
 
 start() {
 	FAIL="no"
 	printf "Loading kernel modules ... "
-	while read p; do
-		if [ -n "$p" ]; then
-			$EXEC "$p" > /dev/null 2>&1
-			if [ $? != "0" ]; then
-				FAIL="yes"
-			fi
+	while read module args; do
+		case "$module" in
+			""|"#"*) continue ;;
+		esac
+		$EXEC $module $args > /dev/null 2>&1
+		if [ $? != "0" ]; then
+			FAIL="yes"
 		fi
 	done < "$MODS"
 	[ $FAIL = "yes" ] && status_fail || status_ok
