@@ -5,6 +5,11 @@
 
 . /etc/init.d/functions
 
+# not running in Xen dom0 or domU
+if ! test -d /proc/xen ; then
+	exit 0
+fi
+
 # run this script only in dom0:
 # no capabilities file in xenlinux domU kernel
 # empty capabilities file in pv_ops domU kernel
@@ -14,10 +19,9 @@ if test -f /proc/xen/capabilities && \
 fi
 
 start() {
-	printf "Starting xen domains ... \n"
 	for f in $(ls /etc/xen/auto/*.cfg 2> /dev/null); do
 		DOM=$(cat $f | grep name | awk '{print $3}' | sed -e 's/"//g')
-		printf "   %s " "$DOM"
+		printf "Starting xen domain %s ... " "$DOM"
 		xl create $f > /dev/null 2>&1
 		check_status
 		sleep 1
