@@ -10,23 +10,8 @@ echo "The system is shutting down ..."
 # executing them in reversed numerical order.
 #
 for i in $(ls -r /etc/init.d/S??*) ;do
-     [ ! -f "$i" ] && continue
-     [ ! -x "$i" ] && continue
-
-     case "$i" in
-	*.sh)
-	    # Source shell script for speed.
-	    (
-		trap - INT QUIT TSTP
-		set stop
-		. $i
-	    )
-	    ;;
-	*)
-	    # No sh extension, so fork subprocess.
-	    $i stop
-	    ;;
-    esac
+	[ ! -f "$i" -o ! -x "$i" ] && continue
+	$i stop
 done
 
 echo "Sending SIGTERM to all processes ..."
@@ -40,7 +25,7 @@ killall5 -9 -o 1
 echo "Syncing filesystems ..."
 sync
 
-# Turn off backlight if we are connected to rpi touchscreen
+# turn off back light on rpi touchscreen
 if [ -f /sys/class/backlight/rpi_backlight/bl_power ]; then
 	echo 1 > /sys/class/backlight/rpi_backlight/bl_power
 fi
