@@ -53,7 +53,7 @@ restart() {
 		exit 1
 	fi
 	sleep 1
-	$SSHD_BIN $SSHD_ARGS
+	$SSHD_BIN $SSHD_ARGS > /dev/null 2>&1
 	check_status
 }
 
