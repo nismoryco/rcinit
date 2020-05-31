@@ -1,0 +1,39 @@
+From 758ae1a1b41ba6ac5522b1cb3a9c4fd82043cb4b Mon Sep 17 00:00:00 2001
+From: Ryan Coe <bluemrp9@gmail.com>
+Date: Thu, 26 Dec 2019 12:45:58 -0800
+Subject: [PATCH 1/1] add crond env variable when running jobs
+
+Signed-off-by: Ryan Coe <bluemrp9@gmail.com>
+---
+ miscutils/crond.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/miscutils/crond.c b/miscutils/crond.c
+index b533a39912dca989ef90c8629122715cefece185..a7bb44a245f64cce37e9282ebf6f11733b5f6af9 100644
+--- a/miscutils/crond.c
++++ b/miscutils/crond.c
+@@ -159,6 +159,7 @@ struct globals {
+ 	char *env_var_home;
+ 	char *env_var_shell;
+ 	char *env_var_logname;
++	char *env_var_crond;
+ #endif
+ } FIX_ALIASING;
+ #define G (*(struct globals*)bb_common_bufsiz1)
+@@ -663,11 +664,13 @@ static void set_env_vars(struct passwd *pas, const char *shell)
+ 	safe_setenv(&G.env_var_user, "USER", pas->pw_name);
+ 	safe_setenv(&G.env_var_home, "HOME", pas->pw_dir);
+ 	safe_setenv(&G.env_var_shell, "SHELL", shell);
++	safe_setenv(&G.env_var_crond, "CROND", "1");
+ #else
+ 	xsetenv("LOGNAME", pas->pw_name);
+ 	xsetenv("USER", pas->pw_name);
+ 	xsetenv("HOME", pas->pw_dir);
+ 	xsetenv("SHELL", shell);
++	xsetenv("CROND", "1");
+ #endif
+ }
+ 
+-- 
+2.24.1
+
