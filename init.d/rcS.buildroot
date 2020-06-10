@@ -14,7 +14,7 @@ umask 0002
 # Welcome message
 echo '  ___      _ _    _              _   '
 echo ' | _ )_  _(_) |__| |_ _ ___  ___| |_ '
-echo ' | _ \ || | | / _` | '_/ _ \/ _ \  _|'
+echo ' | _ \ || | | / _` | '\''_/ _ \/ _ \  _|'
 echo ' |___/\_,_|_|_\__,_|_| \___/\___/\__|'
 echo
 echo "$PRETTY_NAME"
@@ -33,6 +33,4 @@ for i in /etc/init.d/S??* ;do
 done
 
 [ -x "/etc/rc.local" ] && /etc/rc.local
-
-# psplash
 [ -x "/usr/bin/psplash-write" ] && /usr/bin/psplash-write "QUIT"
