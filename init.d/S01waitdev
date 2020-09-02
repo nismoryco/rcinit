@@ -1,0 +1,47 @@
+#!/bin/sh
+#
+# waitdev
+#
+
+NAME="waitdev"
+
+WAIT_DELAY=10
+WAIT_DEVICE=
+
+# shellcheck source=/dev/null
+[ -r "/etc/default/$NAME" ] && . "/etc/default/$NAME"
+
+. /etc/init.d/functions
+
+start() {
+	if [ -n "$WAIT_DELAY" -a -n "$WAIT_DEVICE" -a ! -e "$WAIT_DEVICE" ]; then
+		printf "Waiting for device %s to appear ... " "$WAIT_DEVICE"
+		while [ ${WAIT_DELAY} -gt 0 ]; do
+			if [ -e "$WAIT_DEVICE" ]; then
+				status_ok
+				exit 0
+			fi
+			sleep 1
+			: $((IF_WAIT_DELAY -= 1))
+		done
+		status_fail
+		exit 1
+	fi
+}
+
+stop() {
+	:
+}
+
+case "$1" in
+  start)
+	start
+	;;
+  stop)
+	stop
+	;;
+  *)
+	echo "Usage: $0 {start|stop}" >&2
+	exit 1
+	;;
+esac
