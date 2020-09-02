@@ -1,12 +1,12 @@
 #!/bin/sh
 #
-# swap
+# swapfile
 #
 
 NAME="swap"
 
 SWAPFILE_ENABLED=1
-SWAPFILE="/etc/swapfile"
+SWAPFILE="/var/swapfile"
 SWAPSIZE=100
 
 # shellcheck source=/dev/null
