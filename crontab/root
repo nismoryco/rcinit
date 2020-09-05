@@ -1,0 +1,4 @@
+# crontab
+
+# Minute Hour Day of Month Month Day of Week Command
+0 0 * * * /usr/sbin/logrotate /etc/logrotate.conf
