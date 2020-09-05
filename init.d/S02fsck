@@ -11,8 +11,9 @@ EXEC=$(which $NAME)
 . /etc/init.d/functions
 
 start() {
-	$EXEC -A -P -T -y
-	if [ $? -ne 0 ]; then
+	$EXEC -A -P -T -M -y
+	RETVAL=$?
+	if [ $(($RETVAL & 2)) -ne 0 ]; then
 		sleep 5
 		reboot -f
 		exit 0
