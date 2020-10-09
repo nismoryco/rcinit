@@ -5,17 +5,19 @@
 
 NAME="hwclock"
 EXEC=$(which $NAME)
-DEV_RTC="/dev/rtc0"
+RTC="/dev/rtc0"
 
 [ -x "$EXEC" ] || exit 0
-[ -e "$DEV_RTC" ] || exit 0
+
+[ -r "/etc/default/$NAME" ] && . "/etc/default/$NAME"
+
+[ -e "$RTC" ] || exit 0
 
 . /etc/init.d/functions
 
-mkdir -p /var/lib/hwclock 2> /dev/null
-
 start() {
 	printf "Setting system clock ... "
+	mkdir -p /var/lib/hwclock 2> /dev/null
 	$EXEC -s -u > /dev/null 2>&1
 	check_status
 }
@@ -34,6 +36,6 @@ case "$1" in
 	stop
 	;;
   *)
-	echo "Usage: $0 {start|stop}"
+	echo "Usage: $0 {start|stop}" >&2
 	exit 1
 esac

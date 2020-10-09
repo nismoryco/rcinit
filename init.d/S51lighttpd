@@ -15,7 +15,7 @@ GROUP="www-data"
 
 [ -x "$EXEC" ] || exit 0
 
-[ -r /etc/default/$NAME ] && . /etc/default/$NAME
+[ -r "/etc/default/$NAME" ] && . "/etc/default/$NAME"
 
 . /etc/init.d/functions
 
@@ -50,7 +50,7 @@ case "$1" in
 	restart
 	;;
   *)
-	echo "Usage: $0 {start|stop|restart}"
+	echo "Usage: $0 {start|stop|restart}" >&2
 	exit 1
 esac
 

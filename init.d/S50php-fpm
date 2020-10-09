@@ -1,9 +1,9 @@
-#! /bin/sh
+#!/bin/sh
 
 NAME="php-fpm"
 php_fpm_BIN=$(which $NAME)
 php_fpm_CONF=/etc/php-fpm.conf
-php_fpm_PID=/var/run/php-fpm.pid
+php_fpm_PID=/run/php-fpm.pid
 
 php_opts="--fpm-config $php_fpm_CONF --pid $php_fpm_PID"
 
@@ -12,69 +12,49 @@ php_opts="--fpm-config $php_fpm_CONF --pid $php_fpm_PID"
 . /etc/init.d/functions
 
 wait_for_pid() {
-	try=0
-
-	while test $try -lt 35 ; do
+	[ -z "$WAIT_DELAY" ] && WAIT_DELAY=10
+	while [ $WAIT_DELAY -gt 0 ]; do
 		case "$1" in
-			'created')
+		"created")
 			if [ -f "$2" ] ; then
-				try=''
-				break
+				return 0
 			fi
 			;;
-
-			'removed')
+		"removed")
 			if [ ! -f "$2" ] ; then
-				try=''
-				break
+				return 0
 			fi
 			;;
+		*)
+			return 1
 		esac
-
-		try=`expr $try + 1`
 		sleep 1
-
+		: $((WAIT_DELAY -= 1))
 	done
+	return 1
 }
 
 start() {
 	printf "Starting $NAME ... "
-
 	$php_fpm_BIN --daemonize $php_opts
 	RET=$?
 	if [ "$RET" != 0 ] ; then
 		status_fail
 		exit 1
 	fi
-
 	wait_for_pid created $php_fpm_PID
-
-	if [ -n "$try" ] ; then
-		status_fail
-		exit 1
-	else
-		status_ok
-	fi
+	check_status
 }
 
 stop() {
 	printf "Stopping $NAME ... "
-
 	if [ ! -r $php_fpm_PID ] ; then
 		status_fail
 		exit 1
 	fi
-
 	kill -QUIT `cat $php_fpm_PID`
-
 	wait_for_pid removed $php_fpm_PID
-
-	if [ -n "$try" ] ; then
-		status_fail
-		exit 1
-	else
-		status_ok
-	fi
+	check_status
 }
 
 status() {
@@ -82,7 +62,6 @@ status() {
 		echo "php-fpm is stopped"
 		exit 0
 	fi
-
 	PID=`cat $php_fpm_PID`
 	if ps -p $PID | grep -q $PID; then
 		echo "php-fpm (pid $PID) is running..."
@@ -93,22 +72,13 @@ status() {
 
 forcequit() {
 	printf "Terminating $NAME ... "
-
 	if [ ! -r $php_fpm_PID ] ; then
 		status_fail
 		exit 1
 	fi
-
 	kill -TERM `cat $php_fpm_PID`
-
 	wait_for_pid removed $php_fpm_PID
-
-	if [ -n "$try" ] ; then
-		status_fail
-		exit 1
-	else
-		status_ok
-	fi
+	check_status
 }
 
 restart() {
@@ -118,13 +88,11 @@ restart() {
 }
 
 reload() {
-	printf "Reload service $NAME ... "
-
+	printf "Reloading $NAME ... "
 	if [ ! -r $php_fpm_PID ] ; then
 		status_fail
 		exit 1
 	fi
-
 	kill -USR2 `cat $php_fpm_PID`
 	check_status
 }
@@ -149,7 +117,7 @@ case "$1" in
 	reload
 	;;
   *)
-	echo "Usage: $0 {start|stop|force-quit|restart|reload|status}"
+	echo "Usage: $0 {start|stop|force-quit|restart|reload|status}" >&2
 	exit 1
 	;;
 esac

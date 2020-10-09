@@ -45,6 +45,6 @@ case "$1" in
 	restart
 	;;
   *)
-	echo "Usage: $0 {start|stop|restart}"
+	echo "Usage: $0 {start|stop|restart}" >&2
 	exit 1
 esac

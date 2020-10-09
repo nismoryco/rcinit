@@ -11,8 +11,8 @@ CFG=/etc/ifplugd/ifplugd.conf
 . /etc/init.d/functions
 
 if [ `id -u` != "0" ] && [ "$1" = "start" -o "$1" = "stop" ] ; then
-  echo "You must be root to start, stop or restart ifplugd."
-  exit 1
+	echo "You must be root to start, stop or restart ifplugd." >&2
+	exit 1
 fi
 
 [ -f $CFG ] && . $CFG
@@ -25,54 +25,54 @@ shift
 [ "x$INTERFACES" = "xauto" ] && INTERFACES="`cat /proc/net/dev | awk '{ print $1 }' | egrep '^(eth|wlan)' | cut -d: -f1`"
 
 case "$VERB" in
-    start)
-        for IF in $INTERFACES ; do
-            printf "Starting ifplugd for %s ... " "${IF}"
-            A="`eval echo \$\{ARGS_${IF}\}`"
-            [ -z "$A" ] && A="$ARGS"
-            $IFPLUGD -i $IF $A > /dev/null 2>&1
-            RET=$?
-            if [ $RET -eq 0 -o $RET -eq 2 -o $RET -eq 3 ]; then
-                status_ok
-            else
-                status_fail
-            fi
-        done
-        ;;
-    stop)
-        for IF in $INTERFACES ; do
-            printf "Stopping ifplugd for %s ... " "${IF}"
-            $IFPLUGD -k -i $IF > /dev/null 2>&1
-            check_status
-        done
-        ;;
-    status)
-        for IF in $INTERFACES ; do
-            $IFPLUGD -c -i $IF
-        done
-        ;;
-    suspend)
-        for IF in $INTERFACES ; do
-            printf "Suspending ifplugd for %s ... " "${IF}"
-            $IFPLUGD -S -i $IF
-            check_status
-        done
-        ;;
-    resume)
-        for IF in $INTERFACES ; do
-            printf "Resuming ifplugd for %s ... " "${IF}"
-            $IFPLUGD -R -i $IF
-            check_status
-        done
-        ;;
-    force-reload|restart)
-        $0 stop $INTERFACES
-        sleep 3
-        $0 start $INTERFACES
-        ;;
-    *)
-        echo "Usage: $0 {start|stop|restart|force-reload|status|suspend|resume}"
-        exit 1
+	start)
+		for IF in $INTERFACES ; do
+			printf "Starting ifplugd for %s ... " "${IF}"
+			A="`eval echo \$\{ARGS_${IF}\}`"
+			[ -z "$A" ] && A="$ARGS"
+			$IFPLUGD -i $IF $A > /dev/null 2>&1
+			RET=$?
+			if [ $RET -eq 0 -o $RET -eq 2 -o $RET -eq 3 ]; then
+				status_ok
+			else
+				status_fail
+			fi
+		done
+		;;
+	stop)
+		for IF in $INTERFACES ; do
+			printf "Stopping ifplugd for %s ... " "${IF}"
+			$IFPLUGD -k -i $IF > /dev/null 2>&1
+			check_status
+		done
+		;;
+	status)
+		for IF in $INTERFACES ; do
+			$IFPLUGD -c -i $IF
+		done
+		;;
+	suspend)
+		for IF in $INTERFACES ; do
+			printf "Suspending ifplugd for %s ... " "${IF}"
+			$IFPLUGD -S -i $IF
+			check_status
+		done
+		;;
+	resume)
+		for IF in $INTERFACES ; do
+			printf "Resuming ifplugd for %s ... " "${IF}"
+			$IFPLUGD -R -i $IF
+			check_status
+		done
+		;;
+	force-reload|restart)
+		$0 stop $INTERFACES
+		sleep 3
+		$0 start $INTERFACES
+		;;
+	*)
+		echo "Usage: $0 {start|stop|restart|force-reload|status|suspend|resume}" >&2
+		exit 1
 esac
 
 exit 0

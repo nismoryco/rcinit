@@ -14,7 +14,7 @@ start() {
 	printf "Mounting file systems ..."
 	$EXEC -a
 	check_status
-	mkdir -p /run/lock
+	mkdir -p /run/lock 2> /dev/null
 }
 
 stop() {

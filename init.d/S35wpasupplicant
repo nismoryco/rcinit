@@ -8,12 +8,13 @@ EXEC=$(which $NAME)
 PIDFILE="/var/run/wpa_supplicant.pid"
 CONFFILE="/etc/wpa_supplicant.conf"
 LOGFILE="/var/log/wpa_supplicant.log"
+WAITDELAY=5
 
 [ -x "$EXEC" ] || exit 0
 [ -r "$CONFFILE" ] || exit 0
 
 IFACE="wlan0"
-[ -r "/etc/default/wpa_supplicant" ] && . /etc/default/wpa_supplicant
+[ -r "/etc/default/$NAME" ] && . "/etc/default/$NAME"
 [ -z "$ARGS" ] && ARGS="-Dnl80211 -i$IFACE -c$CONFFILE -f$LOGFILE -P$PIDFILE -B"
 
 . /etc/init.d/functions
@@ -21,20 +22,17 @@ IFACE="wlan0"
 wait_for_iface() {
 	# In case we have a slow-to-appear interface (e.g. eth-over-USB),
 	# and we need to configure it, wait until it appears, but not too
-	# long either. IF_WAIT_DELAY is in seconds.
-
-	IF_WAIT_DELAY=5
-
-	if [ "$IF_WAIT_DELAY" -a ! -e "/sys/class/net/$IFACE" ]; then
+	# long either. WAIT_DELAY is in seconds.
+	if [ "WAIT_DELAY" -a ! -e "/sys/class/net/$IFACE" ]; then
 		printf "Waiting for interface %s to appear " "$IFACE"
-		while [ $IF_WAIT_DELAY -gt 0 ]; do
+		while [ $WAIT_DELAY -gt 0 ]; do
 			if [ -e "/sys/class/net/$IFACE" ]; then
 				printf "\n"
 				return 0
 			fi
 			sleep 1
 			printf "."
-			: $((IF_WAIT_DELAY -= 1))
+			: $((WAIT_DELAY -= 1))
 		done
 		printf "timeout!\n"
 		exit 1

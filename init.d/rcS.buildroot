@@ -17,6 +17,7 @@ echo ' | _ )_  _(_) |__| |_ _ ___  ___| |_ '
 echo ' | _ \ || | | / _` | '\''_/ _ \/ _ \  _|'
 echo ' |___/\_,_|_|_\__,_|_| \___/\___/\__|'
 echo
+echo
 echo "$PRETTY_NAME"
 echo
 
@@ -33,4 +34,3 @@ for i in /etc/init.d/S??* ;do
 done
 
 [ -x "/etc/rc.local" ] && /etc/rc.local
-[ -x "/usr/bin/psplash-write" ] && /usr/bin/psplash-write "QUIT"

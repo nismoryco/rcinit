@@ -3,7 +3,7 @@
 DAEMON="proftpd"
 EXEC=$(which $DAEMON)
 
-test -x "$EXEC" || exit 0
+[ -x "$EXEC" ] || exit 0
 
 . /etc/init.d/functions
 

@@ -9,13 +9,17 @@ MYSQL_PIDFILE="$MYSQL_RUN/mysqld.pid"
 MYSQL_LOG="/var/log/mysql"
 MYSQL_LOGFILE="$MYSQL_LOG/mysqld.log"
 MYSQL_BIN="/usr/bin"
+MYSQL_USER="mysql"
+MYSQL_PREFIX="/usr"
+WAIT_DELAY=10
 
 [ -x "$MYSQL_BIN/mysqld_safe" ] || exit 0
+
+[ -r "/etc/default/$NAME" ] && . "/etc/default/$NAME"
 
 . /etc/init.d/functions
 
 wait_for_ready() {
-	WAIT_DELAY=5
 	while [ $WAIT_DELAY -gt 0 ]; do
 		if "$MYSQL_BIN/mysqladmin" ping > /dev/null 2>&1; then
 			return 0
@@ -29,8 +33,8 @@ wait_for_ready() {
 start() {
 	if [ "`ls -1 $MYSQL_LIB 2> /dev/null | wc -l`" = "0" ] ; then
 		printf "Creating mysql system tables ... "
-		$MYSQL_BIN/mysql_install_db --basedir=/usr --user=mysql \
-			--datadir=$MYSQL_LIB > /dev/null 2>&1
+		$MYSQL_BIN/mysql_install_db --basedir=$MYSQL_PREFIX \
+			--user=$MYSQL_USER --datadir=$MYSQL_LIB > /dev/null 2>&1
 		if [ $? -ne 0 ]; then
 			status_fail
 			exit 1
@@ -48,7 +52,7 @@ start() {
 	# We don't use start-stop-daemon because mysqld has its own
 	# wrapper script.
 	printf "Starting mysql ... "
-	$MYSQL_BIN/mysqld_safe --pid-file=$MYSQL_PIDFILE --user=mysql \
+	$MYSQL_BIN/mysqld_safe --pid-file=$MYSQL_PIDFILE --user=$MYSQL_USER \
 		--log-error=$MYSQL_LOGFILE > /dev/null 2>&1 &
 	wait_for_ready
 	check_status
@@ -66,7 +70,7 @@ stop() {
 
 restart() {
 	stop
-	sleep 1
+	sleep 3
 	start
 }
 
@@ -81,6 +85,6 @@ case "$1" in
 	restart
 	;;
   *)
-	echo "Usage: $0 {start|stop|restart}"
+	echo "Usage: $0 {start|stop|restart}" >&2
 	;;
 esac

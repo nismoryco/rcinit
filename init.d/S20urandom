@@ -16,8 +16,8 @@ touch "$SEED" 2>/dev/null || exit 0
 start() {
 	printf "Initializing random number generator ... "
 	# Load and then save 512 bytes, which is the size of the entropy pool
-	cat "$SEED" > /dev/urandom
-	rm -f "$SEED"
+	cat $SEED > /dev/urandom
+	rm -f $SEED
 	umask 077
 	dd if=$DEV of=$SEED count=1 > /dev/null 2>&1
 	check_status

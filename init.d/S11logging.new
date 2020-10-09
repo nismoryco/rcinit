@@ -9,7 +9,7 @@ ARGS="-s -m 0"
 
 [ -x "$EXEC" ] || exit 0
 
-[ -r /etc/default/logging ] && . /etc/default/logging
+[ -r "/etc/default/$NAME" ] && . "/etc/default/$NAME"
 
 . /etc/init.d/functions
 
@@ -42,6 +42,6 @@ case "$1" in
 	restart
 	;;
   *)
-	echo "Usage: $0 {start|stop|restart}"
+	echo "Usage: $0 {start|stop|restart}" >&2
 	exit 1
 esac

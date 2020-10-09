@@ -6,10 +6,12 @@
 NAME=gpsd
 EXEC=$(which $NAME)
 DEVICES="/dev/ttyS1"
-PIDFILE=/var/run/$NAME.pid
-SOCKFILE=/var/run/$NAME.sock
+PIDFILE=/run/$NAME.pid
+SOCKFILE=/run/$NAME.sock
 
 [ -x "$EXEC" ] || exit 0
+
+[ -r "/etc/default/$NAME" ] && . "/etc/default/$NAME"
 
 . /etc/init.d/functions
 
@@ -21,9 +23,9 @@ start() {
 
 stop() {
 	printf "Stopping $NAME ... "
-	start-stop-daemon -K -q -p $PIDFILE
+	start-stop-daemon -K --remove-pidfile -q \
+		-p $PIDFILE
 	check_status
-	rm -f $PIDFILE
 }
 
 restart() {

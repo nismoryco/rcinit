@@ -4,7 +4,6 @@
 #
 
 NAME="waitdev"
-
 WAIT_DELAY=10
 WAIT_DEVICE=
 

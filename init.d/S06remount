@@ -9,7 +9,7 @@ EXEC=$(which mount)
 
 . /etc/init.d/functions
 
-[ -r /etc/default/rootmount ] && . /etc/default/rootmount
+[ -r "/etc/default/rootmount" ] && . "/etc/default/rootmount"
 
 start() {
 	printf "Remounting rootfs read/write ..."

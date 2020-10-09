@@ -7,6 +7,8 @@ PIDFILE="/var/run/acpid.pid"
 
 [ -x "$EXEC" ] || exit 0
 
+[ -r "/etc/default/$NAME" ] && . "/etc/default/$NAME"
+
 . /etc/init.d/functions
 
 start() {

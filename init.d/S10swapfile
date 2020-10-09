@@ -4,12 +4,10 @@
 #
 
 NAME="swap"
-
 SWAPFILE_ENABLED=1
 SWAPFILE="/var/swapfile"
 SWAPSIZE=1000
 
-# shellcheck source=/dev/null
 [ -r "/etc/default/$NAME" ] && . "/etc/default/$NAME"
 
 . /etc/init.d/functions

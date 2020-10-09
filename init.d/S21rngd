@@ -6,11 +6,11 @@
 NAME="rngd"
 EXEC=$(which $NAME)
 ARGS="--quiet"
-CFG_FILE="/etc/default/$NAME"
 PID_FILE="/var/run/$NAME.pid"
 
 [ -x "$EXEC" ] || exit 0
-[ -r "$CFG_FILE" ] && . "$CFG_FILE"
+
+[ -r "/etc/default/$NAME" ] && . "/etc/default/$NAME"
 
 . /etc/init.d/functions
 

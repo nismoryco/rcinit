@@ -7,7 +7,7 @@ NAME="redis"
 EXEC=$(which $NAME-server)
 CONF="/etc/redis.conf"
 DBDIR="/var/lib/redis"
-PIDFILE="/var/run/redis/redis.pid"
+PIDFILE="/run/redis/redis.pid"
 
 [ -x "$EXEC" ] || exit 0
 [ -f "$CONF" ] || exit 0
@@ -17,12 +17,12 @@ PIDFILE="/var/run/redis/redis.pid"
 
 start() {
 	printf "Starting $NAME ... "
-	install -d -o redis -g redis -m 0777 /var/run/$NAME
 	install -d -o redis -g redis -m 0770 /var/log/$NAME
+	install -d -o redis -g redis -m 0777 /run/$NAME
 	touch $PIDFILE
 	chown redis:redis $PIDFILE
 	ulimit -n 10240
-	start-stop-daemon -S -q -b -c redis:redis        \
+	start-stop-daemon -S -q -b -c redis:redis    \
 		-d $DBDIR --umask 007 --pidfile $PIDFILE \
 		--exec $EXEC -- $CONF
 	check_status
@@ -36,7 +36,7 @@ stop() {
 
 restart() {
 	stop
-	sleep 2
+	sleep 3
 	start
 }
 
@@ -51,6 +51,6 @@ case "$1" in
 	restart
 	;;
   *)
-	echo "Usage: $0 {start|stop|restart}"
+	echo "Usage: $0 {start|stop|restart}" >&2
 	exit 1
 esac

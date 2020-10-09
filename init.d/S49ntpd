@@ -6,15 +6,15 @@ ARGS="-g -l /var/log/ntpd.log -p /run/ntpd.pid"
 
 [ -x "$EXEC" ] || exit 0
 
-# shellcheck source=/dev/null
 [ -r "/etc/default/$NAME" ] && . "/etc/default/$NAME"
 
 . /etc/init.d/functions
 
+# Create ntp directory
+mkdir -p /var/lib/ntp 2> /dev/null
+
 start() {
 	printf 'Starting %s ... ' "$NAME"
-	# Create ntp directory
-	mkdir -p /var/lib/ntp 2> /dev/null
 	$EXEC $ARGS > /dev/null 2>&1
 	check_status
 }

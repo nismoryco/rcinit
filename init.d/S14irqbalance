@@ -13,9 +13,10 @@ ARGS="--pid $PIDFILE"
 
 . /etc/init.d/functions
 
+mkdir -p $RUNDIR 2> /dev/null
+
 start() {
 	printf "Starting $NAME ... "
-	mkdir -p $RUNDIR 2> /dev/null
 	$EXEC $ARGS > /dev/null 2>&1
 	check_status
 }

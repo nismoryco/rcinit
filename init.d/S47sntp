@@ -13,7 +13,6 @@ SNTP_SERVERS="pool.ntp.org"
 SNTP_ARGS="-Ss -M 128"
 SNTP_KEY_CACHE="/tmp/kod"
 
-# shellcheck source=/dev/null
 [ -r "/etc/default/$NAME" ] && . "/etc/default/$NAME"
 
 . /etc/init.d/functions

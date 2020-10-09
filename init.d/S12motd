@@ -12,7 +12,7 @@
 
 start() {
 	printf "Writing motd ... "
-	printf "Welcome to %s %s (%s %s %s)\n" "$NAME" "$VERSION" "$(uname -o)" "$(uname -r)" "$(uname -m)" > /var/run/motd 2> /dev/null
+	printf "Welcome to %s %s (%s %s %s)\n" "$NAME" "$VERSION" "$(uname -o)" "$(uname -r)" "$(uname -m)" > /run/motd 2> /dev/null
 	check_status
 }
 

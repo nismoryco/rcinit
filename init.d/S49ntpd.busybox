@@ -7,7 +7,6 @@ EXEC=$(which $NAME)
 
 NTPD_SERVER="pool.ntp.org"
 
-# shellcheck source=/dev/null
 [ -r "/etc/default/$NAME" ] && . "/etc/default/$NAME"
 
 . /etc/init.d/functions

@@ -8,11 +8,11 @@ EXEC=$(which $NAME)
 ARGS="-c /etc/mosquitto/mosquitto.conf"
 USER="mosquitto"
 GROUP="nogroup"
-PIDFILE="/var/run/mosquitto.pid"
+PIDFILE="/run/mosquitto.pid"
 
 [ -x "$EXEC" ] || exit 0
 
-[ -r "/etc/default/$NAME" ] && . /etc/default/$NAME
+[ -r "/etc/default/$NAME" ] && . "/etc/default/$NAME"
 
 . /etc/init.d/functions
 
@@ -35,7 +35,7 @@ start() {
 }
 
 stop() {
-	printf "Stopping mosquitto ... "
+	printf "Stopping $NAME ... "
 	start-stop-daemon -K --remove-pidfile -q \
 		-p $PIDFILE > /dev/null 2>&1
 	check_status
@@ -58,7 +58,7 @@ case "$1" in
 	restart
 	;;
   *)
-	echo "Usage: $0 {start|stop|restart}"
+	echo "Usage: $0 {start|stop|restart}" >&2
 	exit 1
 esac
 
