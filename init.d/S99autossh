@@ -1,0 +1,35 @@
+#!/bin/sh
+#
+# autossh
+#
+
+NAME="autossh"
+EXEC=$(which $NAME)
+
+[ -x "$EXEC" ] || exit 0
+
+. /etc/init.d/functions
+
+start() {
+	:
+}
+
+stop() {
+	if ps ax 2> /dev/null | grep -q $NAME ; then
+		printf "Stopping $NAME ... "
+		killall $NAME 2> /dev/null
+		check_status
+	fi
+}
+
+case "$1" in
+  start)
+	start
+	;;
+  stop)
+	stop
+	;;
+  *)
+	echo "Usage: $0 {start|stop}"
+	exit 1
+esac
