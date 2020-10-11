@@ -11,14 +11,16 @@ test -d $CONFIG_DIR || exit 0
 start_vpn () {
 	printf "Starting openvpn $NAME ... "
 	start-stop-daemon -S -p /run/openvpn.$NAME.pid -x $DAEMON -- \
-		--daemon --writepid /run/openvpn.$NAME.pid \
-		--config $CONFIG_DIR/$NAME.conf --cd $CONFIG_DIR
+		--daemon --writepid /run/openvpn.$NAME.pid           \
+		--config $CONFIG_DIR/$NAME.conf --cd $CONFIG_DIR     \
+		> /dev/null 2>&1
 	check_status
 }
 
 stop_vpn () {
 	printf "Stopping openvpn $NAME ... "
-	start-stop-daemon -K -p /run/openvpn.$NAME.pid -x $DAEMON
+	start-stop-daemon -K -p /run/openvpn.$NAME.pid -x $DAEMON    \
+		> /dev/null 2>&1
 	check_status
 }
 
@@ -41,14 +43,14 @@ start)
 stop)
 	if test -z $2 ; then
 		for PIDFILE in `ls /run/openvpn.*.pid 2> /dev/null`; do
-			NAME=`echo $PIDFILE | cut -c18-`
+			NAME=`echo $PIDFILE | cut -c14-`
 			NAME=${NAME%%.pid}
 			stop_vpn
 		done
 	else
 		if test -e /var/run/openvpn.$2.pid ; then
 			PIDFILE=`ls /run/openvpn.$2.pid 2> /dev/null`
-			NAME=`echo $PIDFILE | cut -c18-`
+			NAME=`echo $PIDFILE | cut -c14-`
 			NAME=${NAME%%.pid}
 			stop_vpn
 		else
@@ -75,7 +77,7 @@ reload|force-reload)
 	;;
 restart)
 	$0 stop $2
-	sleep 1
+	sleep 3
 	$0 start $2
 	;;
 *)
@@ -85,4 +87,3 @@ restart)
 esac
 
 exit 0
-
