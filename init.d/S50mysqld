@@ -3,6 +3,7 @@
 # mariadb
 #
 
+NAME="mysql"
 MYSQL_LIB="/var/lib/mysql"
 MYSQL_RUN="/run/mysql"
 MYSQL_PIDFILE="$MYSQL_RUN/mysqld.pid"
