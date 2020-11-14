@@ -3,14 +3,18 @@
 # transmission-daemon
 #
 
-. /etc/init.d/functions
-
 PIDFILE="/var/run/transmission-daemon.pid"
 CONFDIR="/var/lib/transmission/info"
 LOGFILE="/var/log/transmission.log"
 DAEMON="transmission-daemon"
 DAEMON_BIN="/usr/bin/$DAEMON"
 USER="transmission"
+DEFAULT_FILE="/etc/default/transmission"
+
+[ -f "$DEFAULT_FILE" ] && . $DEFAULT_FILE
+[ "x$TRANSMISSION_DISABLE" = "xyes" ] && exit 0
+
+. /etc/init.d/functions
 
 start() {
 	echo -n "Starting transmission-daemon ... "

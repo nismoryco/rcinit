@@ -2,9 +2,13 @@
 
 DAEMON="/usr/sbin/openvpn"
 CONFIG_DIR="/etc/openvpn"
+DEFAULT_FILE="/etc/default/openvpn"
 
 test -x $DAEMON || exit 0
 test -d $CONFIG_DIR || exit 0
+
+[ -f "$DEFAULT_FILE" ] && . $DEFAULT_FILE
+[ "x$OPENVPN_DISABLE" = "xyes" ] && exit 0
 
 . /etc/init.d/functions
 
