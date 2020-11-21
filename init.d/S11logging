@@ -1,38 +1,27 @@
 #!/bin/sh
 #
-# Start logging
+# syslogd
 #
 
-SYSLOGD_BIN=$(which syslogd)
-SYSLOGD_ARGS="-m 0"
-SYSLOGD_PID="/var/run/syslogd.pid"
+NAME="syslogd"
+EXEC=$(which $NAME)
+ARGS="-s -m 0"
 
-KLOGD_BIN=$(which klogd)
-KLOGD_ARGS=""
-KLOGD_PID="/var/run/klogd.pid"
+[ -x "$EXEC" ] || exit 0
 
-[ -x "$SYSLOGD_BIN" ] || exit 0
-[ -x "$KLOGD_BIN" ] || exit 0
-
-[ -r /etc/default/logging ] && . /etc/default/logging
+[ -r "/etc/default/$NAME" ] && . "/etc/default/$NAME"
 
 . /etc/init.d/functions
 
 start() {
-	printf "Starting syslogd ... "
-	$SYSLOGD_BIN $SYSLOGD_ARGS
-	check_status
-	printf "Starting klogd ... "
-	$KLOGD_BIN $KLOGD_ARGS
+	printf "Starting $NAME ... "
+	$EXEC $ARGS > /dev/null 2>&1
 	check_status
 }
 
 stop() {
-	printf "Stopping klogd ... "
-	[ -f "$KLOGD_PID" ] && kill `cat "$KLOGD_PID"`
-	check_status
-	printf "Stopping syslogd ... "
-	[ -f "$SYSLOGD_PID" ] && kill `cat "$SYSLOGD_PID"`
+	printf "Stopping $NAME ... "
+	killall $NAME 2> /dev/null
 	check_status
 }
 
@@ -53,6 +42,6 @@ case "$1" in
 	restart
 	;;
   *)
-	echo "Usage: $0 {start|stop|restart}"
+	echo "Usage: $0 {start|stop|restart}" >&2
 	exit 1
 esac
