@@ -8,7 +8,6 @@ echo "The system is shutting down ..."
 
 # Stop all init scripts in /etc/init.d
 # executing them in reversed numerical order.
-#
 for i in $(ls -r /etc/init.d/S??*) ;do
 	[ ! -f "$i" -o ! -x "$i" ] && continue
 	$i stop
