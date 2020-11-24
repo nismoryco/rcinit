@@ -5,13 +5,14 @@
 
 NAME="fsck"
 EXEC=$(which $NAME)
+ARGS="-A -P -T -y"
 
 [ -x "$EXEC" ] || exit 0
 
 . /etc/init.d/functions
 
 start() {
-	$EXEC -A -P -T -M -y
+	$EXEC $ARGS
 	RETVAL=$?
 	if [ $(($RETVAL & 2)) -ne 0 ]; then
 		sleep 5
