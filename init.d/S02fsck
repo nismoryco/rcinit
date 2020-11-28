@@ -4,7 +4,7 @@
 #
 
 NAME="fsck"
-EXEC=$(which $NAME)
+EXEC="$(which $NAME)"
 ARGS="-A -P -T -y"
 
 [ -x "$EXEC" ] || exit 0
