@@ -4,8 +4,9 @@
 #
 
 NAME="syslogd"
-EXEC=$(which $NAME)
+EXEC="$(which $NAME)"
 ARGS="-s -m 0"
+PIDFILE="/run/syslogd.pid"
 
 [ -x "$EXEC" ] || exit 0
 
@@ -14,14 +15,19 @@ ARGS="-s -m 0"
 . /etc/init.d/functions
 
 start() {
-	printf "Starting $NAME ... "
+	printf "Starting %s ... " "$NAME"
 	$EXEC $ARGS > /dev/null 2>&1
 	check_status
 }
 
 stop() {
-	printf "Stopping $NAME ... "
+	printf "Stopping %s ... " "$NAME"
+	if [ ! -r "$PIDFILE" ]; then
+		status_fail
+		exit 1
+	fi
 	killall $NAME 2> /dev/null
+	wait_for_pid removed "$PIDFILE"
 	check_status
 }
 
