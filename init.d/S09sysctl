@@ -3,7 +3,7 @@
 # sysctl
 #
 
-EXEC=$(which sysctl)
+EXEC="$(which sysctl)"
 CONF="/etc/sysctl.conf"
 
 [ -x "$EXEC" ] || exit 0
