@@ -12,7 +12,7 @@ php_opts="--fpm-config $php_fpm_CONF --pid $php_fpm_PID"
 . /etc/init.d/functions
 
 start() {
-	printf "Starting $NAME ... "
+	printf "Starting %s ... " "$NAME"
 	$php_fpm_BIN --daemonize $php_opts
 	RET=$?
 	if [ "$RET" != 0 ] ; then
@@ -24,7 +24,7 @@ start() {
 }
 
 stop() {
-	printf "Stopping $NAME ... "
+	printf "Stopping %s ... " "$NAME"
 	if [ ! -r $php_fpm_PID ] ; then
 		status_fail
 		exit 1
@@ -48,7 +48,7 @@ status() {
 }
 
 forcequit() {
-	printf "Terminating $NAME ... "
+	printf "Terminating %s ... " "$NAME"
 	if [ ! -r $php_fpm_PID ] ; then
 		status_fail
 		exit 1
@@ -65,7 +65,7 @@ restart() {
 }
 
 reload() {
-	printf "Reloading $NAME ... "
+	printf "Reloading %s ... " "$NAME"
 	if [ ! -r $php_fpm_PID ] ; then
 		status_fail
 		exit 1
