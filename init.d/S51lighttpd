@@ -3,33 +3,39 @@
 # lighttpd
 #
 
-NAME=lighttpd
-EXEC=$(which $NAME)
-PID_FILE="/var/run/$NAME.pid"
-CONF_FILE="/etc/$NAME/$NAME.conf"
-ARGS="-f $CONF_FILE"
-ERROR_LOG="/var/log/lighttpd-error.log"
-ACCESS_LOG="/var/log/lighttpd-access.log"
+NAME="lighttpd"
+EXEC="$(which $NAME)"
+RUNDIR="/run/lighttpd"
+PIDFILE="$RUNDIR/$NAME.pid"
+LOGDIR="/var/log/lighttpd"
+ERRORLOG="$LOGDIR/error.log"
+ACCESSLOG="$LOGDIR/access.log"
 USER="www-data"
 GROUP="www-data"
+CONFFILE="/etc/$NAME/$NAME.conf"
+ARGS="-f $CONFFILE"
 
 [ -x "$EXEC" ] || exit 0
-
 [ -r "/etc/default/$NAME" ] && . "/etc/default/$NAME"
 
 . /etc/init.d/functions
 
 start() {
-	printf "Starting $NAME ... "
-	touch $ERROR_LOG ; chown $USER:$GROUP $ERROR_LOG
-	touch $ACCESS_LOG ; chown $USER:$GROUP $ACCESS_LOG
-	start-stop-daemon -S -q -p $PID_FILE --exec $EXEC -- $ARGS
+	printf "Starting %s ... " "$NAME"
+	install -d -o $USER -g $GROUP -m 0775 $RUNDIR
+	install -d -o $USER -g $GROUP -m 0770 $LOGDIR
+	start-stop-daemon -S -q -p $PIDFILE --exec $EXEC -- $ARGS
 	check_status
 }
 
 stop() {
-	printf "Stopping $NAME ... "
-	start-stop-daemon -K -q -p $PID_FILE
+	printf "Stopping %s ... " "$NAME"
+	if [ ! -r "$PIDFILE" ]; then
+		status_fail
+		exit 1
+	fi
+	start-stop-daemon -K -q -p $PIDFILE
+	wait_for_pid removed $PIDFILE
 	check_status
 }
 
