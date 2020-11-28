@@ -4,7 +4,7 @@
 #
 
 NAME="irqbalance"
-EXEC=$(which irqbalance)
+EXEC="$(which irqbalance)"
 RUNDIR="/run/irqbalance"
 PIDFILE="$RUNDIR/irqbalance.pid"
 ARGS="--pid $PIDFILE"
