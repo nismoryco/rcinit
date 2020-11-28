@@ -3,7 +3,7 @@
 # modules
 #
 
-EXEC=$(which modprobe)
+EXEC="$(which modprobe)"
 MODS="/etc/modules.conf"
 
 [ -x "$EXEC" ] || exit 0
