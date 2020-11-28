@@ -1,3 +1,4 @@
+#!/bin/sh
 # rcinit common routines
 
 # Check status and print
@@ -28,4 +29,28 @@ check_status()
 	else
 		status_fail
 	fi
+}
+
+wait_for_pid()
+{
+	[ -z "$WAIT_DELAY" ] && WAIT_DELAY=10
+	while [ $WAIT_DELAY -gt 0 ]; do
+		case "$1" in
+		"created")
+			if [ -f "$2" ] ; then
+				return 0
+			fi
+			;;
+		"removed")
+			if [ ! -f "$2" ] ; then
+				return 0
+			fi
+			;;
+		*)
+			return 1
+		esac
+		sleep 1
+		: $((WAIT_DELAY -= 1))
+	done
+	return 1
 }
