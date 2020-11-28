@@ -3,34 +3,43 @@
 # transmission-daemon
 #
 
-PIDFILE="/var/run/transmission-daemon.pid"
+NAME="transmission-daemon"
+EXEC="$(which $NAME)"
+PIDDIR="/run/transmission"
+PIDFILE="$PIDDIR/transmission-daemon.pid"
 CONFDIR="/var/lib/transmission/info"
-LOGFILE="/var/log/transmission.log"
-DAEMON="transmission-daemon"
-DAEMON_BIN="/usr/bin/$DAEMON"
+LOGDIR="/var/log/transmission"
+LOGFILE="$LOGDIR/transmission.log"
 USER="transmission"
 DEFAULT_FILE="/etc/default/transmission"
+ARGS="-f --pid-file $PIDFILE --config-dir $CONFDIR --logfile $LOGFILE"
 
+[ -x "$EXEC" ] || exit 0
 [ -f "$DEFAULT_FILE" ] && . $DEFAULT_FILE
 [ "x$TRANSMISSION_DISABLE" = "xyes" ] && exit 0
 
 . /etc/init.d/functions
 
 start() {
-	echo -n "Starting transmission-daemon ... "
+	printf "Starting %s ... " "$NAME"
 	if [ ! -f "$CONFDIR/settings.json" ]; then
 		status_fail
 		exit 1
 	fi
-	touch $LOGFILE
-	chown transmission:transmission $LOGFILE
-	start-stop-daemon -S -c $USER -x $DAEMON_BIN -p $PIDFILE -b -- -f --pid-file $PIDFILE --config-dir $CONFDIR --logfile $LOGFILE > /dev/null 2>&1
+	install -d -o $USER -g $USER -m 0770 $LOGDIR
+	install -d -o $USER -g $USER -m 0775 $PIDDIR
+	start-stop-daemon -S -c $USER -x $EXEC -p $PIDFILE -b -- $ARGS > /dev/null 2>&1
 	check_status
 }
 
 stop() {
-	echo -n "Stopping transmission-daemon ... "
-	killall $DAEMON 2> /dev/null
+	printf "Stopping %s ... " "$NAME"
+	if [ ! -r $PIDFILE ] ; then
+		status_fail
+		exit 1
+	fi
+	killall $NAME 2> /dev/null
+	wait_for_pid removed $PIDFILE
 	check_status
 }
 
