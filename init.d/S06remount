@@ -3,7 +3,7 @@
 # remount
 #
 
-EXEC=$(which mount)
+EXEC="$(which mount)"
 
 [ -x "$EXEC" ] || exit 0
 
