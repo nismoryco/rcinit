@@ -16,15 +16,20 @@ PIDFILE="/run/inadyn.pid"
 [ -x $EXEC ] || exit 0
 
 start() {
-	printf "Starting $NAME ... "
+	printf "Starting %s ... " "$NAME"
 	mkdir -p $CACHEDIR
 	start-stop-daemon -b -q -S -p $PIDFILE -x $EXEC -- $ARGS
 	check_status
 }
 
 stop() {
-	printf "Stopping $NAME ... "
+	printf "Stopping %s ... " "$NAME"
+	if [ ! -r "$PIDFILE" ] ; then
+		status_fail
+		exit 1
+	fi
 	start-stop-daemon -q -K -p $PIDFILE -x $EXEC
+	wait_for_pid removed $PIDFILE
 	check_status
 }
 
