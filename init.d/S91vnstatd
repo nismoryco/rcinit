@@ -7,7 +7,7 @@ NAME="vnstatd"
 EXEC=$(which $NAME)
 ARGS="--daemon"
 VARDIR="/var/lib/vnstat"
-PIDFILE="/var/run/vnstat/vnstat.pid"
+PIDFILE="/run/vnstat/vnstat.pid"
 
 # Exit if the package is not installed
 [ -x "$EXEC" ] || exit 1
@@ -15,15 +15,20 @@ PIDFILE="/var/run/vnstat/vnstat.pid"
 . /etc/init.d/functions
 
 start() {
-	printf "Starting $NAME ... "
+	printf "Starting %s ... " "$NAME"
 	mkdir -p $VARDIR
-	start-stop-daemon --start --quiet --pidfile $PIDFILE --exec $EXEC -- $ARGS > /dev/null 2>&1
+	start-stop-daemon -S -q -p $PIDFILE -x $EXEC -- $ARGS > /dev/null 2>&1
 	check_status
 }
 
 stop() {
-	printf "Stopping vnstatd ... "
-	start-stop-daemon --stop --quiet --pidfile $PIDFILE --name $NAME
+	printf "Stopping %s ... " "$NAME"
+	if [ ! -r "$PIDFILE" ] ; then
+		status_fail
+		exit 1
+	fi
+	start-stop-daemon -K -q -p $PIDFILE -n $NAME
+	wait_for_pid removed $PIDFILE
 	check_status
 }
 
