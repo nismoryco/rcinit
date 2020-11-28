@@ -3,8 +3,8 @@
 # retroflag
 #
 
-NAME=retroflag
-EXEC=$(which $NAME)
+NAME="retroflag"
+EXEC="$(which $NAME)"
 
 [ -x "$EXEC" ] || exit 0
 
