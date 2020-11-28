@@ -3,15 +3,16 @@
 # ifplugd
 #
 
-IFPLUGD=$(which ifplugd)
+NAME="ifplugd"
+IFPLUGD="$(which ifplugd)"
 [ -x "$IFPLUGD" ] || exit 0
 
-CFG=/etc/ifplugd/ifplugd.conf
+CFG="/etc/ifplugd/ifplugd.conf"
 
 . /etc/init.d/functions
 
 if [ `id -u` != "0" ] && [ "$1" = "start" -o "$1" = "stop" ] ; then
-	echo "You must be root to start, stop or restart ifplugd." >&2
+	echo "You must be root to start, stop or restart $NAME." >&2
 	exit 1
 fi
 
@@ -27,7 +28,7 @@ shift
 case "$VERB" in
 	start)
 		for IF in $INTERFACES ; do
-			printf "Starting ifplugd for %s ... " "${IF}"
+			printf "Starting %s for %s ... " "${NAME}" "${IF}"
 			A="`eval echo \$\{ARGS_${IF}\}`"
 			[ -z "$A" ] && A="$ARGS"
 			$IFPLUGD -i $IF $A > /dev/null 2>&1
@@ -41,7 +42,7 @@ case "$VERB" in
 		;;
 	stop)
 		for IF in $INTERFACES ; do
-			printf "Stopping ifplugd for %s ... " "${IF}"
+			printf "Stopping %s for %s ... " "${NAME}" "${IF}"
 			$IFPLUGD -k -i $IF > /dev/null 2>&1
 			check_status
 		done
@@ -53,14 +54,14 @@ case "$VERB" in
 		;;
 	suspend)
 		for IF in $INTERFACES ; do
-			printf "Suspending ifplugd for %s ... " "${IF}"
+			printf "Suspending %s for %s ... " "${NAME}" "${IF}"
 			$IFPLUGD -S -i $IF
 			check_status
 		done
 		;;
 	resume)
 		for IF in $INTERFACES ; do
-			printf "Resuming ifplugd for %s ... " "${IF}"
+			printf "Resuming %s for %s ... " "${IFPLUGD}" "${IF}"
 			$IFPLUGD -R -i $IF
 			check_status
 		done
