@@ -4,9 +4,9 @@
 #
 
 NAME="dnsmasq"
-EXEC=$(which $NAME)
-CONFFILE=/etc/dnsmasq.conf
-PIDFILE=/var/run/dnsmasq.pid
+EXEC="$(which $NAME)"
+CONFFILE="/etc/dnsmasq.conf"
+PIDFILE="/run/dnsmasq.pid"
 
 [ -x "$EXEC" ] || exit 0
 [ -f "$CONFFILE" ] || exit 0
@@ -16,14 +16,19 @@ PIDFILE=/var/run/dnsmasq.pid
 mkdir -p /var/lib/dnsmasq
 
 start() {
-	printf "Starting $NAME ... "
+	printf "Starting %s ... " "$NAME"
 	$EXEC > /dev/null 2>&1
 	check_status
 }
 
 stop() {
-	printf "Stopping $NAME ... "
+	printf "Stopping %s ... " "$NAME"
+	if [ ! -r "$PIDFILE" ]; then
+		status_fail
+		exit 1
+	fi
 	killall $NAME 2> /dev/null
+	wait_for_pid removed $PIDFILE
 	check_status
 }
 
