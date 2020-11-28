@@ -1,31 +1,39 @@
 #!/bin/sh
 #
-# apache
+# httpd
 #
 
-NAME="apache"
+NAME="httpd"
 EXEC=$(which apachectl)
+RUNDIR="/run/$NAME"
+PIDFILE="$RUNDIR/httpd.pid"
+LOGDIR="/var/log/$NAME"
 
 [ -x "$EXEC" ] || exit 0
 
 . /etc/init.d/functions
 
 start() {
-	printf "Starting $NAME ... "
-	mkdir -p /run/httpd
-	mkdir -p /var/log/httpd
+	printf "Starting %s ... " "$NAME"
+	mkdir -p $RUNDIR
+	mkdir -p $LOGDIR
 	$EXEC -k start > /dev/null 2>&1
 	check_status
 }
 
 stop() {
-	printf "Stopping $NAME ... "
+	printf "Stopping %s ... " "$NAME"
+	if [ ! -r "$PIDFILE" ]; then
+		status_fail
+		exit 1
+	fi
 	$EXEC -k stop > /dev/null 2>&1
+	wait_for_pid removed $PIDFILE
 	check_status
 }
 
 restart() {
-	printf "Restarting $NAME ... "
+	printf "Restarting %s ... " "$NAME"
 	$EXEC -k restart > /dev/null 2>&1
 	check_status
 }
