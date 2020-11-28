@@ -23,7 +23,12 @@ start() {
 
 stop() {
 	printf "Stopping $NAME ... "
+	if [ ! -r "$PIDFILE" ]; then
+		status_fail
+		exit 1
+	fi
 	start-stop-daemon -K -q -p $PIDFILE
+	wait_for_pid removed $PIDFILE
 	check_status
 }
 
