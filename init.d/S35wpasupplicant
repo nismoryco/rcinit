@@ -4,8 +4,8 @@
 #
 
 NAME="wpa_supplicant"
-EXEC=$(which $NAME)
-PIDFILE="/var/run/wpa_supplicant.pid"
+EXEC="$(which $NAME)"
+PIDFILE="/run/wpa_supplicant.pid"
 CONFFILE="/etc/wpa_supplicant.conf"
 LOGFILE="/var/log/wpa_supplicant.log"
 WAITDELAY=5
@@ -41,14 +41,19 @@ wait_for_iface() {
 
 start() {
 	wait_for_iface
-	printf "Starting $NAME ... "
+	printf "Starting %s ... " "$NAME"
 	start-stop-daemon -S -q -p "$PIDFILE" -x "$EXEC" -- $ARGS
 	check_status
 }
 
 stop() {
-	printf "Stopping $NAME ... "
+	printf "Stopping %s ... " "$NAME"
+	if [ ! -r "$PIDFILE" ]; then
+		status_fail
+		exit 1
+	fi
 	start-stop-daemon -K -q -p "$PIDFILE"
+	wait_for_pid removed "$PIDFILE"
 	check_status
 }
 
