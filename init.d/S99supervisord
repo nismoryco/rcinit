@@ -7,6 +7,7 @@ NAME="supervisord"
 EXEC=$(which $NAME)
 CONF="/etc/supervisor/supervisor.conf"
 ARGS="-c $CONF"
+PIDFILE="/run/supervisord.pid"
 
 [ -x "$EXEC" ] || exit 0
 
@@ -20,7 +21,12 @@ start() {
 
 stop() {
 	printf 'Stopping %s ... ' "$NAME"
+	if [ ! -r "$PIDFILE" ]; then
+		status_fail
+		exit 1
+	fi
 	killall	$NAME 2> /dev/null
+	wait_for_pid removed $PIDFILE
 	check_status
 }
 
