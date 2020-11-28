@@ -18,7 +18,7 @@ start() {
 			# check for read only file system
 			touch $SWAPFILE 2>/dev/null || exit 0
 
-			printf "Creating $NAME ... "
+			printf "Creating %s ... " "$NAME"
 			dd if=/dev/zero of=$SWAPFILE bs=1M count=$SWAPSIZE > /dev/null 2>&1 || (status_fail && exit 1)
 			chmod 0600 $SWAPFILE > /dev/null 2>&1 || (status_fail && exit 1)
 			mkswap $SWAPFILE > /dev/null 2>&1 || (status_fail && exit 1)
@@ -27,18 +27,18 @@ start() {
 			# check for read only file system
 			touch $SWAPFILE 2>/dev/null || exit 0
 		fi
-		printf "Activating $NAME ... "
+		printf "Activating %s ... " "$NAME"
 		swapon $SWAPFILE > /dev/null 2>&1
 		check_status
 	else
-		printf "Activating $NAME ... "
+		printf "Activating %s ... " "$NAME"
 		swapon -a > /dev/null 2>&1
 		check_status
 	fi
 }
 
 stop() {
-	printf "Deactivating $NAME ... "
+	printf "Deactivating %s ... " "$NAME"
 	swapoff -a > /dev/null 2>&1
 	check_status
 }
