@@ -5,39 +5,34 @@
 
 NAME="mosquitto"
 EXEC=$(which $NAME)
-ARGS="-c /etc/mosquitto/mosquitto.conf"
+ARGS="-c /etc/mosquitto/mosquitto.conf -d"
 USER="mosquitto"
-GROUP="nogroup"
-PIDFILE="/run/mosquitto.pid"
+GROUP="mosquitto"
+RUNDIR="/run/mosquitto"
+PIDFILE="$RUNDIR/mosquitto.pid"
+LOGDIR="/var/log/mosquitto"
 
 [ -x "$EXEC" ] || exit 0
-
 [ -r "/etc/default/$NAME" ] && . "/etc/default/$NAME"
 
 . /etc/init.d/functions
 
 start() {
-	printf "Starting $NAME ... "
-	# passwd file
-	touch /etc/mosquitto/passwd
-	chown $USER:$GROUP /etc/mosquitto/passwd
-	chmod 0600 /etc/mosquitto/passwd
-	# database directory
-	mkdir -p /var/lib/mosquitto
-	chown $USER:$GROUP /var/lib/mosquitto
-	# log file
-	touch /var/log/mosquitto.log
-	chmod 0600 /var/log/mosquitto.log
-	chown $USER:$GROUP /var/log/mosquitto.log
-	start-stop-daemon -S -q -b -m -p $PIDFILE \
-		--exec $EXEC -- $ARGS
+	printf "Starting %s ... " "$NAME"
+	install -d -o $USER -g $GROUP -m 0770 $LOGDIR
+	install -d -o $USER -g $GROUP -m 0775 $RUNDIR
+	start-stop-daemon -S -q -p $PIDFILE -x $EXEC -- $ARGS
 	check_status
 }
 
 stop() {
-	printf "Stopping $NAME ... "
-	start-stop-daemon -K --remove-pidfile -q \
-		-p $PIDFILE > /dev/null 2>&1
+	printf "Stopping %s ... " "$NAME"
+	if [ ! -r "$PIDFILE" ]; then
+		status_fail
+		exit 1
+	fi
+	start-stop-daemon -K -q -p $PIDFILE > /dev/null 2>&1
+	wait_for_pid removed $PIDFILE
 	check_status
 }
 
