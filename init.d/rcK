@@ -21,6 +21,8 @@ sleep 2
 echo "Sending SIGKILL to all processes ..."
 killall5 -9 -o 1
 
+sleep 2
+
 echo "Syncing filesystems ..."
 sync
 
