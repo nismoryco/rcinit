@@ -5,22 +5,22 @@
 
 NAME="motion"
 EXEC=$(which $NAME)
+PIDFILE="/run/motion.pid"
 CONF="/etc/motion/motion.conf"
 ARGS="-c $CONF"
-PIDFILE="/run/motion.pid"
 
 [ -x "$EXEC" ] || exit 0
 
 . /etc/init.d/functions
 
 start() {
-	printf 'Starting %s ... ' "$NAME"
+	printf "Starting %s ... " "$NAME"
 	$EXEC $ARGS > /dev/null 2>&1
 	check_status
 }
 
 stop() {
-	printf 'Stopping %s ... ' "$NAME"
+	printf "Stopping %s ... " "$NAME"
 	if [ ! -r "$PIDFILE" ]; then
 		status_fail
 		exit 1
