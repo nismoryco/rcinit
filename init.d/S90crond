@@ -6,6 +6,7 @@
 NAME="crond"
 EXEC=$(which $NAME)
 SPOOLDIR="/var/spool/cron/crontabs"
+PIDFILE="/run/crond.pid"
 
 [ -x "$EXEC" ] || exit 0
 
@@ -20,7 +21,12 @@ start() {
 
 stop() {
 	printf "Stopping $NAME ... "
+	if [ ! -r "$PIDFILE" ] ; then
+		status_fail
+		exit 1
+	fi
 	killall $NAME 2> /dev/null
+	wait_for_pid removed $PIDFILE
 	check_status
 }
 
