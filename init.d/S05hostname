@@ -4,7 +4,7 @@
 #
 
 NAME="hostname"
-EXEC=$(which $NAME)
+EXEC="$(which $NAME)"
 CONF="/etc/hostname"
 
 [ -x "$EXEC" ] || exit 0
@@ -13,7 +13,7 @@ CONF="/etc/hostname"
 . /etc/init.d/functions
 
 start() {
-	printf "Setting $NAME ..."
+	printf "Setting %s ..." "$NAME"
 	$EXEC -F $CONF
 	check_status
 }
