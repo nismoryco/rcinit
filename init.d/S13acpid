@@ -1,9 +1,9 @@
 #!/bin/sh
 
 NAME="acpid"
-EXEC=$(which $NAME)
+EXEC="$(which $NAME)"
 ARGS="-n"
-PIDFILE="/var/run/acpid.pid"
+PIDFILE="/run/acpid.pid"
 
 [ -x "$EXEC" ] || exit 0
 
