@@ -14,7 +14,7 @@ CONF="/etc/samba/smb.conf"
 [ -f "$CONF" ] || exit 0
 
 start() {
-	printf "Starting $NAME ... "
+	printf "Starting %s ... " "$NAME"
 	mkdir -p /var/cache/samba
 	mkdir -p /var/log/samba
 	mkdir -p /var/lock/subsys
@@ -25,7 +25,7 @@ start() {
 }
 
 stop() {
-	printf "Stopping $NAME ... "
+	printf "Stopping %s ... " "$NAME"
 	kill -9 `pidof $NAME` > /dev/null 2>&1
 	check_status
 	rm -f /var/run/samba/smbd.pid
