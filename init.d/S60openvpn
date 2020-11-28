@@ -1,19 +1,18 @@
-#!/bin/bash
+#!/bin/sh
 
-DAEMON="/usr/sbin/openvpn"
+DAEMON="$(which openvpn)"
 CONFIG_DIR="/etc/openvpn"
 DEFAULT_FILE="/etc/default/openvpn"
 
-test -x $DAEMON || exit 0
-test -d $CONFIG_DIR || exit 0
-
+[ -x "$DAEMON" ] || exit 0
+[ -d "$CONFIG_DIR" ] || exit 0
 [ -f "$DEFAULT_FILE" ] && . $DEFAULT_FILE
 [ "x$OPENVPN_DISABLE" = "xyes" ] && exit 0
 
 . /etc/init.d/functions
 
 start_vpn () {
-	printf "Starting openvpn $NAME ... "
+	printf "Starting openvpn %s ... " "$NAME"
 	start-stop-daemon -S -p /run/openvpn.$NAME.pid -x $DAEMON -- \
 		--daemon --writepid /run/openvpn.$NAME.pid           \
 		--config $CONFIG_DIR/$NAME.conf --cd $CONFIG_DIR     \
@@ -22,7 +21,7 @@ start_vpn () {
 }
 
 stop_vpn () {
-	printf "Stopping openvpn $NAME ... "
+	printf "Stopping openvpn %s ... " "$NAME"
 	start-stop-daemon -K -p /run/openvpn.$NAME.pid -x $DAEMON    \
 		> /dev/null 2>&1
 	check_status
@@ -64,7 +63,7 @@ stop)
 	;;
 # We only 'reload' for running VPNs. New ones will only start with 'start' or 'restart'.
 reload|force-reload)
-	for PIDFILE in `ls /var/run/openvpn.*.pid 2> /dev/null`; do
+	for PIDFILE in `ls /run/openvpn.*.pid 2> /dev/null`; do
 		NAME=`echo $PIDFILE | cut -c18-`
 		NAME=${NAME%%.pid}
 		# If openvpn if running under a different user than root we'll need to restart
