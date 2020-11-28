@@ -3,11 +3,12 @@
 # ssh
 #
 
+NAME="sshd"
 KEYGEN_BIN="/usr/bin/ssh-keygen"
 KEYGEN_ARGS="-A"
 SSHD_BIN="/usr/sbin/sshd"
 SSHD_ARGS=""
-PIDFILE="/var/run/sshd.pid"
+PIDFILE="/run/sshd.pid"
 ETC_DIR="/etc/ssh"
 KEY_FILES="ssh_host_dsa_key.pub ssh_host_ed25519_key ssh_host_rsa_key.pub ssh_host_ecdsa_key ssh_host_ed25519_key.pub ssh_host_dsa_key ssh_host_ecdsa_key.pub ssh_host_rsa_key"
 
@@ -32,21 +33,26 @@ start() {
 		check_status
 	fi
 
-	printf "Starting sshd ... "
+	printf "Starting %s ... " "$NAME"
 	$SSHD_BIN $SSHD_ARGS > /dev/null 2>&1
 	check_status
 }
 
 stop() {
-	printf "Stopping sshd ... "
-	killall sshd 2> /dev/null
+	printf "Stopping %s ... " "$NAME"
+	if [ ! -r "$PIDFILE" ]; then
+		status_fail
+		exit 1
+	fi
+	killall $NAME 2> /dev/null
+	wait_for_pid removed $PIDFILE
 	check_status
 }
 
 restart() {
-	printf "Restarting sshd ... "
-	PID="`cat ${PIDFILE} 2> /dev/null`"
-	if [ -n "${PID}" ] ; then
+	printf "Restarting %s ... " "$NAME"
+	PID="`cat $PIDFILE 2> /dev/null`"
+	if [ -n "$PID" ]; then
 		kill $PID
 	else
 		status_fail
