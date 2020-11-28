@@ -4,7 +4,7 @@
 #
 
 NAME="vmtoolsd"
-EXEC=$(which $NAME)
+EXEC="$(which $NAME)"
 PIDFILE="/run/vmtoolsd.pid"
 ARGS="-b $PIDFILE"
 
