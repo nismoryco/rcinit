@@ -4,7 +4,7 @@
 #
 
 NAME="psplash"
-EXEC=$(which $NAME)
+EXEC="$(which $NAME)"
 
 [ -x "$EXEC" ] || exit 0
 
