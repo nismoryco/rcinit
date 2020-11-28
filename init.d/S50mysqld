@@ -61,17 +61,18 @@ start() {
 
 stop() {
 	printf "Stopping mysql ... "
-	if [ -f "$MYSQL_PIDFILE" ]; then
-		kill `cat $MYSQL_PIDFILE` > /dev/null 2>&1
-		check_status
-	else
+	if [ ! -r "$MYSQL_PIDFILE" ]; then
 		status_fail
+		exit 1
 	fi
+	kill `cat $MYSQL_PIDFILE` > /dev/null 2>&1
+	wait_for_pid removed $MYSQL_PIDFILE
+	check_status
 }
 
 restart() {
 	stop
-	sleep 3
+	sleep 1
 	start
 }
 
