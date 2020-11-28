@@ -11,14 +11,14 @@ EXEC=$(which $NAME)
 . /etc/init.d/functions
 
 start() {
-	printf "Starting $NAME ... "
+	printf "Starting %s ... " "$NAME"
 	umask 077
 	$EXEC > /dev/null 2>&1
 	check_status
 }
 
 stop() {
-	printf "Stopping $NAME ... "
+	printf "Stopping %s ... " "$NAME"
 	killall $NAME 2> /dev/null
 	check_status
 }
