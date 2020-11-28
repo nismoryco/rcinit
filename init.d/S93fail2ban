@@ -6,7 +6,7 @@
 NAME="fail2ban"
 EXEC=$(which $NAME-server)
 VARDIR="/var/run/fail2ban"
-PIDFILE="/var/run/fail2ban/fail2ban.pid"
+PIDFILE="/run/fail2ban/fail2ban.pid"
 ARGS="-xf start"
 
 [ -x "$EXEC" ] || exit 0
@@ -14,15 +14,14 @@ ARGS="-xf start"
 . /etc/init.d/functions
 
 start() {
-	printf "Starting $NAME ... "
+	printf "Starting %s ... " "$NAME"
 	mkdir -p $VARDIR
-	start-stop-daemon -S -q -m -p $PIDFILE \
-		-b -x $EXEC -- $ARGS
+	start-stop-daemon -S -q -b -m -p $PIDFILE -x $EXEC -- $ARGS
 	check_status
 }
 
 stop() {
-	printf "Stopping $NAME ... "
+	printf "Stopping %s ... " "$NAME"
 	if [ ! -r "$PIDFILE" ]; then
 		status_fail
 		exit 1
