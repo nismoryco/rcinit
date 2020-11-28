@@ -26,7 +26,8 @@ stop() {
 		exit 1
 	fi
 	killall $NAME 2> /dev/null
-	wait_for_pid removed $PIDFILE
+	# Does not remove pid file
+	#wait_for_pid removed $PIDFILE
 	check_status
 }
 
