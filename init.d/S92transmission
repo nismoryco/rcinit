@@ -5,8 +5,8 @@
 
 NAME="transmission-daemon"
 EXEC="$(which $NAME)"
-PIDDIR="/run/transmission"
-PIDFILE="$PIDDIR/transmission-daemon.pid"
+RUNDIR="/run/transmission"
+PIDFILE="$RUNDIR/transmission-daemon.pid"
 CONFDIR="/var/lib/transmission/info"
 LOGDIR="/var/log/transmission"
 LOGFILE="$LOGDIR/transmission.log"
@@ -27,14 +27,14 @@ start() {
 		exit 1
 	fi
 	install -d -o $USER -g $USER -m 0770 $LOGDIR
-	install -d -o $USER -g $USER -m 0775 $PIDDIR
+	install -d -o $USER -g $USER -m 0775 $RUNDIR
 	start-stop-daemon -S -c $USER -x $EXEC -p $PIDFILE -b -- $ARGS > /dev/null 2>&1
 	check_status
 }
 
 stop() {
 	printf "Stopping %s ... " "$NAME"
-	if [ ! -r $PIDFILE ] ; then
+	if [ ! -r "$PIDFILE" ] ; then
 		status_fail
 		exit 1
 	fi
