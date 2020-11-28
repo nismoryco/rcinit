@@ -4,7 +4,7 @@
 #
 
 NAME="udevd"
-EXEC=$(which $NAME)
+EXEC="$(which $NAME)"
 CONF="/etc/udev/udev.conf"
 ARGS="-d"
 
