@@ -6,7 +6,7 @@
 NAME="rngd"
 EXEC=$(which $NAME)
 ARGS="--quiet"
-PID_FILE="/var/run/$NAME.pid"
+PID_FILE="/run/$NAME.pid"
 
 [ -x "$EXEC" ] || exit 0
 
