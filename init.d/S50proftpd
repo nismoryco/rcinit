@@ -1,21 +1,23 @@
 #!/bin/sh
 
-DAEMON="proftpd"
-EXEC=$(which $DAEMON)
+NAME="proftpd"
+EXEC="$(which $NAME)"
+PIDFILE="/var/proftpd/proftpd.pid"
 
 [ -x "$EXEC" ] || exit 0
 
 . /etc/init.d/functions
 
 start() {
-	printf 'Starting %s ... ' "$DAEMON"
+	printf "Starting %s ... " "$NAME"
 	$EXEC > /dev/null 2>&1
 	check_status
 }
 
 stop() {
-	printf 'Stopping %s ... ' "$DAEMON"
-	killall $DAEMON 2> /dev/null
+	printf "Stopping %s ... " "$NAME"
+	killall $NAME 2> /dev/null
+	wait_for_pid removed "$PIDFILE"
 	check_status
 }
 
