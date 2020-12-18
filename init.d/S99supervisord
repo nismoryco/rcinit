@@ -4,7 +4,7 @@
 #
 
 NAME="supervisord"
-EXEC=$(which $NAME)
+EXEC="$(which $NAME)"
 PIDFILE="/run/supervisord.pid"
 CONF="/etc/supervisor/supervisor.conf"
 ARGS="-c $CONF"
@@ -25,8 +25,8 @@ stop() {
 		status_fail
 		exit 1
 	fi
-	killall	$NAME 2> /dev/null
-	wait_for_pid removed $PIDFILE
+	killall $NAME 2> /dev/null
+	wait_for_pid removed "$PIDFILE"
 	check_status
 }
 
