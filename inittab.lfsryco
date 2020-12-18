@@ -17,10 +17,10 @@
 ::sysinit:/etc/init.d/rcS
 
 # Put a getty on the console
-tty1::respawn:/sbin/agetty -J -L tty1 linux
+tty1::respawn:/usr/sbin/agetty -J -L tty1 linux
 
 # Stuff to do for the 3-finger salute
-::ctrlaltdel:/sbin/reboot
+::ctrlaltdel:/usr/sbin/reboot
 
 # Stuff to do before rebooting
 ::shutdown:/etc/init.d/rcK
