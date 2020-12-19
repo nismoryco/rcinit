@@ -5,7 +5,7 @@
 
 NAME=gpsd
 EXEC=$(which $NAME)
-DEVICES="/dev/ttyS1"
+DEVICE="/dev/ttyS1"
 PIDFILE=/run/$NAME.pid
 SOCKFILE=/run/$NAME.sock
 
@@ -17,7 +17,8 @@ SOCKFILE=/run/$NAME.sock
 
 start() {
 	printf "Starting $NAME ... "
-	start-stop-daemon -S -q -p $PIDFILE --exec $EXEC -- -P $PIDFILE $DEVICES -n -F $SOCKFILE
+	ln -sf $DEVICE /dev/gps0
+	start-stop-daemon -S -q -p $PIDFILE --exec $EXEC -- -P $PIDFILE -n -F $SOCKFILE /dev/gps0
 	check_status
 }
 
