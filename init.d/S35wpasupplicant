@@ -7,7 +7,6 @@ NAME="wpa_supplicant"
 EXEC="$(which $NAME)"
 PIDFILE="/run/wpa_supplicant.pid"
 CONFFILE="/etc/wpa_supplicant.conf"
-LOGFILE="/var/log/wpa_supplicant.log"
 WAITDELAY=5
 
 [ -x "$EXEC" ] || exit 0
@@ -15,7 +14,7 @@ WAITDELAY=5
 
 IFACE="wlan0"
 [ -r "/etc/default/$NAME" ] && . "/etc/default/$NAME"
-[ -z "$ARGS" ] && ARGS="-Dnl80211 -i$IFACE -c$CONFFILE -f$LOGFILE -P$PIDFILE -B"
+[ -z "$ARGS" ] && ARGS="-Dnl80211 -i$IFACE -c$CONFFILE -P$PIDFILE -s -B"
 
 . /etc/init.d/functions
 
@@ -78,4 +77,3 @@ case "$1" in
 	exit 1
 	;;
 esac
-
