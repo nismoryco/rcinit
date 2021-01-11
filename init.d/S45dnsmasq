@@ -5,8 +5,14 @@
 
 NAME="dnsmasq"
 EXEC="$(which $NAME)"
-CONFFILE="/etc/dnsmasq.conf"
-PIDFILE="/run/dnsmasq.pid"
+CONFFILE="/etc/$NAME.conf"
+LOGDIR="/var/log/$NAME"
+LOGFILE="$LOGDIR/$NAME.log"
+RUNDIR="/run/$NAME"
+PIDFILE="$RUNDIR/$NAME.pid"
+USER="dnsmasq"
+GROUP="dnsmasq"
+ARGS="--pid-file=$PIDFILE --user=$USER --group=$GROUP --log-facility=$LOGFILE"
 
 [ -x "$EXEC" ] || exit 0
 [ -f "$CONFFILE" ] || exit 0
@@ -17,7 +23,9 @@ mkdir -p /var/lib/dnsmasq
 
 start() {
 	printf "Starting %s ... " "$NAME"
-	$EXEC > /dev/null 2>&1
+	install -d -o $USER -g $GROUP -m 0755 $RUNDIR
+	install -d -o $USER -g root -m 0750 $LOGDIR
+	$EXEC $ARGS > /dev/null 2>&1
 	check_status
 }
 
