@@ -9,6 +9,8 @@ EXEC=$(which dbus-daemon)
 
 . /etc/init.d/functions
 
+check_root
+
 # Create needed directories.
 [ -d /var/run/dbus ] || mkdir -p /var/run/dbus
 [ -d /var/lock/subsys ] || mkdir -p /var/lock/subsys
@@ -41,12 +43,12 @@ case "$1" in
 	start
 	;;
   stop)
-        stop
-        ;;
+	stop
+	;;
   restart)
 	restart
 	;;
   *)
-        echo "Usage: $0 {start|stop|restart}" >&2
-        ;;
+	echo "Usage: $0 {start|stop|restart}" >&2
+	;;
 esac

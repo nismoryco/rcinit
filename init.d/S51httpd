@@ -13,10 +13,12 @@ LOGDIR="/var/log/$NAME"
 
 . /etc/init.d/functions
 
+check_root
+
 start() {
 	printf "Starting %s ... " "$NAME"
-	mkdir -p $RUNDIR
-	mkdir -p $LOGDIR
+	install -d -m 0770 $LOGDIR
+	install -d -m 0775 $RUNDIR
 	$EXEC -k start > /dev/null 2>&1
 	check_status
 }

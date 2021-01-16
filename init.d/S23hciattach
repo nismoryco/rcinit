@@ -9,6 +9,8 @@ EXEC=$(which hciattach)
 
 . /etc/init.d/functions
 
+check_root
+
 start() {
 	printf "Initializing bluetooth adapter ..."
 	$EXEC /dev/ttyAMA0 bcm43xx 921600 noflow - > /dev/null 2>&1

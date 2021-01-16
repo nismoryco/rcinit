@@ -17,6 +17,8 @@ SNTP_KEY_CACHE="/tmp/kod"
 
 . /etc/init.d/functions
 
+check_root
+
 start() {
 	printf 'Starting %s ... ' "$NAME"
 	# Create key cache file to prevents warning that file is missing

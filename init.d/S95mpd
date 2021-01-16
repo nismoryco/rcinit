@@ -6,22 +6,31 @@
 NAME="mpd"
 EXEC=$(which $NAME)
 CONF="/etc/mpd.conf"
-PIDFILE="/var/run/mpd/mpd.pid"
+RUNDIR="/run/mpd"
+PIDFILE="$RUNDIR/mpd.pid"
 
 [ -x "$EXEC" ] || exit 0
 [ -f "$CONF" ] || exit 0
 
-./etc/init.d/functions
+. /etc/init.d/functions
+
+check_root
 
 start() {
 	printf "Starting $NAME ... "
+	install -d -m 0775 $RUNDIR
 	start-stop-daemon --start --quiet --background --exec $EXEC
 	check_status
 }
 
 stop() {
 	printf "Stopping $NAME ... "
+	if [ ! -r "$PIDFILE" ]; then
+		status_fail
+		exit 1
+	fi
 	start-stop-daemon --stop --quiet --pidfile $PIDFILE
+	wait_for_pid removed $PIDFILE
 	check_status
 }
 
@@ -42,6 +51,6 @@ case "$1" in
 	restart
 	;;
   *)
-	echo "Usage: $0 {start|stop|restart}"
+	echo "Usage: $0 {start|stop|restart}" >&2
 	exit 1
 esac

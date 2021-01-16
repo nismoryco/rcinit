@@ -8,6 +8,8 @@ PIDFILE="/var/proftpd/proftpd.pid"
 
 . /etc/init.d/functions
 
+check_root
+
 start() {
 	printf "Starting %s ... " "$NAME"
 	$EXEC > /dev/null 2>&1

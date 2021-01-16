@@ -2,7 +2,9 @@
 
 NAME="ntpd"
 EXEC=$(which $NAME)
-ARGS="-g -l /var/log/ntpd.log -p /run/ntpd.pid"
+LOGFILE="/var/log/ntpd.log"
+PIDFILE="/run/ntpd.pid"
+ARGS="-g -l $LOGFILE -p $PIDFILE"
 
 [ -x "$EXEC" ] || exit 0
 
@@ -10,18 +12,25 @@ ARGS="-g -l /var/log/ntpd.log -p /run/ntpd.pid"
 
 . /etc/init.d/functions
 
+check_root
+
 # Create ntp directory
 mkdir -p /var/lib/ntp 2> /dev/null
 
 start() {
-	printf 'Starting %s ... ' "$NAME"
+	printf "Starting %s ... " "$NAME"
 	$EXEC $ARGS > /dev/null 2>&1
 	check_status
 }
 
 stop() {
-	printf 'Stopping %s ... ' "$NAME"
+	printf "Stopping %s ... " "$NAME"
+	if [ ! -r "$PIDFILE" ]; then
+		status_fail
+		exit 1
+	fi
 	killall $NAME 2> /dev/null
+	wait_for_pid removed $PIDFILE
 	check_status
 }
 

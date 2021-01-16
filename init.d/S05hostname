@@ -12,6 +12,8 @@ CONF="/etc/hostname"
 
 . /etc/init.d/functions
 
+check_root
+
 start() {
 	printf "Setting %s ..." "$NAME"
 	$EXEC -F $CONF

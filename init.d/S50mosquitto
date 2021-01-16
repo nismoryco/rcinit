@@ -17,6 +17,8 @@ LOGDIR="/var/log/mosquitto"
 
 . /etc/init.d/functions
 
+check_root
+
 start() {
 	printf "Starting %s ... " "$NAME"
 	install -d -o $USER -g $GROUP -m 0770 $LOGDIR

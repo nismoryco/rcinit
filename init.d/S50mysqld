@@ -20,6 +20,8 @@ WAIT_DELAY=10
 
 . /etc/init.d/functions
 
+check_root
+
 wait_for_ready() {
 	while [ $WAIT_DELAY -gt 0 ]; do
 		if "$MYSQL_BIN/mysqladmin" ping > /dev/null 2>&1; then

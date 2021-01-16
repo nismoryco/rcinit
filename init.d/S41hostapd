@@ -19,6 +19,8 @@ WAIT_DELAY=5
 
 . /etc/init.d/functions
 
+check_root
+
 wait_for_iface() {
 	# In case we have a slow-to-appear interface (e.g. eth-over-USB),
 	# and we need to configure it, wait until it appears, but not too

@@ -18,6 +18,7 @@ start() {
 		while [ ${WAIT_DELAY} -gt 0 ]; do
 			if [ -e "$WAIT_DEVICE" ]; then
 				status_ok
+				echo
 				exit 0
 			fi
 			sleep 1

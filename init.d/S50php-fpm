@@ -11,6 +11,8 @@ php_opts="--fpm-config $php_fpm_CONF --pid $php_fpm_PID"
 
 . /etc/init.d/functions
 
+check_root
+
 start() {
 	printf "Starting %s ... " "$NAME"
 	$php_fpm_BIN --daemonize $php_opts

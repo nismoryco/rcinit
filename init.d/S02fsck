@@ -11,6 +11,8 @@ ARGS="-A -P -T -y"
 
 . /etc/init.d/functions
 
+check_root
+
 start() {
 	$EXEC $ARGS
 	RETVAL=$?

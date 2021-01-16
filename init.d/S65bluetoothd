@@ -12,14 +12,16 @@ PID_FILE="/var/run/$NAME.pid"
 
 . /etc/init.d/functions
 
+check_root
+
 start() {
-	printf "Starting $NAME ... "
+	printf "Starting %s ... " "$NAME"
 	start-stop-daemon -b -S -q -m -p $PID_FILE --exec $EXEC -- $ARGS
 	check_status
 }
 
 stop() {
-	printf "Stopping $NAME ... "
+	printf "Stopping %s ... " "$NAME"
 	start-stop-daemon -K -q -p $PID_FILE
 	check_status
 }

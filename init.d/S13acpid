@@ -11,6 +11,8 @@ PIDFILE="/run/acpid.pid"
 
 . /etc/init.d/functions
 
+check_root
+
 start() {
 	printf "Starting $NAME ... "
 	$EXEC $ARGS > /dev/null 2>&1
@@ -40,6 +42,6 @@ case "$1" in
 	restart
 	;;
   *)
-	echo "Usage: $0 {start|stop|restart}"
+	echo "Usage: $0 {start|stop|restart}" >&2
 	;;
 esac

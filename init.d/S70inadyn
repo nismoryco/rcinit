@@ -3,8 +3,6 @@
 # inadyn
 #
 
-. /etc/init.d/functions
-
 NAME="inadyn"
 EXEC=$(which $NAME)
 CACHEDIR="/var/lib/inadyn"
@@ -14,6 +12,10 @@ PIDFILE="/run/inadyn.pid"
 
 [ -f $CONF ] || exit 0
 [ -x $EXEC ] || exit 0
+
+. /etc/init.d/functions
+
+check_root
 
 start() {
 	printf "Starting %s ... " "$NAME"

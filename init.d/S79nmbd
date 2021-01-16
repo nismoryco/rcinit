@@ -7,18 +7,25 @@ NAME="nmbd"
 EXEC=$(which $NAME)
 ARGS="-D"
 CONF="/etc/samba/smb.conf"
+CACHEDIR="/var/cache/samba"
+LOGDIR="/var/log/samba"
+LOCKDIR="/run/lock/subsys"
+RUNDIR="/run/samba"
+PIDFILE="$RUNDIR/nmbd.pid"
 
 [ -x "$EXEC" ] || exit 0
 [ -f "$CONF" ] || exit 0
 
 . /etc/init.d/functions
 
+check_root
+
 start() {
 	printf "Starting %s ... " "$NAME"
-	mkdir -p /var/cache/samba
-	mkdir -p /var/log/samba
-	mkdir -p /var/lock/subsys
-	mkdir -p /var/run/samba
+	install -d -m 0755 $CACHEDIR
+	install -d -m 0750 $LOGDIR
+	install -d -m 0775 $LOCKDIR
+	install -d -m 0775 $RUNDIR
 	$EXEC $ARGS > /dev/null 2>&1
 	check_status
 }
@@ -27,7 +34,7 @@ stop() {
 	printf "Stopping %s ... " "$NAME"
 	kill -9 `pidof $NAME` > /dev/null 2>&1
 	check_status
-	rm -f /var/run/samba/nmbd.pid
+	rm -f "$PIDFILE"
 }
 
 restart() {

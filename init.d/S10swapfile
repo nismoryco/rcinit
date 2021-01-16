@@ -12,6 +12,8 @@ SWAPSIZE=1000
 
 . /etc/init.d/functions
 
+check_root
+
 start() {
 	if [ "$SWAPFILE_ENABLED" -eq 1 ]; then
 		if [ ! -f "$SWAPFILE" ]; then

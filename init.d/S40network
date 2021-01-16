@@ -11,6 +11,8 @@ IFDOWN=$(which ifdown)
 
 . /etc/init.d/functions
 
+check_root
+
 # Debian ifupdown needs the /run/network lock directory
 mkdir -p /run/network
 

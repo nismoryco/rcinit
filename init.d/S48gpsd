@@ -15,6 +15,8 @@ SOCKFILE=/run/$NAME.sock
 
 . /etc/init.d/functions
 
+check_root
+
 start() {
 	printf "Starting $NAME ... "
 	ln -sf $DEVICE /dev/gps0
@@ -24,8 +26,7 @@ start() {
 
 stop() {
 	printf "Stopping $NAME ... "
-	start-stop-daemon -K --remove-pidfile -q \
-		-p $PIDFILE
+	start-stop-daemon -K --remove-pidfile -q -p $PIDFILE
 	check_status
 }
 
@@ -46,6 +47,6 @@ case "$1" in
 	restart
 	;;
   *)
-	echo "Usage: $0 {start|stop|restart}"
+	echo "Usage: $0 {start|stop|restart}" >&2
 	exit 1
 esac

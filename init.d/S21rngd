@@ -14,6 +14,8 @@ PID_FILE="/run/$NAME.pid"
 
 . /etc/init.d/functions
 
+check_root
+
 start() {
 	printf "Starting $NAME ... "
 	start-stop-daemon -S -q -x "$EXEC" -- $ARGS > /dev/null 2>&1

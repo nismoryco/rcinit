@@ -11,11 +11,13 @@ DEFAULT_FILE="/etc/default/openvpn"
 
 . /etc/init.d/functions
 
+check_root
+
 start_vpn () {
 	printf "Starting openvpn %s ... " "$NAME"
 	start-stop-daemon -S -p /run/openvpn.$NAME.pid -x $DAEMON -- \
-		--daemon --writepid /run/openvpn.$NAME.pid           \
-		--config $CONFIG_DIR/$NAME.conf --cd $CONFIG_DIR     \
+		--daemon --writepid /run/openvpn.$NAME.pid               \
+		--config $CONFIG_DIR/$NAME.conf --cd $CONFIG_DIR         \
 		> /dev/null 2>&1
 	check_status
 }
@@ -51,7 +53,7 @@ stop)
 			stop_vpn
 		done
 	else
-		if test -e /var/run/openvpn.$2.pid ; then
+		if test -e /run/openvpn.$2.pid ; then
 			PIDFILE=`ls /run/openvpn.$2.pid 2> /dev/null`
 			NAME=`echo $PIDFILE | cut -c14-`
 			NAME=${NAME%%.pid}

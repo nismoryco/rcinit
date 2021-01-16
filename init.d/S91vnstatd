@@ -14,9 +14,11 @@ PIDFILE="/run/vnstat/vnstat.pid"
 
 . /etc/init.d/functions
 
+check_root
+
 start() {
 	printf "Starting %s ... " "$NAME"
-	mkdir -p $VARDIR
+	install -d -m 0755 $VARDIR
 	start-stop-daemon -S -q -p $PIDFILE -x $EXEC -- $ARGS > /dev/null 2>&1
 	check_status
 }
@@ -49,6 +51,6 @@ case "$1" in
 	restart
 	;;
   *)
-	echo "Usage: $0 {start|stop|restart}"
+	echo "Usage: $0 {start|stop|restart}" >&2
 	exit 1
 esac

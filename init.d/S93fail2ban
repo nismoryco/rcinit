@@ -5,17 +5,19 @@
 
 NAME="fail2ban"
 EXEC=$(which $NAME-server)
-VARDIR="/var/run/fail2ban"
-PIDFILE="/run/fail2ban/fail2ban.pid"
+RUNDIR="/run/fail2ban"
+PIDFILE="$RUNDIR/fail2ban.pid"
 ARGS="-xf start"
 
 [ -x "$EXEC" ] || exit 0
 
 . /etc/init.d/functions
 
+check_root
+
 start() {
 	printf "Starting %s ... " "$NAME"
-	mkdir -p $VARDIR
+	install -d -m 0775 $RUNDIR
 	start-stop-daemon -S -q -b -m -p $PIDFILE -x $EXEC -- $ARGS
 	check_status
 }
@@ -48,7 +50,7 @@ case "$1" in
 	restart
 	;;
   *)
-	echo "Usage: $0 {start|stop|restart}"
+	echo "Usage: $0 {start|stop|restart}" >&2
 	exit 1
 	;;
 esac

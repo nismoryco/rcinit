@@ -24,6 +24,8 @@ fi
 
 . /etc/init.d/functions
 
+check_root
+
 start() {
 	# Start daemons.
 	printf "Starting nfs statd ... "

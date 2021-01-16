@@ -9,6 +9,8 @@ HWCLOCK_EPOCH_SEC="1460678400"
 
 . /etc/init.d/functions
 
+check_root
+
 start() {
 	if [ -e $HWCLOCK_FILE ]; then
 		SAVED=$(cat $HWCLOCK_FILE)

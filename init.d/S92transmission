@@ -20,6 +20,8 @@ ARGS="-f --pid-file $PIDFILE --config-dir $CONFDIR --logfile $LOGFILE"
 
 . /etc/init.d/functions
 
+check_root
+
 start() {
 	printf "Starting %s ... " "$NAME"
 	if [ ! -f "$CONFDIR/settings.json" ]; then
@@ -60,7 +62,7 @@ case "$1" in
 	restart
 	;;
   *)
-	echo "Usage: $0 {start|stop|restart}"
+	echo "Usage: $0 {start|stop|restart}" >&2
 	exit 1
 esac
 

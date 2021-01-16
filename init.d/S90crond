@@ -12,9 +12,11 @@ PIDFILE="/run/crond.pid"
 
 . /etc/init.d/functions
 
+check_root
+
 start() {
 	printf "Starting $NAME ... "
-	mkdir -p $SPOOLDIR
+	install -d -m 0700 $SPOOLDIR
 	$EXEC > /dev/null 2>&1
 	check_status
 }
@@ -26,9 +28,9 @@ stop() {
 		exit 1
 	fi
 	killall $NAME 2> /dev/null
-	# Does not remove pid file
-	#wait_for_pid removed $PIDFILE
 	check_status
+	# crond not remove pid file
+	rm -f "$PIDFILE"
 }
 
 restart() {
@@ -48,6 +50,6 @@ case "$1" in
 	restart
 	;;
   *)
-	echo "Usage: $0 {start|stop|restart}"
+	echo "Usage: $0 {start|stop|restart}" >&2
 	exit 1
 esac

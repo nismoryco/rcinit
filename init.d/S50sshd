@@ -4,9 +4,9 @@
 #
 
 NAME="sshd"
-KEYGEN_BIN="/usr/bin/ssh-keygen"
+KEYGEN_BIN="$(which ssh-keygen)"
 KEYGEN_ARGS="-A"
-SSHD_BIN="/usr/sbin/sshd"
+SSHD_BIN="$(which sshd)"
 SSHD_ARGS=""
 PIDFILE="/run/sshd.pid"
 ETC_DIR="/etc/ssh"
@@ -16,6 +16,8 @@ KEY_FILES="ssh_host_dsa_key.pub ssh_host_ed25519_key ssh_host_rsa_key.pub ssh_ho
 [ -x "$SSHD_BIN" ] || exit 0
 
 . /etc/init.d/functions
+
+check_root
 
 umask 0002
 

@@ -11,6 +11,8 @@ CONF="/etc/sysctl.conf"
 
 . /etc/init.d/functions
 
+check_root
+
 start() {
 	printf "Configuring kernel parameters ..."
 	$EXEC -p $CONF > /dev/null 2>&1

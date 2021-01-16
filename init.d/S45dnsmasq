@@ -15,9 +15,12 @@ GROUP="dnsmasq"
 ARGS="--pid-file=$PIDFILE --user=$USER --group=$GROUP --log-facility=$LOGFILE"
 
 [ -x "$EXEC" ] || exit 0
+[ -r "/etc/default/$NAME" ] && . /etc/default/$NAME
 [ -f "$CONFFILE" ] || exit 0
 
 . /etc/init.d/functions
+
+check_root
 
 mkdir -p /var/lib/dnsmasq
 

@@ -2,23 +2,25 @@
 
 NAME="ntpd"
 EXEC=$(which $NAME)
+NTPD_SERVER="pool.ntp.org"
+ARGS="-p $NTPD_SERVER"
 
 [ -x "$EXEC" ] || exit 0
-
-NTPD_SERVER="pool.ntp.org"
 
 [ -r "/etc/default/$NAME" ] && . "/etc/default/$NAME"
 
 . /etc/init.d/functions
 
+check_root
+
 start() {
-	printf 'Starting %s ... ' "$NAME"
-	$EXEC -p $NTPD_SERVER > /dev/null 2>&1
+	printf "Starting %s ... " "$NAME"
+	$EXEC $ARGS > /dev/null 2>&1
 	check_status
 }
 
 stop() {
-	printf 'Stopping %s ... ' "$NAME"
+	printf "Stopping %s ... " "$NAME"
 	killall	$NAME 2> /dev/null
 	check_status
 }

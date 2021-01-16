@@ -13,6 +13,8 @@ egrep -qv '^($|#)' $MODS || exit 0
 
 . /etc/init.d/functions
 
+check_root
+
 start() {
 	FAIL="no"
 	printf "Loading kernel modules ... "

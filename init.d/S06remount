@@ -11,6 +11,8 @@ EXEC="$(which mount)"
 
 [ -r "/etc/default/rootmount" ] && . "/etc/default/rootmount"
 
+check_root
+
 start() {
 	printf "Remounting rootfs read/write ..."
 	if [ -z "$MOUNTOPTS" ]; then

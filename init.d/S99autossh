@@ -10,6 +10,8 @@ EXEC=$(which $NAME)
 
 . /etc/init.d/functions
 
+check_root
+
 start() {
 	:
 }

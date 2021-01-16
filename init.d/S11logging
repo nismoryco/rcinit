@@ -14,6 +14,8 @@ PIDFILE="/run/syslogd.pid"
 
 . /etc/init.d/functions
 
+check_root
+
 start() {
 	printf "Starting %s ... " "$NAME"
 	$EXEC $ARGS > /dev/null 2>&1

@@ -19,6 +19,8 @@ GROUP="redis"
 
 . /etc/init.d/functions
 
+check_root
+
 start() {
 	printf "Starting $NAME ... "
 	install -d -o $USER -g $GROUP -m 0770 $LOGDIR

@@ -3,22 +3,25 @@
 # cupsd
 #
 
-CUPS_BIN="/usr/sbin/cupsd"
-CUPS_ARGS=""
+NAME="cupsd"
+EXEC="$(which $NAME)"
+ARGS=""
 
-[ -x "$CUPS_BIN" ] || exit 0
+[ -x "$EXEC" ] || exit 0
 
 . /etc/init.d/functions
 
+check_root
+
 start() {
-	printf "Starting cupsd ... "
-	$CUPS_BIN $CUPS_ARGS
+	printf "Starting %s ... " "$NAME"
+	$EXEC $ARGS > /dev/null 2>&1
 	check_status
 }
 
 stop() {
-	printf "Stopping cupsd ... "
-	killall cupsd 2> /dev/null
+	printf "Stopping %s ... " "$NAME"
+	killall $NAME 2> /dev/null
 	check_status
 }
 

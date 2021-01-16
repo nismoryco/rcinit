@@ -5,6 +5,8 @@
 
 . /etc/init.d/functions
 
+check_root
+
 # not running in Xen dom0 or domU
 if ! test -d /proc/xen ; then
 	exit 0

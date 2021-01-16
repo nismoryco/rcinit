@@ -13,6 +13,8 @@ touch "$SEED" 2>/dev/null || exit 0
 
 . /etc/init.d/functions
 
+check_root
+
 start() {
 	printf "Initializing random number generator ... "
 	# Load and then save 512 bytes, which is the size of the entropy pool
