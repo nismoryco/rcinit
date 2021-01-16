@@ -30,6 +30,7 @@ mkdir -p /dev/shm
 mount -t tmpfs -o mode=0777 tmpfs /dev/shm
 mount -t tmpfs -o mode=1777 tmpfs /tmp
 mount -t tmpfs -o mode=0755,nosuid,nodev tmpfs /run
+mkdir -p /run/lock
 
 # Start all init scripts in /etc/init.d
 # executing them in numerical order.
