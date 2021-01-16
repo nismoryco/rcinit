@@ -54,3 +54,11 @@ wait_for_pid()
 	done
 	return 1
 }
+
+check_root()
+{
+	if [ "$EUID" -ne 0 ]; then
+		echo "You must be root for this" >&2
+		exit 1
+	fi
+}
