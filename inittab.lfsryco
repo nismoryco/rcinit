@@ -10,17 +10,11 @@
 #
 # id        == tty to run on, or empty for /dev/console
 # runlevels == ignored
-# action    == one of sysinit, respawn, askfirst, wait, and once
+# action    == one of respawn, askfirst, wait, and once
 # process   == program to run
-
-# Startup the system
-::sysinit:/etc/init.d/rcS
 
 # Put a getty on the console
 tty1::respawn:/usr/sbin/agetty -J -L tty1 linux
-
-# Stuff to do for the 3-finger salute
-::ctrlaltdel:/usr/sbin/reboot
-
-# Stuff to do before rebooting
-::shutdown:/etc/init.d/rcK
+tty2::askfirst:/usr/sbin/agetty -J -L tty2 linux
+tty3::askfirst:/usr/sbin/agetty -J -L tty3 linux
+tty4::askfirst:/usr/sbin/agetty -J -L tty4 linux
