@@ -2,9 +2,7 @@
 
 export PATH=@PATH@
 
-echo
-echo
-echo "The system is shutting down ..."
+wall -n "The system is shutting down ..."
 
 # Stop all init scripts in /etc/init.d
 # executing them in reversed numerical order.
@@ -13,23 +11,9 @@ for i in $(ls -r /etc/init.d/S??*) ;do
 	$i stop
 done
 
-echo "Sending SIGTERM to all processes ..."
-killall5 -15 -o 1
-
-sleep 2
-
-echo "Sending SIGKILL to all processes ..."
-killall5 -9 -o 1
-
-sleep 2
-
-echo "Syncing filesystems ..."
-sync
-
-# turn off back light on rpi touchscreen
+# Turn off back light on rpi touchscreen
 if [ -f /sys/class/backlight/rpi_backlight/bl_power ]; then
 	echo 1 > /sys/class/backlight/rpi_backlight/bl_power
 fi
 
-echo "Unmounting filesystems ..."
-umount -a -r
+sync
