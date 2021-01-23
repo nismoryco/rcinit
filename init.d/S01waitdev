@@ -22,7 +22,7 @@ start() {
 				exit 0
 			fi
 			sleep 1
-			: $((IF_WAIT_DELAY -= 1))
+			: $((WAIT_DELAY -= 1))
 		done
 		status_fail
 		exit 1
