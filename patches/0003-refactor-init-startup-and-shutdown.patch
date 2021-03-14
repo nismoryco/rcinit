@@ -1,0 +1,194 @@
+From 5332747252e7af5495e3db5ba131d0ba53a00c4d Mon Sep 17 00:00:00 2001
+From: Ryan Coe <bluemrp9@gmail.com>
+Date: Sat, 16 Jan 2021 15:50:33 -0800
+Subject: [PATCH 3/3] refactor init startup and shutdown
+
+Signed-off-by: Ryan Coe <bluemrp9@gmail.com>
+---
+ init/init.c | 78 ++++++++++++++++++++++++++++++++---------------------
+ 1 file changed, 47 insertions(+), 31 deletions(-)
+
+diff --git a/init/init.c b/init/init.c
+index 486bc2054039095d05255e0209ab06210d35fc87..9a0093413f8cea6074ffab31c6bd076adc3ba737 100644
+--- a/init/init.c
++++ b/init/init.c
+@@ -5,6 +5,7 @@
+  * Copyright (C) 1995, 1996 by Bruce Perens <bruce@pixar.com>.
+  * Copyright (C) 1999-2004 by Erik Andersen <andersen@codepoet.org>
+  * Adjusted by so many folks, it's impossible to keep track.
++ * Copyright (C) 2021 by Ryan Coe <bluemrp9@gmail.com>
+  *
+  * Licensed under GPLv2 or later, see file LICENSE in this source tree.
+  */
+@@ -151,20 +152,23 @@
+ 
+ #define CONSOLE_NAME_SIZE 32
+ 
+-/* Default sysinit script. */
+-#ifndef INIT_SCRIPT
+-# define INIT_SCRIPT  "/etc/init.d/rcS"
++/* Default sysinit startup script. */
++#ifndef STARTUP_SCRIPT
++# define STARTUP_SCRIPT  "/etc/init.d/rcS"
++#endif
++
++/* Default sysinit shutdown script. */
++#ifndef SHUTDOWN_SCRIPT
++# define SHUTDOWN_SCRIPT  "/etc/init.d/rcK"
+ #endif
+ 
+ /* Each type of actions can appear many times. They will be
+  * handled in order. RESTART is an exception, only 1st is used.
+  */
+-/* Start these actions first and wait for completion */
+-#define SYSINIT     0x01
+ /* Start these after SYSINIT and wait for completion */
+-#define WAIT        0x02
++#define WAIT        0x01
+ /* Start these after WAIT and *dont* wait for completion */
+-#define ONCE        0x04
++#define ONCE        0x02
+ /*
+  * NB: while SYSINIT/WAIT/ONCE are being processed,
+  * SIGHUP ("reread /etc/inittab") will be processed only after
+@@ -172,9 +176,11 @@
+  * it will not be run, since init is already "past SYSINIT stage".
+  */
+ /* Start these after ONCE are started, restart on exit */
+-#define RESPAWN     0x08
++#define RESPAWN     0x04
+ /* Like RESPAWN, but wait for <Enter> to be pressed on tty */
+-#define ASKFIRST    0x10
++#define ASKFIRST    0x08
++/* Start these actions first and wait for completion */
++#define SYSINIT     0x10
+ /*
+  * Start these on SIGINT, and wait for completion.
+  * Then go back to respawning RESPAWN and ASKFIRST actions.
+@@ -187,14 +193,15 @@
+  * (initiated by SIGUSR1/SIGTERM/SIGUSR2).
+  * Wait for completion before proceeding.
+  */
+-#define SHUTDOWN    0x40
++#define SHUTDOWN1   0x40
++#define SHUTDOWN2   0x80
+ /*
+  * exec() on SIGQUIT. SHUTDOWN actions are started and waited for,
+  * then all processes are killed, then init exec's 1st RESTART action,
+  * replacing itself by it. If no RESTART action specified,
+  * SIGQUIT has no effect.
+  */
+-#define RESTART     0x80
++#define RESTART     0x100
+ 
+ /* A linked list of init_actions, to be read from inittab */
+ struct init_action {
+@@ -599,9 +606,9 @@ static void run_actions(int action_type)
+ 		if (!(a->action_type & action_type))
+ 			continue;
+ 
+-		if (a->action_type & (SYSINIT | WAIT | ONCE | CTRLALTDEL | SHUTDOWN)) {
++		if (a->action_type & (WAIT | ONCE | SYSINIT | CTRLALTDEL | SHUTDOWN1 | SHUTDOWN2)) {
+ 			pid_t pid = run(a);
+-			if (a->action_type & (SYSINIT | WAIT | CTRLALTDEL | SHUTDOWN))
++			if (a->action_type & (WAIT | SYSINIT | CTRLALTDEL | SHUTDOWN1 | SHUTDOWN2))
+ 				waitfor(pid);
+ 		}
+ 		if (a->action_type & (RESPAWN | ASKFIRST)) {
+@@ -662,7 +669,7 @@ static void new_init_action(uint8_t action_type, const char *command, const char
+ 
+ /* NOTE that if CONFIG_FEATURE_USE_INITTAB is NOT defined,
+  * then parse_inittab() simply adds in some default
+- * actions (i.e., runs INIT_SCRIPT and then starts a pair
++ * actions (i.e., runs STARTUP_SCRIPT and then starts a pair
+  * of "askfirst" shells).  If CONFIG_FEATURE_USE_INITTAB
+  * _is_ defined, but /etc/inittab is missing, this
+  * results in the same set of default behaviors.
+@@ -677,25 +684,28 @@ static void parse_inittab(void)
+ #endif
+ 	{
+ 		/* No inittab file - set up some default behavior */
+-		/* Sysinit */
+-		new_init_action(SYSINIT, INIT_SCRIPT, "");
+ 		/* Askfirst shell on tty1-4 */
+ 		new_init_action(ASKFIRST, bb_default_login_shell, "");
+ //TODO: VC_1 instead of ""? "" is console -> ctty problems -> angry users
+ 		new_init_action(ASKFIRST, bb_default_login_shell, VC_2);
+ 		new_init_action(ASKFIRST, bb_default_login_shell, VC_3);
+ 		new_init_action(ASKFIRST, bb_default_login_shell, VC_4);
+-		/* Reboot on Ctrl-Alt-Del */
+-		new_init_action(CTRLALTDEL, "reboot", "");
+-		/* Umount all filesystems on halt/reboot */
+-		new_init_action(SHUTDOWN, "umount -a -r", "");
+-		/* Swapoff on halt/reboot */
+-		new_init_action(SHUTDOWN, "swapoff -a", "");
+ 		/* Restart init when a QUIT is received */
+ 		new_init_action(RESTART, "init", "");
+ 		return;
+ 	}
+ 
++	/* Startup scripts */
++	new_init_action(SYSINIT, STARTUP_SCRIPT, "");
++	/* Reboot on Ctrl-Alt-Del */
++	new_init_action(CTRLALTDEL, "reboot", "");
++	/* Shutdown scripts */
++	new_init_action(SHUTDOWN1, SHUTDOWN_SCRIPT, "");
++	/* Swapoff on halt/reboot */
++	new_init_action(SHUTDOWN2, "swapoff -a", "");
++	/* Umount all filesystems on halt/reboot */
++	new_init_action(SHUTDOWN2, "umount -a -r", "");
++
+ #if ENABLE_FEATURE_USE_INITTAB
+ 	/* optional_tty:ignored_runlevel:action:command
+ 	 * Delims are not to be collapsed and need exactly 4 tokens
+@@ -703,9 +713,9 @@ static void parse_inittab(void)
+ 	while (config_read(parser, token, 4, 0, "#:",
+ 				PARSE_NORMAL & ~(PARSE_TRIM | PARSE_COLLAPSE))) {
+ 		/* order must correspond to SYSINIT..RESTART constants */
++		/* "sysinit\0""ctrlaltdel\0""shutdown\0""restart\0" */
+ 		static const char actions[] ALIGN1 =
+-			"sysinit\0""wait\0""once\0""respawn\0""askfirst\0"
+-			"ctrlaltdel\0""shutdown\0""restart\0";
++			"wait\0""once\0""respawn\0""askfirst\0";
+ 		int action;
+ 		char *tty = token[0];
+ 
+@@ -757,22 +767,28 @@ static void pause_and_low_level_reboot(unsigned magic)
+ 
+ static void run_shutdown_and_kill_processes(void)
+ {
+-	/* Run everything to be run at "shutdown".  This is done _prior_
++	/* Run everything to be run at "shutdown1".  This is done _prior_
+ 	 * to killing everything, in case people wish to use scripts to
+ 	 * shut things down gracefully... */
+-	run_actions(SHUTDOWN);
+-
+-	/*message(L_CONSOLE | L_LOG, "The system is going down NOW!");*/
++	run_actions(SHUTDOWN1);
+ 
+ 	/* Send signals to every process _except_ pid 1 */
+ 	kill(-1, SIGTERM);
+-	/*message(L_CONSOLE, "Sent SIG%s to all processes", "TERM");*/
++	message(L_CONSOLE, "Sent SIG%s to all processes ...", "TERM");
++
++	sleep(2);
+ 	sync();
+-	sleep1();
+ 
++	/* Send signals to every process _except_ pid 1 */
+ 	kill(-1, SIGKILL);
+-	/*message(L_CONSOLE, "Sent SIG%s to all processes", "KILL");*/
++	message(L_CONSOLE, "Sent SIG%s to all processes ...", "KILL");
++
++	sleep(2);
+ 	sync();
++
++	/* Run everything to be run at "shutdown2". */
++	run_actions(SHUTDOWN2);
++	message(L_CONSOLE, "Reached target shutdown");
+ 	/*sleep1(); - callers take care about making a pause */
+ }
+ 
+-- 
+2.25.1
+
