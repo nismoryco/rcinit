@@ -17,11 +17,9 @@ start() {
 }
 
 stop() {
-	if ps ax 2> /dev/null | grep -q $NAME ; then
-		printf "Stopping $NAME ... "
-		killall $NAME 2> /dev/null
-		check_status
-	fi
+	printf "Stopping $NAME ... "
+	killall $NAME 2> /dev/null
+	status_ok
 }
 
 case "$1" in
