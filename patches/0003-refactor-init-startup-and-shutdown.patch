@@ -1,15 +1,15 @@
-From 5332747252e7af5495e3db5ba131d0ba53a00c4d Mon Sep 17 00:00:00 2001
+From 80ffa9ab6da296a7594f57cf047189b5e5201a93 Mon Sep 17 00:00:00 2001
 From: Ryan Coe <bluemrp9@gmail.com>
-Date: Sat, 16 Jan 2021 15:50:33 -0800
+Date: Thu, 1 Jul 2021 20:32:38 -0700
 Subject: [PATCH 3/3] refactor init startup and shutdown
 
 Signed-off-by: Ryan Coe <bluemrp9@gmail.com>
 ---
- init/init.c | 78 ++++++++++++++++++++++++++++++++---------------------
- 1 file changed, 47 insertions(+), 31 deletions(-)
+ init/init.c | 80 ++++++++++++++++++++++++++++++++---------------------
+ 1 file changed, 49 insertions(+), 31 deletions(-)
 
 diff --git a/init/init.c b/init/init.c
-index 486bc2054039095d05255e0209ab06210d35fc87..9a0093413f8cea6074ffab31c6bd076adc3ba737 100644
+index 486bc2054039095d05255e0209ab06210d35fc87..2aa2baa72a6fa47314e147ac3fa382ea2367e592 100644
 --- a/init/init.c
 +++ b/init/init.c
 @@ -5,6 +5,7 @@
@@ -104,7 +104,7 @@ index 486bc2054039095d05255e0209ab06210d35fc87..9a0093413f8cea6074ffab31c6bd076a
   * of "askfirst" shells).  If CONFIG_FEATURE_USE_INITTAB
   * _is_ defined, but /etc/inittab is missing, this
   * results in the same set of default behaviors.
-@@ -677,25 +684,28 @@ static void parse_inittab(void)
+@@ -677,25 +684,30 @@ static void parse_inittab(void)
  #endif
  	{
  		/* No inittab file - set up some default behavior */
@@ -137,11 +137,13 @@ index 486bc2054039095d05255e0209ab06210d35fc87..9a0093413f8cea6074ffab31c6bd076a
 +	new_init_action(SHUTDOWN2, "swapoff -a", "");
 +	/* Umount all filesystems on halt/reboot */
 +	new_init_action(SHUTDOWN2, "umount -a -r", "");
++	/* Make sure / is mounted read only */
++	new_init_action(SHUTDOWN2, "mount -o remount,ro /", "");
 +
  #if ENABLE_FEATURE_USE_INITTAB
  	/* optional_tty:ignored_runlevel:action:command
  	 * Delims are not to be collapsed and need exactly 4 tokens
-@@ -703,9 +713,9 @@ static void parse_inittab(void)
+@@ -703,9 +715,9 @@ static void parse_inittab(void)
  	while (config_read(parser, token, 4, 0, "#:",
  				PARSE_NORMAL & ~(PARSE_TRIM | PARSE_COLLAPSE))) {
  		/* order must correspond to SYSINIT..RESTART constants */
@@ -153,7 +155,7 @@ index 486bc2054039095d05255e0209ab06210d35fc87..9a0093413f8cea6074ffab31c6bd076a
  		int action;
  		char *tty = token[0];
  
-@@ -757,22 +767,28 @@ static void pause_and_low_level_reboot(unsigned magic)
+@@ -757,22 +769,28 @@ static void pause_and_low_level_reboot(unsigned magic)
  
  static void run_shutdown_and_kill_processes(void)
  {
@@ -190,5 +192,5 @@ index 486bc2054039095d05255e0209ab06210d35fc87..9a0093413f8cea6074ffab31c6bd076a
  }
  
 -- 
-2.25.1
+2.32.0
 
