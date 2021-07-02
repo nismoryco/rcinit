@@ -18,7 +18,7 @@ echo '| |__| _|\__ \___|   / || / _/ _ \'
 echo '|____|_| |___/   |_|_\\_, \__\___/'
 echo '                      |__/        '
 echo
-echo "$PRETTY_NAME"
+echo "$PRETTY_NAME ($BUILD_ID)"
 echo
 
 # Basic mounts
