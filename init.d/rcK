@@ -2,6 +2,7 @@
 
 export PATH=@PATH@
 
+echo
 wall -n "The system is shutting down ..."
 
 # Stop all init scripts in /etc/init.d
