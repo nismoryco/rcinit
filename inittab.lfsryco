@@ -14,7 +14,7 @@
 # process   == program to run
 
 # Put a getty on the console
-tty1::respawn:/usr/sbin/agetty -J -L tty1 linux
-tty2::askfirst:/usr/sbin/agetty -J -L tty2 linux
-tty3::askfirst:/usr/sbin/agetty -J -L tty3 linux
-tty4::askfirst:/usr/sbin/agetty -J -L tty4 linux
+tty1::respawn:/usr/sbin/agetty --nohints -J -L tty1 linux
+tty2::askfirst:/usr/sbin/agetty --nohints -J -L tty2 linux
+tty3::askfirst:/usr/sbin/agetty --nohints -J -L tty3 linux
+tty4::askfirst:/usr/sbin/agetty --nohints -J -L tty4 linux
