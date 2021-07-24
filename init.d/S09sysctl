@@ -4,10 +4,8 @@
 #
 
 EXEC="$(which sysctl)"
-CONF="/etc/sysctl.conf"
 
 [ -x "$EXEC" ] || exit 0
-[ -r "$CONF" ] || exit 0
 
 . /etc/init.d/functions
 
@@ -15,7 +13,7 @@ check_root
 
 start() {
 	printf "Configuring kernel parameters ..."
-	$EXEC -p $CONF > /dev/null 2>&1
+	$EXEC --system > /dev/null 2>&1
 	check_status
 }
 
