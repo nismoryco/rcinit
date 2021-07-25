@@ -22,7 +22,7 @@ log_stop()
 status_ok()
 {
 	if [ -z "$CROND" ] ; then
-		log_message "\\033[65G\\033[1;32mOK\\033[0;39m\n"
+		log_message "\\033[72G\\033[1;30m[ \\033[1;32mOK\\033[1;30m ]\\033[0;39m\n"
 	else
 		echo -n -e "  OK\n"
 	fi
@@ -31,7 +31,7 @@ status_ok()
 status_fail()
 {
 	if [ -z "$CROND" ] ; then
-		log_message "\\033[65G\\033[1;31mFAIL\\033[0;39m\n"
+		log_message "\\033[72G\\033[1;30m[\\033[1;31mFAIL\\033[1;30m]\\033[0;39m\n"
 	else
 		echo -n -e "  FAIL\n"
 	fi
