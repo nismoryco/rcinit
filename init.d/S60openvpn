@@ -14,7 +14,7 @@ DEFAULT_FILE="/etc/default/openvpn"
 check_root
 
 start_vpn () {
-	printf "Starting openvpn %s ... " "$NAME"
+	log_message "Starting $DAEMON $NAME ... "
 	start-stop-daemon -S -p /run/openvpn.$NAME.pid -x $DAEMON -- \
 		--daemon --writepid /run/openvpn.$NAME.pid               \
 		--config $CONFIG_DIR/$NAME.conf --cd $CONFIG_DIR         \
@@ -23,7 +23,7 @@ start_vpn () {
 }
 
 stop_vpn () {
-	printf "Stopping openvpn %s ... " "$NAME"
+	log_message "Stopping $DAEMON $NAME ... "
 	start-stop-daemon -K -p /run/openvpn.$NAME.pid -x $DAEMON    \
 		> /dev/null 2>&1
 	check_status
@@ -41,7 +41,7 @@ start)
 			NAME=$2
 			start_vpn
 		else
-			printf "No such VPN: $2\n"
+			log_message "No such VPN: $2\n"
 		fi
 	fi
 	;;
@@ -59,7 +59,7 @@ stop)
 			NAME=${NAME%%.pid}
 			stop_vpn
 		else
-			printf "No such VPN: $2\n"
+			log_message "No such VPN: $2\n"
 		fi
 	fi
 	;;
@@ -74,7 +74,7 @@ reload|force-reload)
 			sleep 1
 			start_vpn
 		else
-			printf "Reloading openvpn $NAME ... "
+			log_message "Reloading $DAEMON $NAME ... "
 			kill -HUP `cat $PIDFILE` || true
 			check_status
 		fi

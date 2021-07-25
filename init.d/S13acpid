@@ -14,13 +14,13 @@ PIDFILE="/run/acpid.pid"
 check_root
 
 start() {
-	printf "Starting $NAME ... "
+	log_start $NAME
 	$EXEC $ARGS > /dev/null 2>&1
 	check_status
 }
 
 stop() {
-	printf "Stopping $NAME ... "
+	log_stop $NAME
 	killall $NAME 2> /dev/null
 	check_status
 }

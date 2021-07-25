@@ -1,6 +1,7 @@
 #!/bin/sh
 
 [ -r /etc/os-release ] && . /etc/os-release
+. /etc/init.d/functions
 
 # Set path used for startup scripts
 export PATH=@PATH@
@@ -10,16 +11,6 @@ dmesg -n 1
 
 # Set user mask for startup scripts
 umask 0002
-
-# Welcome message
-echo ' _    ___ ___     ___             '
-echo '| |  | __/ __|___| _ \_  _ __ ___ '
-echo '| |__| _|\__ \___|   / || / _/ _ \'
-echo '|____|_| |___/   |_|_\\_, \__\___/'
-echo '                      |__/        '
-echo
-echo "$PRETTY_NAME ($BUILD_ID)"
-echo
 
 # Basic mounts
 mount -t proc proc /proc
@@ -31,6 +22,15 @@ mount -t tmpfs -o mode=0777 tmpfs /dev/shm
 mount -t tmpfs -o mode=1777 tmpfs /tmp
 mount -t tmpfs -o mode=0755,nosuid,nodev tmpfs /run
 mkdir -p /run/lock
+touch /run/bootlog
+
+# Welcome message
+log_message ' _    ___ ___     ___             \n'
+log_message '| |  | __/ __|___| _ \\_  _ __ ___ \n'
+log_message '| |__| _|\\__ \\___|   / || / _/ _ \\\n'
+log_message '|____|_| |___/   |_|_\\\\_, \\__\\___/\n'
+log_message '                      |__/        \n'
+log_message "\n$PRETTY_NAME ($BUILD_ID)\n\n"
 
 # Start all init scripts in /etc/init.d
 # executing them in numerical order.
@@ -40,3 +40,4 @@ for i in /etc/init.d/S??* ;do
 done
 
 [ -x "/etc/rc.local" ] && /etc/rc.local
+mv /run/bootlog /var/log/bootlog

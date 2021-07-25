@@ -3,10 +3,6 @@
 # remount
 #
 
-EXEC="$(which mount)"
-
-[ -x "$EXEC" ] || exit 0
-
 . /etc/init.d/functions
 
 [ -r "/etc/default/rootmount" ] && . "/etc/default/rootmount"
@@ -14,11 +10,11 @@ EXEC="$(which mount)"
 check_root
 
 start() {
-	printf "Remounting rootfs read/write ..."
+	log_message "Remounting rootfs read/write ... "
 	if [ -z "$MOUNTOPTS" ]; then
-		$EXEC -o remount,rw /
+		mount -o remount,rw /
 	else
-		$EXEC -o remount,rw,$MOUNTOPTS /
+		mount -o remount,rw,$MOUNTOPTS /
 	fi
 	check_status
 }

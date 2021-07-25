@@ -18,14 +18,14 @@ PIDFILE="/run/inadyn.pid"
 check_root
 
 start() {
-	printf "Starting %s ... " "$NAME"
-	mkdir -p $CACHEDIR
+	log_start $NAME
+	install -d -m 0775 $CACHEDIR
 	start-stop-daemon -b -q -S -p $PIDFILE -x $EXEC -- $ARGS
 	check_status
 }
 
 stop() {
-	printf "Stopping %s ... " "$NAME"
+	log_stop $NAME
 	if [ ! -r "$PIDFILE" ] ; then
 		status_fail
 		exit 1

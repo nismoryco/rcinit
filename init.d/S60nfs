@@ -27,41 +27,41 @@ fi
 check_root
 
 start() {
-	# Start daemons.
-	printf "Starting nfs statd ... "
+	# Start daemons
+	log_message "Starting nfs statd ... "
 	rpc.statd
 	check_status
 	touch /var/lock/subsys/nfslock
 
-	printf "Starting nfs services ... "
+	log_message "Starting nfs services ... "
 	/usr/sbin/exportfs -r
 	check_status
 
-	printf "Starting nfs daemon ... "
+	log_message "Starting nfs daemon ... "
 	rpc.nfsd ${NR_THREADS}
 	check_status
 
-	printf "Starting nfs mountd ... "
+	log_message "Starting nfs mountd ... "
 	rpc.mountd
 	check_status
 	touch /var/lock/subsys/nfs
 }
 
 stop() {
-	# Stop daemons.
-	printf "Shutting down nfs mountd ... "
+	# Stop daemons
+	log_message "Shutting down nfs mountd ... "
 	killall -q rpc.mountd 2> /dev/null
 	check_status
 
-	printf "Shutting down nfs daemon ... "
+	log_message "Shutting down nfs daemon ... "
 	killall -q nfsd 2> /dev/null
 	check_status
 
-	printf "Shutting down nfs services ... "
+	log_message "Shutting down nfs services ... "
 	/usr/sbin/exportfs -au
 	check_status
 
-	printf "Stopping nfs statd ... "
+	log_message "Stopping nfs statd ... "
 	killall -q rpc.statd 2> /dev/null
 	check_status
 	rm -f /var/lock/subsys/nfs

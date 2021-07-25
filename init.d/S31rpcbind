@@ -13,14 +13,14 @@ EXEC=$(which $NAME)
 check_root
 
 start() {
-	printf "Starting %s ... " "$NAME"
+	log_start $NAME
 	umask 077
 	$EXEC > /dev/null 2>&1
 	check_status
 }
 
 stop() {
-	printf "Stopping %s ... " "$NAME"
+	log_stop $NAME
 	killall $NAME 2> /dev/null
 	check_status
 }

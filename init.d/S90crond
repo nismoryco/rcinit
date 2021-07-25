@@ -15,21 +15,21 @@ PIDFILE="/run/crond.pid"
 check_root
 
 start() {
-	printf "Starting $NAME ... "
+	log_start $NAME
 	install -d -m 0700 $SPOOLDIR
 	$EXEC > /dev/null 2>&1
 	check_status
 }
 
 stop() {
-	printf "Stopping $NAME ... "
+	log_stop $NAME
 	if [ ! -r "$PIDFILE" ] ; then
 		status_fail
 		exit 1
 	fi
 	killall $NAME 2> /dev/null
 	check_status
-	# crond not remove pid file
+	# crond does not remove pid file
 	rm -f "$PIDFILE"
 }
 

@@ -14,13 +14,13 @@ ARGS=""
 check_root
 
 start() {
-	printf "Starting %s ... " "$NAME"
+	log_message "Starting $NAME ... "
 	$EXEC $ARGS > /dev/null 2>&1
 	check_status
 }
 
 stop() {
-	printf "Stopping %s ... " "$NAME"
+	log_message "Stopping $NAME ... "
 	killall $NAME 2> /dev/null
 	check_status
 }

@@ -3,12 +3,11 @@
 # swapfile
 #
 
-NAME="swap"
 SWAPFILE_ENABLED=1
 SWAPFILE="/var/swapfile"
 SWAPSIZE=1000
 
-[ -r "/etc/default/$NAME" ] && . "/etc/default/$NAME"
+[ -r "/etc/default/swap" ] && . "/etc/default/swap"
 
 . /etc/init.d/functions
 
@@ -20,7 +19,7 @@ start() {
 			# check for read only file system
 			touch $SWAPFILE 2>/dev/null || exit 0
 
-			printf "Creating %s ... " "$NAME"
+			log_message "Creating swapfile ... "
 			dd if=/dev/zero of=$SWAPFILE bs=1M count=$SWAPSIZE > /dev/null 2>&1 || (status_fail && exit 1)
 			chmod 0600 $SWAPFILE > /dev/null 2>&1 || (status_fail && exit 1)
 			mkswap $SWAPFILE > /dev/null 2>&1 || (status_fail && exit 1)
@@ -29,18 +28,18 @@ start() {
 			# check for read only file system
 			touch $SWAPFILE 2>/dev/null || exit 0
 		fi
-		printf "Activating %s ... " "$NAME"
+		log_message "Activating swapfile ... "
 		swapon $SWAPFILE > /dev/null 2>&1
 		check_status
 	else
-		printf "Activating %s ... " "$NAME"
+		log_message "Activating swapfile ... "
 		swapon -a > /dev/null 2>&1
 		check_status
 	fi
 }
 
 stop() {
-	printf "Deactivating %s ... " "$NAME"
+	log_message "Deactivating swapfile ... "
 	swapoff -a > /dev/null 2>&1
 	check_status
 }
@@ -50,8 +49,8 @@ restart() {
 	sleep 1
 	if [ "$SWAPFILE_ENABLED" -eq 1 ]; then
 		rm -f $SWAPFILE
+		start
 	fi
-	start
 }
 
 case "$1" in

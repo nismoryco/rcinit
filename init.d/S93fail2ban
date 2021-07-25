@@ -16,14 +16,14 @@ ARGS="-xf start"
 check_root
 
 start() {
-	printf "Starting %s ... " "$NAME"
+	log_start $NAME
 	install -d -m 0775 $RUNDIR
 	start-stop-daemon -S -q -b -m -p $PIDFILE -x $EXEC -- $ARGS
 	check_status
 }
 
 stop() {
-	printf "Stopping %s ... " "$NAME"
+	log_stop $NAME
 	if [ ! -r "$PIDFILE" ]; then
 		status_fail
 		exit 1

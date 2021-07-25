@@ -3,20 +3,13 @@
 # hostname
 #
 
-NAME="hostname"
-EXEC="$(which $NAME)"
-CONF="/etc/hostname"
-
-[ -x "$EXEC" ] || exit 0
-[ -r "$CONF" ] || exit 0
-
 . /etc/init.d/functions
 
 check_root
 
 start() {
-	printf "Setting %s ..." "$NAME"
-	$EXEC -F $CONF
+	log_message "Setting hostname ... "
+	hostname -F /etc/hostname > /dev/null 2>&1
 	check_status
 }
 

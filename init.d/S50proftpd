@@ -11,13 +11,13 @@ PIDFILE="/var/proftpd/proftpd.pid"
 check_root
 
 start() {
-	printf "Starting %s ... " "$NAME"
+	log_start $NAME
 	$EXEC > /dev/null 2>&1
 	check_status
 }
 
 stop() {
-	printf "Stopping %s ... " "$NAME"
+	log_stop $NAME
 	killall $NAME 2> /dev/null
 	wait_for_pid removed "$PIDFILE"
 	check_status

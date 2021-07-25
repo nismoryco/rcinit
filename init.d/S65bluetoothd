@@ -15,13 +15,13 @@ PID_FILE="/var/run/$NAME.pid"
 check_root
 
 start() {
-	printf "Starting %s ... " "$NAME"
+	log_message "Starting $NAME ... "
 	start-stop-daemon -b -S -q -m -p $PID_FILE --exec $EXEC -- $ARGS
 	check_status
 }
 
 stop() {
-	printf "Stopping %s ... " "$NAME"
+	log_message "Stopping $NAME ... "
 	start-stop-daemon -K -q -p $PID_FILE
 	check_status
 }

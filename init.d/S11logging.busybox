@@ -5,11 +5,11 @@
 
 SYSLOGD_BIN=$(which syslogd)
 SYSLOGD_ARGS="-n -s 500 -b 0"
-SYSLOGD_PID="/var/run/syslogd.pid"
+SYSLOGD_PID="/run/syslogd.pid"
 
 KLOGD_BIN=$(which klogd)
 KLOGD_ARGS="-n"
-KLOGD_PID="/var/run/klogd.pid"
+KLOGD_PID="/run/klogd.pid"
 
 [ -x "$SYSLOGD_BIN" ] || exit 0
 [ -x "$KLOGD_BIN" ] || exit 0
@@ -18,20 +18,22 @@ KLOGD_PID="/var/run/klogd.pid"
 
 . /etc/init.d/functions
 
+check_root
+
 start() {
-	printf "Starting syslogd ... "
+	log_start syslogd
 	start-stop-daemon -b -S -q -m -p "$SYSLOGD_PID" --exec "$SYSLOGD_BIN" -- $SYSLOGD_ARGS
 	check_status
-	printf "Starting klogd ... "
+	log_start klogd
 	start-stop-daemon -b -S -q -m -p "$KLOGD_PID" --exec "$KLOGD_BIN" -- $KLOGD_ARGS
 	check_status
 }
 
 stop() {
-	printf "Stopping klogd ... "
+	log_stop klogd
 	start-stop-daemon -K -q -p "$KLOGD_PID"
 	check_status
-	printf "Stopping syslogd ... "
+	log_stop syslogd
 	start-stop-daemon -K -q -p "$SYSLOGD_PID"
 	check_status
 }
@@ -53,6 +55,6 @@ case "$1" in
 	restart
 	;;
   *)
-	echo "Usage: $0 {start|stop|restart}"
+	echo "Usage: $0 {start|stop|restart}" >&2
 	exit 1
 esac

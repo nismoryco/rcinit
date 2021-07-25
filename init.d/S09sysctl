@@ -12,7 +12,7 @@ EXEC="$(which sysctl)"
 check_root
 
 start() {
-	printf "Configuring kernel parameters ..."
+	log_message "Configuring kernel parameters ... "
 	$EXEC --system > /dev/null 2>&1
 	check_status
 }

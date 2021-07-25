@@ -35,7 +35,7 @@ wait_for_ready() {
 
 start() {
 	if [ "`ls -1 $MYSQL_LIB 2> /dev/null | wc -l`" = "0" ] ; then
-		printf "Creating mysql system tables ... "
+		log_message "Creating $NAME system tables ... "
 		$MYSQL_BIN/mysql_install_db --basedir=$MYSQL_PREFIX \
 			--user=$MYSQL_USER --datadir=$MYSQL_LIB > /dev/null 2>&1
 		if [ $? -ne 0 ]; then
@@ -54,7 +54,7 @@ start() {
 
 	# We don't use start-stop-daemon because mysqld has its own
 	# wrapper script.
-	printf "Starting mysql ... "
+	log_start $NAME
 	$MYSQL_BIN/mysqld_safe --pid-file=$MYSQL_PIDFILE --user=$MYSQL_USER \
 		--log-error=$MYSQL_LOGFILE > /dev/null 2>&1 &
 	wait_for_ready
@@ -62,7 +62,7 @@ start() {
 }
 
 stop() {
-	printf "Stopping mysql ... "
+	log_stop $NAME
 	if [ ! -r "$MYSQL_PIDFILE" ]; then
 		status_fail
 		exit 1

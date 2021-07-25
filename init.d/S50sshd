@@ -30,18 +30,18 @@ start() {
 
 	# Create any missing keys
 	if [ "$KEYGEN" = "yes" ]; then
-		printf "Creating ssh keys ... "
+		log_message "Creating ssh keys ... "
 		$KEYGEN_BIN $KEYGEN_ARGS > /dev/null 2>&1
 		check_status
 	fi
 
-	printf "Starting %s ... " "$NAME"
+	log_start $NAME
 	$SSHD_BIN $SSHD_ARGS > /dev/null 2>&1
 	check_status
 }
 
 stop() {
-	printf "Stopping %s ... " "$NAME"
+	log_stop $NAME
 	if [ ! -r "$PIDFILE" ]; then
 		status_fail
 		exit 1
@@ -52,7 +52,7 @@ stop() {
 }
 
 restart() {
-	printf "Restarting %s ... " "$NAME"
+	log_message "Restarting $NAME ... "
 	PID="`cat $PIDFILE 2> /dev/null`"
 	if [ -n "$PID" ]; then
 		kill $PID

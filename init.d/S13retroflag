@@ -13,13 +13,13 @@ EXEC="$(which $NAME)"
 check_root
 
 start() {
-	printf "Starting $NAME ... "
+	log_start $NAME
 	start-stop-daemon -S -q -x $EXEC -b --
 	check_status
 }
 
 stop() {
-	printf "Stopping $NAME ... "
+	log_stop $NAME
 	start-stop-daemon -K -q -n $NAME
 	check_status
 }

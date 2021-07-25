@@ -20,7 +20,7 @@ LOGDIR="/var/log/mosquitto"
 check_root
 
 start() {
-	printf "Starting %s ... " "$NAME"
+	log_start $NAME
 	install -d -o $USER -g $GROUP -m 0770 $LOGDIR
 	install -d -o $USER -g $GROUP -m 0775 $RUNDIR
 	start-stop-daemon -S -q -p $PIDFILE -x $EXEC -- $ARGS
@@ -28,7 +28,7 @@ start() {
 }
 
 stop() {
-	printf "Stopping %s ... " "$NAME"
+	log_stop $NAME
 	if [ ! -r "$PIDFILE" ]; then
 		status_fail
 		exit 1

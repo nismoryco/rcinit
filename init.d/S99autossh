@@ -17,7 +17,7 @@ start() {
 }
 
 stop() {
-	printf "Stopping $NAME ... "
+	log_stop $NAME
 	killall $NAME 2> /dev/null
 	status_ok
 }

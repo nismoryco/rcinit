@@ -14,13 +14,13 @@ ARGS="-p $NTPD_SERVER"
 check_root
 
 start() {
-	printf "Starting %s ... " "$NAME"
+	log_start $NAME
 	$EXEC $ARGS > /dev/null 2>&1
 	check_status
 }
 
 stop() {
-	printf "Stopping %s ... " "$NAME"
+	log_stop $NAME
 	killall	$NAME 2> /dev/null
 	check_status
 }

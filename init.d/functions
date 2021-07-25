@@ -1,23 +1,39 @@
 #!/bin/sh
+#
 # rcinit common routines
+#
 
-# Check status and print
-# OK or FAIL
+log_message()
+{
+	echo -n -e "${@}"
+	[ -f "/run/bootlog" ] && echo -n -e "${@}" >> /run/bootlog
+}
+
+log_start()
+{
+	log_message "Starting $1 ... "
+}
+
+log_stop()
+{
+	log_message "Stopping $1 ... "
+}
+
 status_ok()
 {
 	if [ -z "$CROND" ] ; then
-		printf "\\033[65G\\033[1;32mOK\\033[0;39m\n"
+		log_message "\\033[65G\\033[1;32mOK\\033[0;39m\n"
 	else
-		printf "  OK\n"
+		echo -n -e "  OK\n"
 	fi
 }
 
 status_fail()
 {
 	if [ -z "$CROND" ] ; then
-		printf "\\033[65G\\033[1;31mFAIL\\033[0;39m\n"
+		log_message "\\033[65G\\033[1;31mFAIL\\033[0;39m\n"
 	else
-		printf "  FAIL\n"
+		echo -n -e "  FAIL\n"
 	fi
 }
 
@@ -31,8 +47,17 @@ check_status()
 	fi
 }
 
+check_root()
+{
+	if [ "$EUID" -ne 0 ]; then
+		echo "You must be root for this" >&2
+		exit 1
+	fi
+}
+
 wait_for_pid()
 {
+	local WAIT_DELAY=$3
 	[ -z "$WAIT_DELAY" ] && WAIT_DELAY=10
 	while [ $WAIT_DELAY -gt 0 ]; do
 		case "$1" in
@@ -55,10 +80,23 @@ wait_for_pid()
 	return 1
 }
 
-check_root()
-{
-	if [ "$EUID" -ne 0 ]; then
-		echo "You must be root for this" >&2
+wait_for_iface() {
+	local IFACE=$1
+	local WAIT_DELAY=$2
+	[ -z "$IFACE" ] && return 1
+	[ -z "$WAIT_DELAY" ] && WAIT_DELAY=10
+	if [ "$WAIT_DELAY" -gt 0 -a ! -e "/sys/class/net/$IFACE" ]; then
+		log_mesage "Waiting for interface $IFACE to appear "
+		while [ $WAIT_DELAY -gt 0 ]; do
+			if [ -e "/sys/class/net/$IFACE" ]; then
+				log_message "\n"
+				return 0
+			fi
+			sleep 1
+			log_message "."
+			: $((WAIT_DELAY -= 1))
+		done
+		log_message "timeout!\n"
 		exit 1
 	fi
 }

@@ -21,7 +21,7 @@ ARGS="-f $CONFFILE"
 . /etc/init.d/functions
 
 start() {
-	printf "Starting %s ... " "$NAME"
+	log_start $NAME
 	install -d -o $USER -g $GROUP -m 0775 $RUNDIR
 	install -d -o $USER -g $GROUP -m 0770 $LOGDIR
 	start-stop-daemon -S -q -p $PIDFILE --exec $EXEC -- $ARGS
@@ -29,7 +29,7 @@ start() {
 }
 
 stop() {
-	printf "Stopping %s ... " "$NAME"
+	log_stop $NAME
 	if [ ! -r "$PIDFILE" ]; then
 		status_fail
 		exit 1

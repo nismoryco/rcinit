@@ -17,14 +17,14 @@ PIDFILE="$RUNDIR/mpd.pid"
 check_root
 
 start() {
-	printf "Starting $NAME ... "
+	log_start $NAME
 	install -d -m 0775 $RUNDIR
 	start-stop-daemon --start --quiet --background --exec $EXEC
 	check_status
 }
 
 stop() {
-	printf "Stopping $NAME ... "
+	log_stop $NAME
 	if [ ! -r "$PIDFILE" ]; then
 		status_fail
 		exit 1

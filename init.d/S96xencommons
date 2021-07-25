@@ -42,12 +42,12 @@ do_start () {
 
 	for mod in $BACKEND_MODULES ; do modprobe "$mod" &>/dev/null ; done
 
-	mkdir -m700 -p ${XEN_RUN_DIR}
-	mkdir -m700 -p ${XEN_LOCK_DIR}
-	mkdir -p ${XEN_LOG_DIR}
+	mkdir -m 0700 -p $XEN_RUN_DIR
+	mkdir -m 0700 -p $XEN_LOCK_DIR
+	mkdir -p $XEN_LOG_DIR
 	mkdir -p /var/lib/xen
 
-	printf "Starting xenstore ... "
+	log_start xenstore
 	/etc/xen/scripts/launch-xenstore > /dev/null 2>&1
 	if [ "$?" = "0" ]; then
 		status_ok
@@ -56,16 +56,16 @@ do_start () {
 		exit 1
 	fi
 
-	printf "Setting domain 0 name, domid and json config ... "
+	log_message "Setting domain 0 name, domid and json config ... "
 	${LIBEXEC_BIN}/xen-init-dom0 ${XEN_DOM0_UUID} > /dev/null 2>&1
 	check_status
 
-	printf "Starting xenconsoled ... "
+	log_start xenconsoled
 	test -z "$XENCONSOLED_TRACE" || XENCONSOLED_ARGS=" --log=$XENCONSOLED_TRACE"
 	${sbindir}/xenconsoled --pid-file=$XENCONSOLED_PIDFILE $XENCONSOLED_ARGS > /dev/null 2>&1
 	check_status
 
-	printf "Starting qemu as disk backend for dom0 ... "
+	log_message "Starting qemu as disk backend for dom0 ... "
 	test -z "$QEMU_XEN" && QEMU_XEN="/usr/lib/xen/bin/qemu-system-i386"
 	$QEMU_XEN -xen-domid 0 -xen-attach -name dom0 -nographic -M xenpv -daemonize \
 		-monitor /dev/null -serial /dev/null -parallel /dev/null \
@@ -74,7 +74,7 @@ do_start () {
 }
 
 do_stop () {
-	printf "Stopping xenconsoled ... "
+	log_stop xenconsoled
 	if read 2>/dev/null <$XENCONSOLED_PIDFILE pid; then
 		kill $pid
 		while kill -9 $pid >/dev/null 2>&1; do sleep 1; done
@@ -84,7 +84,7 @@ do_stop () {
 		status_fail
 	fi
 
-	printf "Stopping qemu ... "
+	log_stop qemu
 	if read 2>/dev/null <$QEMU_PIDFILE pid; then
 		kill $pid
 		while kill -9 $pid >/dev/null 2>&1; do sleep 1; done
@@ -94,7 +94,7 @@ do_stop () {
 		status_fail
 	fi
 
-	printf "Stopping xenstored ... "
+	log_stop xenstored
 	killall xenstored 2> /dev/null
 	check_status
 }

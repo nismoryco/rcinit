@@ -23,7 +23,7 @@ ARGS="-f --pid-file $PIDFILE --config-dir $CONFDIR --logfile $LOGFILE"
 check_root
 
 start() {
-	printf "Starting %s ... " "$NAME"
+	log_start $NAME
 	if [ ! -f "$CONFDIR/settings.json" ]; then
 		status_fail
 		exit 1
@@ -35,7 +35,7 @@ start() {
 }
 
 stop() {
-	printf "Stopping %s ... " "$NAME"
+	log_stop $NAME
 	if [ ! -r "$PIDFILE" ] ; then
 		status_fail
 		exit 1

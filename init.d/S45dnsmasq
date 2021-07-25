@@ -25,7 +25,7 @@ check_root
 mkdir -p /var/lib/dnsmasq
 
 start() {
-	printf "Starting %s ... " "$NAME"
+	log_start $NAME
 	install -d -o $USER -g $GROUP -m 0755 $RUNDIR
 	install -d -o $USER -g root -m 0750 $LOGDIR
 	$EXEC $ARGS > /dev/null 2>&1
@@ -33,7 +33,7 @@ start() {
 }
 
 stop() {
-	printf "Stopping %s ... " "$NAME"
+	log_stop $NAME
 	if [ ! -r "$PIDFILE" ]; then
 		status_fail
 		exit 1

@@ -17,7 +17,7 @@ start() {
 		SAVED_SEC=$(date -u -d "$SAVED" '+%s')
 		NOW_SEC=$(date -u '+%s')
 		if [ $NOW_SEC -le $SAVED_SEC ]; then
-			printf "Setting fake system clock ... "
+			log_message "Setting fake system clock ... "
 			date -u -s "$SAVED" > /dev/null 2>&1
 			check_status
 		fi
@@ -28,7 +28,7 @@ stop() {
 	touch $HWCLOCK_FILE 2>/dev/null || exit 0
 	NOW_SEC=$(date -u '+%s')
 	if [ $NOW_SEC -ge $HWCLOCK_EPOCH_SEC ]; then
-		printf "Saving fake hardware clock ... "
+		log_message "Saving fake hardware clock ... "
 		date -u '+%Y-%m-%d %H:%M:%S' > $HWCLOCK_FILE 2> /dev/null
 		check_status
 	fi

@@ -3,18 +3,13 @@
 # mount
 #
 
-NAME="mount"
-EXEC="$(which mount)"
-
-[ -x "$EXEC" ] || exit 0
-
 . /etc/init.d/functions
 
 check_root
 
 start() {
-	printf "Mounting file systems ..."
-	$EXEC -a
+	log_message "Mounting file systems ... "
+	mount -a
 	check_status
 }
 

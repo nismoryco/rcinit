@@ -17,7 +17,7 @@ check_root
 
 start() {
 	FAIL="no"
-	printf "Loading kernel modules ... "
+	log_message "Loading kernel modules ... "
 	while read module args; do
 		case "$module" in
 			""|"#"*) continue ;;

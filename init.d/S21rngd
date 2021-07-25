@@ -17,13 +17,13 @@ PID_FILE="/run/$NAME.pid"
 check_root
 
 start() {
-	printf "Starting $NAME ... "
+	log_start $NAME
 	start-stop-daemon -S -q -x "$EXEC" -- $ARGS > /dev/null 2>&1
 	check_status
 }
 
 stop() {
-	printf "Stopping $NAME ... "
+	log_stop $NAME
 	# This daemon does not exit properly with the default TERM signal unless
 	# it's forced to work by something reading /dev/random. Killing it and
 	# removing its PID file is more straightforward.

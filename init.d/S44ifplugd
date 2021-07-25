@@ -29,7 +29,7 @@ shift
 case "$VERB" in
   start)
 	for IF in $INTERFACES ; do
-		printf "Starting %s for %s ... " "${NAME}" "${IF}"
+		log_message "Starting $NAME for $IF ... "
 		A="`eval echo \$\{ARGS_${IF}\}`"
 		[ -z "$A" ] && A="$ARGS"
 		$IFPLUGD -i $IF $A > /dev/null 2>&1
@@ -43,7 +43,7 @@ case "$VERB" in
 	;;
   stop)
 	for IF in $INTERFACES ; do
-		printf "Stopping %s for %s ... " "${NAME}" "${IF}"
+		log_message "Stopping $NAME for $IF ... "
 		$IFPLUGD -k -i $IF > /dev/null 2>&1
 		check_status
 	done
@@ -55,14 +55,14 @@ case "$VERB" in
 	;;
   suspend)
 	for IF in $INTERFACES ; do
-		printf "Suspending %s for %s ... " "${NAME}" "${IF}"
+		log_message "Suspending $NAME for $IF ... "
 		$IFPLUGD -S -i $IF
 		check_status
 	done
 	;;
   resume)
 	for IF in $INTERFACES ; do
-		printf "Resuming %s for %s ... " "${NAME}" "${IF}"
+		log_message "Resuming $NAME for $IF ... "
 		$IFPLUGD -R -i $IF
 		check_status
 	done

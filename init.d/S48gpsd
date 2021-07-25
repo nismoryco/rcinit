@@ -18,14 +18,14 @@ SOCKFILE=/run/$NAME.sock
 check_root
 
 start() {
-	printf "Starting $NAME ... "
+	log_start $NAME
 	ln -sf $DEVICE /dev/gps0
 	start-stop-daemon -S -q -p $PIDFILE --exec $EXEC -- -P $PIDFILE -n -F $SOCKFILE /dev/gps0
 	check_status
 }
 
 stop() {
-	printf "Stopping $NAME ... "
+	log_stop $NAME
 	start-stop-daemon -K --remove-pidfile -q -p $PIDFILE
 	check_status
 }

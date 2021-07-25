@@ -16,7 +16,7 @@ LOGDIR="/var/log/$NAME"
 check_root
 
 start() {
-	printf "Starting %s ... " "$NAME"
+	log_start $NAME
 	install -d -m 0770 $LOGDIR
 	install -d -m 0775 $RUNDIR
 	$EXEC -k start > /dev/null 2>&1
@@ -24,7 +24,7 @@ start() {
 }
 
 stop() {
-	printf "Stopping %s ... " "$NAME"
+	log_stop $NAME
 	if [ ! -r "$PIDFILE" ]; then
 		status_fail
 		exit 1
@@ -35,7 +35,7 @@ stop() {
 }
 
 restart() {
-	printf "Restarting %s ... " "$NAME"
+	log_message "Restarting $NAME ... "
 	$EXEC -k restart > /dev/null 2>&1
 	check_status
 }

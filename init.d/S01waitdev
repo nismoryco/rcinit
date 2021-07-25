@@ -14,7 +14,7 @@ WAIT_DEVICE=
 
 start() {
 	if [ -n "$WAIT_DELAY" -a -n "$WAIT_DEVICE" -a ! -e "$WAIT_DEVICE" ]; then
-		printf "Waiting for device %s to appear ... " "$WAIT_DEVICE"
+		log_message "Waiting for device $WAIT_DEVICE to appear ... "
 		while [ ${WAIT_DELAY} -gt 0 ]; do
 			if [ -e "$WAIT_DEVICE" ]; then
 				status_ok

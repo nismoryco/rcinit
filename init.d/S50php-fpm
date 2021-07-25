@@ -14,7 +14,7 @@ php_opts="--fpm-config $php_fpm_CONF --pid $php_fpm_PID"
 check_root
 
 start() {
-	printf "Starting %s ... " "$NAME"
+	log_start $NAME
 	$php_fpm_BIN --daemonize $php_opts
 	RET=$?
 	if [ "$RET" != 0 ] ; then
@@ -26,7 +26,7 @@ start() {
 }
 
 stop() {
-	printf "Stopping %s ... " "$NAME"
+	log_stop $NAME
 	if [ ! -r $php_fpm_PID ] ; then
 		status_fail
 		exit 1
@@ -38,19 +38,19 @@ stop() {
 
 status() {
 	if [ ! -r $php_fpm_PID ] ; then
-		echo "php-fpm is stopped"
+		log_message "$NAME is stopped\n"
 		exit 0
 	fi
 	PID=`cat $php_fpm_PID`
 	if ps -p $PID | grep -q $PID; then
-		echo "php-fpm (pid $PID) is running..."
+		log_message "$NAME (pid $PID) is running\n"
 	else
-		echo "php-fpm dead but pid file exists"
+		log_message "$NAME dead but pid file exists\n"
 	fi
 }
 
 forcequit() {
-	printf "Terminating %s ... " "$NAME"
+	log_message "Terminating $NAME ... "
 	if [ ! -r $php_fpm_PID ] ; then
 		status_fail
 		exit 1
@@ -67,7 +67,7 @@ restart() {
 }
 
 reload() {
-	printf "Reloading %s ... " "$NAME"
+	log_message "Reloading $NAME ... "
 	if [ ! -r $php_fpm_PID ] ; then
 		status_fail
 		exit 1

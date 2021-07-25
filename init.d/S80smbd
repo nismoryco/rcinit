@@ -19,7 +19,7 @@ PIDFILE="$RUNDIR/smbd.pid"
 [ -f "$CONF" ] || exit 0
 
 start() {
-	printf "Starting %s ... " "$NAME"
+	log_start $NAME
 	install -d -m 0755 $CACHEDIR
 	install -d -m 0750 $LOGDIR
 	install -d -m 0775 $LOCKDIR
@@ -30,7 +30,7 @@ start() {
 }
 
 stop() {
-	printf "Stopping %s ... " "$NAME"
+	log_stop $NAME
 	kill -9 `pidof $NAME` > /dev/null 2>&1
 	check_status
 	rm -f "$PIDFILE"
@@ -44,7 +44,7 @@ restart() {
 }
 
 reload() {
-	printf "Reloading $NAME ... "
+	log_message "Reloading $NAME ... "
 	kill -HUP `pidof smbd` > /dev/null 2>&1
 	check_status
 }

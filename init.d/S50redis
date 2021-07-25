@@ -22,7 +22,7 @@ GROUP="redis"
 check_root
 
 start() {
-	printf "Starting $NAME ... "
+	log_start $NAME
 	install -d -o $USER -g $GROUP -m 0770 $LOGDIR
 	install -d -o $USER -g $GROUP -m 0775 $RUNDIR
 	ulimit -n 10240
@@ -33,7 +33,7 @@ start() {
 }
 
 stop() {
-	printf "Stopping $NAME ... "
+	log_stop $NAME
 	if [ ! -r "$PIDFILE" ]; then
 		status_fail
 		exit 1
