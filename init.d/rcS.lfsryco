@@ -24,6 +24,9 @@ mount -t tmpfs -o mode=0755,nosuid,nodev tmpfs /run
 mkdir -p /run/lock
 touch /run/bootlog
 
+# Change ownership
+chown root:utmp /var/log/{faillog,lastlog}
+
 # Welcome message
 log_message ' _    ___ ___     ___             \n'
 log_message '| |  | __/ __|___| _ \\_  _ __ ___ \n'
