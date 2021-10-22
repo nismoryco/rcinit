@@ -86,17 +86,17 @@ wait_for_iface() {
 	[ -z "$IFACE" ] && return 1
 	[ -z "$WAIT_DELAY" ] && WAIT_DELAY=10
 	if [ "$WAIT_DELAY" -gt 0 -a ! -e "/sys/class/net/$IFACE" ]; then
-		log_mesage "Waiting for interface $IFACE to appear "
+		log_message "Waiting for interface $IFACE to appear "
 		while [ $WAIT_DELAY -gt 0 ]; do
 			if [ -e "/sys/class/net/$IFACE" ]; then
-				log_message "\n"
+				status_ok
 				return 0
 			fi
 			sleep 1
 			log_message "."
 			: $((WAIT_DELAY -= 1))
 		done
-		log_message "timeout!\n"
+		status_fail
 		exit 1
 	fi
 }
