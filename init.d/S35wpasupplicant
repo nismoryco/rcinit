@@ -14,6 +14,7 @@ WAIT_DELAY=5
 [ -r "$CONFFILE" ] || exit 0
 
 [ -r "/etc/default/$NAME" ] && . "/etc/default/$NAME"
+[ "x$WPASUPPLICANT_DISABLE" = "xyes" ] && exit 0
 [ -z "$ARGS" ] && ARGS="-Dnl80211 -i$IFACE -c$CONFFILE -P$PIDFILE -s -B"
 
 . /etc/init.d/functions
