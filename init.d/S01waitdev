@@ -13,15 +13,15 @@ WAIT_DEVICE=
 . /etc/init.d/functions
 
 start() {
-	if [ -n "$WAIT_DELAY" -a -n "$WAIT_DEVICE" -a ! -e "$WAIT_DEVICE" ]; then
-		log_message "Waiting for device $WAIT_DEVICE to appear ... "
+	if [ -n "$WAIT_DELAY" -a -n "$WAIT_DEVICE" ]; then
+		log_message "Waiting for device $WAIT_DEVICE to appear "
 		while [ ${WAIT_DELAY} -gt 0 ]; do
 			if [ -e "$WAIT_DEVICE" ]; then
 				status_ok
-				echo
 				exit 0
 			fi
 			sleep 1
+			log_message "."
 			: $((WAIT_DELAY -= 1))
 		done
 		status_fail
