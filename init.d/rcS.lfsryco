@@ -34,6 +34,7 @@ log_message "\n$PRETTY_NAME ($BUILD_ID)\n\n"
 
 # Start all init scripts in /etc/init.d
 # executing them in numerical order.
+export RCS=1
 for i in /etc/init.d/S??* ;do
 	[ ! -f "$i" -o ! -x "$i" ] && continue
 	$i start
