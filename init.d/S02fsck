@@ -14,14 +14,14 @@ ARGS="-A -P -T -y"
 check_root
 
 start() {
-	$EXEC $ARGS
+	log_message "Checking filesystems ...\n"
+	$EXEC $ARGS >> /run/bootlog
 	RETVAL=$?
 	if [ $(($RETVAL & 2)) -ne 0 ]; then
 		sleep 5
 		reboot -f
 		exit 0
 	fi
-	echo
 }
 
 stop() {
