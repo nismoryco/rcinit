@@ -9,8 +9,9 @@ ARGS="--daemon"
 VARDIR="/var/lib/vnstat"
 PIDFILE="/run/vnstat/vnstat.pid"
 
-# Exit if the package is not installed
 [ -x "$EXEC" ] || exit 1
+[ -r "/etc/default/$NAME" ] && . "/etc/default/$NAME"
+[ "x$VNSTATD_DISABLE" = "xyes" ] && exit 0
 
 . /etc/init.d/functions
 

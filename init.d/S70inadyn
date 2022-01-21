@@ -12,6 +12,8 @@ PIDFILE="/run/inadyn.pid"
 
 [ -f $CONF ] || exit 0
 [ -x $EXEC ] || exit 0
+[ -r "/etc/default/$NAME" ] && . "/etc/default/$NAME"
+[ "x$INADYN_DISABLE" = "xyes" ] && exit 0
 
 . /etc/init.d/functions
 

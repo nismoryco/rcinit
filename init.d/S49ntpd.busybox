@@ -6,8 +6,8 @@ NTPD_SERVER="pool.ntp.org"
 ARGS="-p $NTPD_SERVER"
 
 [ -x "$EXEC" ] || exit 0
-
 [ -r "/etc/default/$NAME" ] && . "/etc/default/$NAME"
+[ "x$NTPD_DISABLE" = "xyes" ] && exit 0
 
 . /etc/init.d/functions
 

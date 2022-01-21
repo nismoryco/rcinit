@@ -17,6 +17,7 @@ ARGS="--pid-file=$PIDFILE --user=$USER --group=$GROUP --log-facility=$LOGFILE"
 [ -x "$EXEC" ] || exit 0
 [ -r "/etc/default/$NAME" ] && . /etc/default/$NAME
 [ -f "$CONFFILE" ] || exit 0
+[ "x$DNSMASQ_DISABLE" == "xyes" ] && exit 0
 
 . /etc/init.d/functions
 

@@ -10,6 +10,8 @@ CONF="/etc/supervisor/supervisor.conf"
 ARGS="-c $CONF"
 
 [ -x "$EXEC" ] || exit 0
+[ -r "/etc/default/$NAME" ] && . "/etc/default/$NAME"
+[ "x$SUPERVISORD_DISABLE" = "xyes" ] && exit 0
 
 . /etc/init.d/functions
 

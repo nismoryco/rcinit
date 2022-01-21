@@ -13,9 +13,9 @@ WAIT_DELAY=5
 
 [ -r "/etc/default/$NAME" ] && . /etc/default/$NAME
 [ -z "$ARGS" ] && ARGS="-B -P $PIDFILE -f $LOGFILE $CONFFILE"
-
 [ -x "$EXEC" ] || exit 0
 [ -r "$CONFFILE" ] || exit 0
+[ "x$HOSTAPD_DISABLE" == "xyes" ] && exit 0
 
 . /etc/init.d/functions
 

@@ -11,6 +11,8 @@ PIDFILE="$RUNDIR/mpd.pid"
 
 [ -x "$EXEC" ] || exit 0
 [ -f "$CONF" ] || exit 0
+[ -r "/etc/default/$NAME" ] && . "/etc/default/$NAME"
+[ "x$MPD_DISABLE" = "xyes" ] && exit 0
 
 . /etc/init.d/functions
 

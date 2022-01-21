@@ -15,8 +15,8 @@ MYSQL_PREFIX="/usr"
 WAIT_DELAY=10
 
 [ -x "$MYSQL_BIN/mysqld_safe" ] || exit 0
-
 [ -r "/etc/default/$NAME" ] && . "/etc/default/$NAME"
+[ "x$MYSQLD_DISABLE" = "xyes" ] && exit 0
 
 . /etc/init.d/functions
 

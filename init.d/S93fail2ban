@@ -10,6 +10,8 @@ PIDFILE="$RUNDIR/fail2ban.pid"
 ARGS="-xf start"
 
 [ -x "$EXEC" ] || exit 0
+[ -r "/etc/default/$NAME" ] && . "/etc/default/$NAME"
+[ "x$FAIL2BAN_DISABLE" = "xyes" ] && exit 0
 
 . /etc/init.d/functions
 
