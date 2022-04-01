@@ -3,19 +3,39 @@
 # urandom
 #
 
+RANDOM_SEED="/etc/random-seed"
+POOLFILE="/proc/sys/kernel/random/poolsize"
+
+[ -r "/etc/default/urandom" ] && . "/etc/default/urandom"
+
 . /etc/init.d/functions
 
 check_root
 
+[ -r "$POOLFILE" ] && BITS=$(cat $POOLFILE) || BITS=4096
+BYTES=$(expr $BITS / 8)
+
 start() {
 	log_message "Initializing random number generator ... "
-	seedrng > /dev/null 2>&1
-	check_status
+	# Carry a random seed from start-up to start-up
+	# Load and then save the whole entropy pool
+	if [ -f "$RANDOM_SEED" ]; then
+		cat $RANDOM_SEED >/dev/urandom
+		rndaddtoentcnt $BITS >/dev/null 2>&1
+		check_status
+	else
+		touch $RANDOM_SEED
+		status_fail
+	fi
+	chmod 0600 $RANDOM_SEED
+	dd if=/dev/urandom of=$RANDOM_SEED count=1 bs=$BYTES >/dev/null 2>&1
 }
 
 stop() {
 	log_message "Saving random seed ... "
-	seedrng > /dev/null 2>&1
+	touch $RANDOM_SEED
+	chmod 0600 $RANDOM_SEED
+	dd if=/dev/urandom of=$RANDOM_SEED count=1 bs=$BYTES >/dev/null 2>&1
 	check_status
 }
 
