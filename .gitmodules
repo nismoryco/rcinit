@@ -1,0 +1,3 @@
+[submodule "rndaddtoentcnt"]
+	path = rndaddtoentcnt
+	url = https://github.com/jumpnow/rndaddtoentcnt.git
