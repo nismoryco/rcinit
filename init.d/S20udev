@@ -18,7 +18,7 @@ check_root
 
 start() {
 	log_message "Populating ${udev_root:-/dev} using udev ... "
-	[ -e /proc/sys/kernel/hotplug ] && printf '\000\000\000\000' > /proc/sys/kernel/hotplug
+	[ -e /proc/sys/kernel/hotplug ] && printf '\000\000\000\000' >/proc/sys/kernel/hotplug
 	$EXEC $ARGS || (status_fail && exit 1)
 	udevadm trigger --type=subsystems --action=add
 	udevadm trigger --type=devices --action=add
@@ -30,7 +30,7 @@ stop() {
 	log_stop udev
 	udevadm control --stop-exec-queue
 	check_status
-	killall $NAME 2> /dev/null
+	killall $NAME 2>/dev/null
 }
 
 case "$1" in

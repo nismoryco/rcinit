@@ -12,9 +12,9 @@ EXEC=$(which dbus-daemon)
 check_root
 
 # Create needed directories.
-[ -d /run/dbus ] || mkdir -p /run/dbus
-[ -d /var/lock/subsys ] || mkdir -p /var/lock/subsys
-[ -d /tmp/dbus ] || mkdir -p /tmp/dbus
+[ ! -d /run/dbus ] && mkdir -p /run/dbus
+[ ! -d /var/lock/subsys ] && mkdir -p /var/lock/subsys
+[ ! -d /tmp/dbus ] && mkdir -p /tmp/dbus
 
 start() {
 	log_message "Starting system message bus ... "
@@ -26,7 +26,7 @@ start() {
 
 stop() {
 	log_message "Stopping system message bus ... "
-	killall dbus-daemon 2> /dev/null
+	killall dbus-daemon 2>/dev/null
 	check_status
 	rm -f /var/lock/subsys/dbus-daemon
 	rm -f /run/messagebus.pid

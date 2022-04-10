@@ -23,7 +23,7 @@ start() {
 	log_start $NAME
 	# Create key cache file to prevents warning that file is missing
 	touch $SNTP_KEY_CACHE
-	$EXEC $SNTP_ARGS -K $SNTP_KEY_CACHE $SNTP_SERVERS > /dev/null 2>&1
+	$EXEC $SNTP_ARGS -K $SNTP_KEY_CACHE $SNTP_SERVERS >/dev/null 2>&1
 	# sntp behavior
 	# - Does not background
 	# - Does not infinitely block

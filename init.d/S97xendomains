@@ -21,10 +21,10 @@ if test -f /proc/xen/capabilities && \
 fi
 
 start() {
-	for f in $(ls /etc/xen/auto/*.cfg 2> /dev/null); do
+	for f in $(ls /etc/xen/auto/*.cfg 2>/dev/null); do
 		DOM=$(cat $f | grep name | awk '{print $3}' | sed -e 's/"//g')
 		log_message "Starting xen domain $DOM ... "
-		xl create $f > /dev/null 2>&1
+		xl create $f >/dev/null 2>&1
 		check_status
 		sleep 1
 	done
@@ -32,7 +32,7 @@ start() {
 
 stop() {
 	log_message "Stopping xen domains ... "
-	xl shutdown --all --wait > /dev/null 2>&1
+	xl shutdown --all --wait >/dev/null 2>&1
 	check_status
 }
 

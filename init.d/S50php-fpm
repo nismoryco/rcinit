@@ -2,8 +2,8 @@
 
 NAME="php-fpm"
 php_fpm_BIN=$(which $NAME)
-php_fpm_CONF=/etc/php-fpm.conf
-php_fpm_PID=/run/php-fpm.pid
+php_fpm_CONF="/etc/php-fpm.conf"
+php_fpm_PID="/run/php-fpm.pid"
 
 php_opts="--fpm-config $php_fpm_CONF --pid $php_fpm_PID"
 

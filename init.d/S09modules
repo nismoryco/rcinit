@@ -22,7 +22,7 @@ start() {
 		case "$module" in
 			""|"#"*) continue ;;
 		esac
-		$EXEC $module $args > /dev/null 2>&1
+		$EXEC $module $args >/dev/null 2>&1
 		if [ $? != "0" ]; then
 			FAIL="yes"
 		fi

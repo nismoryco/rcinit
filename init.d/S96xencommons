@@ -40,7 +40,7 @@ fi
 do_start () {
 	local mod
 
-	for mod in $BACKEND_MODULES ; do modprobe "$mod" &>/dev/null ; done
+	for mod in $BACKEND_MODULES ; do modprobe "$mod" >/dev/null 2>&1 ; done
 
 	mkdir -m 0700 -p $XEN_RUN_DIR
 	mkdir -m 0700 -p $XEN_LOCK_DIR
@@ -48,7 +48,7 @@ do_start () {
 	mkdir -p /var/lib/xen
 
 	log_start xenstore
-	/etc/xen/scripts/launch-xenstore > /dev/null 2>&1
+	/etc/xen/scripts/launch-xenstore >/dev/null 2>&1
 	if [ "$?" = "0" ]; then
 		status_ok
 	else
@@ -57,19 +57,19 @@ do_start () {
 	fi
 
 	log_message "Setting domain 0 name, domid and json config ... "
-	${LIBEXEC_BIN}/xen-init-dom0 ${XEN_DOM0_UUID} > /dev/null 2>&1
+	${LIBEXEC_BIN}/xen-init-dom0 ${XEN_DOM0_UUID} >/dev/null 2>&1
 	check_status
 
 	log_start xenconsoled
 	test -z "$XENCONSOLED_TRACE" || XENCONSOLED_ARGS=" --log=$XENCONSOLED_TRACE"
-	${sbindir}/xenconsoled --pid-file=$XENCONSOLED_PIDFILE $XENCONSOLED_ARGS > /dev/null 2>&1
+	${sbindir}/xenconsoled --pid-file=$XENCONSOLED_PIDFILE $XENCONSOLED_ARGS >/dev/null 2>&1
 	check_status
 
 	log_message "Starting qemu as disk backend for dom0 ... "
 	test -z "$QEMU_XEN" && QEMU_XEN="/usr/lib/xen/bin/qemu-system-i386"
 	$QEMU_XEN -xen-domid 0 -xen-attach -name dom0 -nographic -M xenpv -daemonize \
 		-monitor /dev/null -serial /dev/null -parallel /dev/null \
-		-pidfile $QEMU_PIDFILE > /dev/null 2>&1
+		-pidfile $QEMU_PIDFILE >/dev/null 2>&1
 	check_status
 }
 
@@ -95,7 +95,7 @@ do_stop () {
 	fi
 
 	log_stop xenstored
-	killall xenstored 2> /dev/null
+	killall xenstored 2>/dev/null
 	check_status
 }
 
@@ -110,10 +110,12 @@ case "$1" in
 	do_stop
 	;;
   reload)
-	echo >&2 'Reload not available; use force-reload'; exit 1
+	echo "Reload not available; use force-reload" >&2
+	exit 1
 	;;
   force-reload|restart)
 	do_stop
+	sleep 1
 	do_start
 	;;
   *)

@@ -6,7 +6,7 @@
 NAME="bluetoothd"
 EXEC="/usr/libexec/bluetooth/$NAME"
 ARGS="--experimental"
-PID_FILE="/var/run/$NAME.pid"
+PID_FILE="/run/$NAME.pid"
 
 [ -x "$EXEC" ] || exit 0
 

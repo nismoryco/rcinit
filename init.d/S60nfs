@@ -50,11 +50,11 @@ start() {
 stop() {
 	# Stop daemons
 	log_message "Shutting down nfs mountd ... "
-	killall -q rpc.mountd 2> /dev/null
+	killall -q rpc.mountd 2>/dev/null
 	check_status
 
 	log_message "Shutting down nfs daemon ... "
-	killall -q nfsd 2> /dev/null
+	killall -q nfsd 2>/dev/null
 	check_status
 
 	log_message "Shutting down nfs services ... "
@@ -62,7 +62,7 @@ stop() {
 	check_status
 
 	log_message "Stopping nfs statd ... "
-	killall -q rpc.statd 2> /dev/null
+	killall -q rpc.statd 2>/dev/null
 	check_status
 	rm -f /var/lock/subsys/nfs
 	rm -f /var/run/rpc.statd.pid

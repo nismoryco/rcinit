@@ -24,14 +24,14 @@ start() {
 	install -d -m 0750 $LOGDIR
 	install -d -m 0775 $LOCKDIR
 	install -d -m 0775 $RUNDIR
-	$EXEC $ARGS > /dev/null 2>&1
+	$EXEC $ARGS >/dev/null 2>&1
 	check_status
 	touch "$LOCKDIR/smb"
 }
 
 stop() {
 	log_stop $NAME
-	kill -9 `pidof $NAME` > /dev/null 2>&1
+	kill -9 `pidof $NAME` >/dev/null 2>&1
 	check_status
 	rm -f "$PIDFILE"
 	rm -f "$LOCKDIR/smb"
@@ -45,7 +45,7 @@ restart() {
 
 reload() {
 	log_message "Reloading $NAME ... "
-	kill -HUP `pidof smbd` > /dev/null 2>&1
+	kill -HUP `pidof smbd` >/dev/null 2>&1
 	check_status
 }
 

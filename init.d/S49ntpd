@@ -15,11 +15,11 @@ ARGS="-g -l $LOGFILE -p $PIDFILE"
 check_root
 
 # Create ntp directory
-mkdir -p /var/lib/ntp 2> /dev/null
+mkdir -p /var/lib/ntp 2>/dev/null
 
 start() {
 	log_start $NAME
-	$EXEC $ARGS > /dev/null 2>&1
+	$EXEC $ARGS >/dev/null 2>&1
 	check_status
 }
 
@@ -29,7 +29,7 @@ stop() {
 		status_fail
 		exit 1
 	fi
-	killall $NAME 2> /dev/null
+	killall $NAME 2>/dev/null
 	wait_for_pid removed $PIDFILE
 	check_status
 }

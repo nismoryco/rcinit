@@ -18,14 +18,14 @@ mkdir -p /run/network
 
 start() {
 	log_start network
-	$IFUP -a > /dev/null 2>&1
+	$IFUP -a >/dev/null 2>&1
 	check_status
 }
 
 stop() {
 	log_stop network
-	umount --all --force --types nfs,cifs,nfs4 > /dev/null 2>&1
-	$IFDOWN -a > /dev/null 2>&1
+	umount --all --force --types nfs,cifs,nfs4 >/dev/null 2>&1
+	$IFDOWN -a >/dev/null 2>&1
 	check_status
 }
 

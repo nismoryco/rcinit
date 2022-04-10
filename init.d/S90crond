@@ -17,7 +17,7 @@ check_root
 start() {
 	log_start $NAME
 	install -d -m 0700 $SPOOLDIR
-	$EXEC > /dev/null 2>&1
+	$EXEC >/dev/null 2>&1
 	check_status
 }
 
@@ -27,7 +27,7 @@ stop() {
 		status_fail
 		exit 1
 	fi
-	killall $NAME 2> /dev/null
+	killall $NAME 2>/dev/null
 	check_status
 	# crond does not remove pid file
 	rm -f "$PIDFILE"

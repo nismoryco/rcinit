@@ -29,7 +29,7 @@ start() {
 	log_start $NAME
 	install -d -o $USER -g $GROUP -m 0755 $RUNDIR
 	install -d -o $USER -g root -m 0750 $LOGDIR
-	$EXEC $ARGS > /dev/null 2>&1
+	$EXEC $ARGS >/dev/null 2>&1
 	check_status
 }
 
@@ -39,7 +39,7 @@ stop() {
 		status_fail
 		exit 1
 	fi
-	killall $NAME 2> /dev/null
+	killall $NAME 2>/dev/null
 	wait_for_pid removed $PIDFILE
 	check_status
 }

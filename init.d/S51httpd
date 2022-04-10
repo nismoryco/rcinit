@@ -19,7 +19,7 @@ start() {
 	log_start $NAME
 	install -d -m 0770 $LOGDIR
 	install -d -m 0775 $RUNDIR
-	$EXEC -k start > /dev/null 2>&1
+	$EXEC -k start >/dev/null 2>&1
 	check_status
 }
 
@@ -29,14 +29,14 @@ stop() {
 		status_fail
 		exit 1
 	fi
-	$EXEC -k stop > /dev/null 2>&1
+	$EXEC -k stop >/dev/null 2>&1
 	wait_for_pid removed $PIDFILE
 	check_status
 }
 
 restart() {
 	log_message "Restarting $NAME ... "
-	$EXEC -k restart > /dev/null 2>&1
+	$EXEC -k restart >/dev/null 2>&1
 	check_status
 }
 

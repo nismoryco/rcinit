@@ -9,7 +9,7 @@ check_root
 
 start() {
 	log_message "Setting hostname ... "
-	hostname -F /etc/hostname > /dev/null 2>&1
+	hostname -F /etc/hostname >/dev/null 2>&1
 	check_status
 }
 

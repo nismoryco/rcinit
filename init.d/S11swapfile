@@ -20,27 +20,27 @@ start() {
 			touch $SWAPFILE 2>/dev/null || exit 0
 
 			log_message "Creating swapfile ... "
-			dd if=/dev/zero of=$SWAPFILE bs=1M count=$SWAPSIZE > /dev/null 2>&1 || (status_fail && exit 1)
-			chmod 0600 $SWAPFILE > /dev/null 2>&1 || (status_fail && exit 1)
-			mkswap $SWAPFILE > /dev/null 2>&1 || (status_fail && exit 1)
+			dd if=/dev/zero of=$SWAPFILE bs=1M count=$SWAPSIZE >/dev/null 2>&1 || (status_fail && exit 1)
+			chmod 0600 $SWAPFILE >/dev/null 2>&1 || (status_fail && exit 1)
+			mkswap $SWAPFILE >/dev/null 2>&1 || (status_fail && exit 1)
 			status_ok
 		else
 			# check for read only file system
 			touch $SWAPFILE 2>/dev/null || exit 0
 		fi
 		log_message "Activating swapfile ... "
-		swapon $SWAPFILE > /dev/null 2>&1
+		swapon $SWAPFILE >/dev/null 2>&1
 		check_status
 	else
 		log_message "Activating swapfile ... "
-		swapon -a > /dev/null 2>&1
+		swapon -a >/dev/null 2>&1
 		check_status
 	fi
 }
 
 stop() {
 	log_message "Deactivating swapfile ... "
-	swapoff -a > /dev/null 2>&1
+	swapoff -a >/dev/null 2>&1
 	check_status
 }
 

@@ -18,7 +18,7 @@ check_root
 
 start() {
 	log_start $NAME
-	start-stop-daemon -S -q -x "$EXEC" -- $ARGS > /dev/null 2>&1
+	start-stop-daemon -S -q -x "$EXEC" -- $ARGS >/dev/null 2>&1
 	check_status
 }
 

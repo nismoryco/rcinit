@@ -4,7 +4,7 @@
 #
 
 start() {
-	echo -ne '\033[9;0]' > /dev/tty1
+	echo -ne '\033[9;0]' >/dev/tty1
 }
 
 stop() {

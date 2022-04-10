@@ -24,7 +24,7 @@ check_root
 
 wait_for_ready() {
 	while [ $WAIT_DELAY -gt 0 ]; do
-		if "$MYSQL_BIN/mysqladmin" ping > /dev/null 2>&1; then
+		if "$MYSQL_BIN/mysqladmin" ping >/dev/null 2>&1; then
 			return 0
 		fi
 		sleep 1
@@ -34,10 +34,10 @@ wait_for_ready() {
 }
 
 start() {
-	if [ "`ls -1 $MYSQL_LIB 2> /dev/null | wc -l`" = "0" ] ; then
+	if [ "`ls -1 $MYSQL_LIB 2> /dev/null | wc -l`" = "0" ]; then
 		log_message "Creating $NAME system tables ... "
 		$MYSQL_BIN/mysql_install_db --basedir=$MYSQL_PREFIX \
-			--user=$MYSQL_USER --datadir=$MYSQL_LIB > /dev/null 2>&1
+			--user=$MYSQL_USER --datadir=$MYSQL_LIB >/dev/null 2>&1
 		if [ $? -ne 0 ]; then
 			status_fail
 			exit 1
@@ -56,7 +56,7 @@ start() {
 	# wrapper script.
 	log_start $NAME
 	$MYSQL_BIN/mysqld_safe --pid-file=$MYSQL_PIDFILE --user=$MYSQL_USER \
-		--log-error=$MYSQL_LOGFILE > /dev/null 2>&1 &
+		--log-error=$MYSQL_LOGFILE >/dev/null 2>&1 &
 	wait_for_ready
 	check_status
 }
@@ -67,7 +67,7 @@ stop() {
 		status_fail
 		exit 1
 	fi
-	kill `cat $MYSQL_PIDFILE` > /dev/null 2>&1
+	kill `cat $MYSQL_PIDFILE` >/dev/null 2>&1
 	wait_for_pid removed $MYSQL_PIDFILE
 	check_status
 }

@@ -31,12 +31,12 @@ start() {
 	# Create any missing keys
 	if [ "$KEYGEN" = "yes" ]; then
 		log_message "Creating ssh keys ... "
-		$KEYGEN_BIN $KEYGEN_ARGS > /dev/null 2>&1
+		$KEYGEN_BIN $KEYGEN_ARGS >/dev/null 2>&1
 		check_status
 	fi
 
 	log_start $NAME
-	$SSHD_BIN $SSHD_ARGS > /dev/null 2>&1
+	$SSHD_BIN $SSHD_ARGS >/dev/null 2>&1
 	check_status
 }
 
@@ -46,14 +46,14 @@ stop() {
 		status_fail
 		exit 1
 	fi
-	killall $NAME 2> /dev/null
+	killall $NAME 2>/dev/null
 	wait_for_pid removed $PIDFILE
 	check_status
 }
 
 restart() {
 	log_message "Restarting $NAME ... "
-	PID="`cat $PIDFILE 2> /dev/null`"
+	PID="`cat $PIDFILE 2>/dev/null`"
 	if [ -n "$PID" ]; then
 		kill $PID
 	else
@@ -61,7 +61,7 @@ restart() {
 		exit 1
 	fi
 	sleep 1
-	$SSHD_BIN $SSHD_ARGS > /dev/null 2>&1
+	$SSHD_BIN $SSHD_ARGS >/dev/null 2>&1
 	check_status
 }
 

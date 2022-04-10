@@ -19,14 +19,14 @@ check_root
 
 start() {
 	log_message "Setting system clock ... "
-	mkdir -p /var/lib/hwclock 2> /dev/null
-	$EXEC -s -u > /dev/null 2>&1
+	mkdir -p /var/lib/hwclock 2>/dev/null
+	$EXEC -s -u >/dev/null 2>&1
 	check_status
 }
 
 stop() {
 	log_message "Syncing hardware clock ... "
-	$EXEC -w -u > /dev/null 2>&1
+	$EXEC -w -u >/dev/null 2>&1
 	check_status
 }
 

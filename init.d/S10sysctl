@@ -13,7 +13,7 @@ check_root
 
 start() {
 	log_message "Configuring kernel parameters ... "
-	$EXEC --system > /dev/null 2>&1
+	$EXEC --system >/dev/null 2>&1
 	check_status
 }
 

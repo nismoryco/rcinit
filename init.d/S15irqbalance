@@ -15,17 +15,17 @@ ARGS="--pid $PIDFILE"
 
 check_root
 
-mkdir -p $RUNDIR 2> /dev/null
+mkdir -p $RUNDIR 2>/dev/null
 
 start() {
 	log_start $NAME
-	$EXEC $ARGS > /dev/null 2>&1
+	$EXEC $ARGS >/dev/null 2>&1
 	check_status
 }
 
 stop() {
 	log_stop $NAME
-	killall $NAME 2> /dev/null
+	killall $NAME 2>/dev/null
 	check_status
 }
 

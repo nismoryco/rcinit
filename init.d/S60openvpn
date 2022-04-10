@@ -19,21 +19,21 @@ start_vpn () {
 	start-stop-daemon -S -p /run/openvpn.$NAME.pid -x $DAEMON -- \
 		--daemon --writepid /run/openvpn.$NAME.pid               \
 		--config $CONFIG_DIR/$NAME.conf --cd $CONFIG_DIR         \
-		> /dev/null 2>&1
+		>/dev/null 2>&1
 	check_status
 }
 
 stop_vpn () {
 	log_message "Stopping $EXEC $NAME ... "
 	start-stop-daemon -K -p /run/openvpn.$NAME.pid -x $DAEMON    \
-		> /dev/null 2>&1
+		>/dev/null 2>&1
 	check_status
 }
 
 case "$1" in
 start)
 	if test -z $2 ; then
-		for CONFIG in `cd $CONFIG_DIR; ls *.conf 2> /dev/null`; do
+		for CONFIG in `cd $CONFIG_DIR; ls *.conf 2>/dev/null`; do
 			NAME=${CONFIG%%.conf}
 			start_vpn
 		done
@@ -48,14 +48,14 @@ start)
 	;;
 stop)
 	if test -z $2 ; then
-		for PIDFILE in `ls /run/openvpn.*.pid 2> /dev/null`; do
+		for PIDFILE in `ls /run/openvpn.*.pid 2>/dev/null`; do
 			NAME=`echo $PIDFILE | cut -c14-`
 			NAME=${NAME%%.pid}
 			stop_vpn
 		done
 	else
 		if test -e /run/openvpn.$2.pid ; then
-			PIDFILE=`ls /run/openvpn.$2.pid 2> /dev/null`
+			PIDFILE=`ls /run/openvpn.$2.pid 2>/dev/null`
 			NAME=`echo $PIDFILE | cut -c14-`
 			NAME=${NAME%%.pid}
 			stop_vpn
@@ -66,11 +66,11 @@ stop)
 	;;
 # We only 'reload' for running VPNs. New ones will only start with 'start' or 'restart'.
 reload|force-reload)
-	for PIDFILE in `ls /run/openvpn.*.pid 2> /dev/null`; do
+	for PIDFILE in `ls /run/openvpn.*.pid 2>/dev/null`; do
 		NAME=`echo $PIDFILE | cut -c18-`
 		NAME=${NAME%%.pid}
 		# If openvpn if running under a different user than root we'll need to restart
-		if egrep '^( |\t)*user' $CONFIG_DIR/$NAME.conf > /dev/null 2>&1 ; then
+		if egrep '^( |\t)*user' $CONFIG_DIR/$NAME.conf >/dev/null 2>&1 ; then
 			stop_vpn
 			sleep 1
 			start_vpn

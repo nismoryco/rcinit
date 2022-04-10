@@ -30,7 +30,7 @@ start() {
 	fi
 	install -d -o $USER -g $USER -m 0770 $LOGDIR
 	install -d -o $USER -g $USER -m 0775 $RUNDIR
-	start-stop-daemon -S -c $USER -x $EXEC -p $PIDFILE -b -- $ARGS > /dev/null 2>&1
+	start-stop-daemon -S -c $USER -x $EXEC -p $PIDFILE -b -- $ARGS >/dev/null 2>&1
 	check_status
 }
 
@@ -40,7 +40,7 @@ stop() {
 		status_fail
 		exit 1
 	fi
-	killall $NAME 2> /dev/null
+	killall $NAME 2>/dev/null
 	wait_for_pid removed $PIDFILE
 	check_status
 }

@@ -16,8 +16,7 @@ check_root
 
 start() {
 	log_start $NAME
-	start-stop-daemon -S -q -p $PIDFILE \
-		-x $EXEC -- $ARGS
+	start-stop-daemon -S -q -p $PIDFILE -x $EXEC -- $ARGS
 	check_status
 }
 

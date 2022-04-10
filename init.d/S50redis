@@ -38,7 +38,7 @@ stop() {
 		status_fail
 		exit 1
 	fi
-	/usr/bin/redis-cli shutdown > /dev/null 2>&1
+	/usr/bin/redis-cli shutdown >/dev/null 2>&1
 	wait_for_pid removed $PIDFILE
 	check_status
 }
