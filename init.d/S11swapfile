@@ -32,14 +32,14 @@ start() {
 		swapon $SWAPFILE >/dev/null 2>&1
 		check_status
 	else
-		log_message "Activating swapfile ... "
+		log_message "Activating swap ... "
 		swapon -a >/dev/null 2>&1
 		check_status
 	fi
 }
 
 stop() {
-	log_message "Deactivating swapfile ... "
+	log_message "Deactivating swap ... "
 	swapoff -a >/dev/null 2>&1
 	check_status
 }
@@ -49,8 +49,8 @@ restart() {
 	sleep 1
 	if [ "$SWAPFILE_ENABLED" -eq 1 ]; then
 		rm -f $SWAPFILE
-		start
 	fi
+	start
 }
 
 case "$1" in
