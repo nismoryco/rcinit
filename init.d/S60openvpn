@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/bash
 
 EXEC="openvpn"
 DAEMON="$(which $EXEC)"
