@@ -1,0 +1,41 @@
+#!/usr/bin/bash
+#
+# htpdate
+#
+
+NAME="htpdate"
+EXEC=$(which $NAME)
+
+[ -x "$EXEC" ] || exit 0
+
+URL="https://www.ryco.dev/"
+ARGS="-l -s -t"
+
+[ -r "/etc/default/$NAME" ] && . "/etc/default/$NAME"
+
+. /etc/init.d/functions
+
+check_root
+
+start() {
+	log_start $NAME
+	$EXEC $ARGS $URL >/dev/null 2>&1
+	check_status
+}
+
+stop() {
+	:
+}
+
+case "$1" in
+  start)
+	start
+	;;
+  stop)
+	stop
+	;;
+  *)
+	echo "Usage: $0 {start|stop}" >&2
+	exit 1
+	;;
+esac
