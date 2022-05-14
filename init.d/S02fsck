@@ -15,7 +15,7 @@ check_root
 
 start() {
 	log_message "Checking filesystems ...\n"
-	$EXEC $ARGS | tee -a /run/bootlog
+	$EXEC $ARGS 2>&1 | tee -a /run/bootlog
 	RETVAL=$?
 	if [ $(($RETVAL & 2)) -ne 0 ]; then
 		sleep 5
