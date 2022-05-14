@@ -1,0 +1,27 @@
+From 7aa94c8558109449823270820744bd070b17dc07 Mon Sep 17 00:00:00 2001
+From: Ryan Coe <bluemrp9@gmail.com>
+Date: Sat, 14 May 2022 14:52:11 -0700
+Subject: [PATCH 2/3] always create pidfile in ntpd
+
+Signed-off-by: Ryan Coe <bluemrp9@gmail.com>
+---
+ networking/ntpd.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/networking/ntpd.c b/networking/ntpd.c
+index 204e1d7c2f26093fb5c0bfea54c71aa0a3b817f2..5e02c4d5d0dec57661b704dfc1206aea0e28a071 100644
+--- a/networking/ntpd.c
++++ b/networking/ntpd.c
+@@ -2431,8 +2431,7 @@ static NOINLINE void ntp_init(char **argv)
+ 		G.stratum = 1;
+ 	}
+ 
+-	if (!(opts & OPT_n)) /* only if backgrounded: */
+-		write_pidfile_std_path_and_ext("ntpd");
++	write_pidfile_std_path_and_ext("ntpd");
+ 
+ 	/* If network is up, syncronization occurs in ~10 seconds.
+ 	 * We give "ntpd -q" 10 seconds to get first reply,
+-- 
+2.25.1
+
