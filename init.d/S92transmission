@@ -18,7 +18,7 @@ ARGS="-f --pid-file $PIDFILE --config-dir $CONFDIR --logfile $LOGFILE"
 [ -f "$DEFAULT_FILE" ] && . $DEFAULT_FILE
 [ "x$TRANSMISSION_DISABLE" = "xyes" ] && exit 0
 
-. /etc/init.d/functions
+. /usr/share/rcinit/functions
 
 check_root
 

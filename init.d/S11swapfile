@@ -9,7 +9,7 @@ SWAPSIZE=1000
 
 [ -r "/etc/default/swap" ] && . "/etc/default/swap"
 
-. /etc/init.d/functions
+. /usr/share/rcinit/functions
 
 check_root
 

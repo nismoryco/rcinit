@@ -10,7 +10,7 @@ DEFAULT_FILE="/etc/default/openvpn"
 [ -f "$DEFAULT_FILE" ] && . $DEFAULT_FILE
 [ "x$OPENVPN_DISABLE" = "xyes" ] && exit 0
 
-. /etc/init.d/functions
+. /usr/share/rcinit/functions
 
 check_root
 

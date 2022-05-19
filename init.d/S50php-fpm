@@ -9,7 +9,7 @@ php_opts="--fpm-config $php_fpm_CONF --pid $php_fpm_PID"
 
 [ -x "$php_fpm_BIN" ] || exit 0
 
-. /etc/init.d/functions
+. /usr/share/rcinit/functions
 
 check_root
 

@@ -15,7 +15,7 @@ PIDFILE="/run/inadyn.pid"
 [ -r "/etc/default/$NAME" ] && . "/etc/default/$NAME"
 [ "x$INADYN_DISABLE" = "xyes" ] && exit 0
 
-. /etc/init.d/functions
+. /usr/share/rcinit/functions
 
 check_root
 

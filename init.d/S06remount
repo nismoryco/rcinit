@@ -3,7 +3,7 @@
 # remount
 #
 
-. /etc/init.d/functions
+. /usr/share/rcinit/functions
 
 [ -r "/etc/default/rootmount" ] && . "/etc/default/rootmount"
 

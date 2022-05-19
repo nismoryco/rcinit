@@ -8,7 +8,7 @@ POOLFILE="/proc/sys/kernel/random/poolsize"
 
 [ -r "/etc/default/urandom" ] && . "/etc/default/urandom"
 
-. /etc/init.d/functions
+. /usr/share/rcinit/functions
 
 check_root
 

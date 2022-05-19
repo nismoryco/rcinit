@@ -18,7 +18,7 @@ ARGS="-f $CONFFILE"
 [ -x "$EXEC" ] || exit 0
 [ -r "/etc/default/$NAME" ] && . "/etc/default/$NAME"
 
-. /etc/init.d/functions
+. /usr/share/rcinit/functions
 
 start() {
 	log_start $NAME

@@ -13,7 +13,7 @@ RTC="/dev/rtc0"
 
 [ -e "$RTC" ] || exit 0
 
-. /etc/init.d/functions
+. /usr/share/rcinit/functions
 
 check_root
 

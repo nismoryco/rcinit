@@ -11,7 +11,7 @@ MODS="/etc/modules.conf"
 [ -r "$MODS" ] || exit 0
 egrep -qv '^($|#)' $MODS || exit 0
 
-. /etc/init.d/functions
+. /usr/share/rcinit/functions
 
 check_root
 

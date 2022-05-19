@@ -9,7 +9,7 @@ PIDFILE="/run/unifi/unifi.pid"
 
 [ -x "$EXEC" ] || exit 0
 
-. /etc/init.d/functions
+. /usr/share/rcinit/functions
 
 export JAVA_HOME=/opt/java
 

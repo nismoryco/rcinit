@@ -9,7 +9,7 @@ IFDOWN=$(which ifdown)
 [ -x "$IFUP" ] || exit 0
 [ -x "$IFDOWN" ] || exit 0
 
-. /etc/init.d/functions
+. /usr/share/rcinit/functions
 
 check_root
 

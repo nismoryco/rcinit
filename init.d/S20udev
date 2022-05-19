@@ -12,7 +12,7 @@ ARGS="-d"
 [ -r "$CONF" ] || exit 0
 
 . $CONF
-. /etc/init.d/functions
+. /usr/share/rcinit/functions
 
 check_root
 

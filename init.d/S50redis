@@ -17,7 +17,7 @@ GROUP="redis"
 [ -f "$CONF" ] || exit 0
 [ -d "$DBDIR" ] || exit 0
 
-. /etc/init.d/functions
+. /usr/share/rcinit/functions
 
 check_root
 

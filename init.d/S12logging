@@ -12,7 +12,7 @@ PIDFILE="/run/syslogd.pid"
 
 [ -r "/etc/default/$NAME" ] && . "/etc/default/$NAME"
 
-. /etc/init.d/functions
+. /usr/share/rcinit/functions
 
 check_root
 
