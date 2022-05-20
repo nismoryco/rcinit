@@ -1,4 +1,4 @@
 #!/bin/sh
 
 mkdir -p /run/irqbalance
-exec irqbalance --pid=/run/irqbalance/irqbalance.pid --foreground
+exec /usr/sbin/irqbalance --pid=/run/irqbalance/irqbalance.pid --foreground
