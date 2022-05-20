@@ -1,0 +1,5 @@
+#!/bin/sh
+
+install -d -o www-data -g www-data -m 0770 /var/log/lighttpd
+install -d -o www-data -g www-data -m 0775 /run/lighttpd
+exec /usr/sbin/lighttpd -D -f /etc/lighttpd/lighttpd.conf
