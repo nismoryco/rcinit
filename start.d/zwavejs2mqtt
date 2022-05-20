@@ -1,0 +1,6 @@
+#!/bin/sh
+
+export HOST=127.0.0.1
+export NODE_OPTIONS=--openssl-legacy-provider
+cd /opt/zwavejs2mqtt
+exec yarn start
