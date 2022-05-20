@@ -1,0 +1,5 @@
+#!/bin/sh
+
+install -d -o mosquitto -g mosquitto -m 0770 /var/log/mosquitto
+install -d -o mosquitto -g mosquitto -m 0775 /run/mosquitto
+exec /usr/sbin/mosquitto -c /etc/mosquitto/mosquitto.conf
