@@ -1,0 +1,7 @@
+#!/bin/sh
+
+install -d -m 0755 /var/cache/samba
+install -d -m 0750 /var/log/samba
+install -d -m 0775 /run/lock/samba
+install -d -m 0775 /run/samba
+exec nmbd -i
