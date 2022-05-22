@@ -12,8 +12,7 @@ done
 
 # Create any missing keys
 if [ "$KEYGEN" = "yes" ]; then
-	ssh-keygen -A
+	/usr/bin/ssh-keygen -A
 fi
 
-sshd -D 
-
+/usr/sbin/sshd -D
