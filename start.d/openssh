@@ -1,0 +1,19 @@
+#!/bin/sh
+
+KEY_FILES="ssh_host_dsa_key.pub ssh_host_ed25519_key ssh_host_rsa_key.pub ssh_host_ecdsa_key ssh_host_ed25519_key.pub ssh_host_dsa_key ssh_host_ecdsa_key.pub ssh_host_rsa_key"
+
+umask 0002
+
+# Check for missing keys
+KEYGEN="no"
+for i in $KEY_FILES; do
+	[ ! -f "/etc/ssh/$i" ] && KEYGEN="yes"
+done
+
+# Create any missing keys
+if [ "$KEYGEN" = "yes" ]; then
+	ssh-keygen -A
+fi
+
+sshd -D 
+
