@@ -1,0 +1,28 @@
+#!/bin/sh
+
+NAME="mysql"
+MYSQL_LIB="/var/lib/mysql"
+MYSQL_RUN="/run/mysql"
+MYSQLD_RUN="/run/mysqld"
+MYSQL_PIDFILE="$MYSQL_RUN/mysqld.pid"
+MYSQL_LOG="/var/log/mysql"
+MYSQL_LOGFILE="$MYSQL_LOG/mysqld.log"
+MYSQL_BIN="/usr/bin"
+MYSQL_USER="mysql"
+MYSQL_PREFIX="/usr"
+
+if [ "`ls -1 $MYSQL_LIB 2> /dev/null | wc -l`" = "0" ]; then
+	log_message "Creating $NAME system tables ... "
+	$MYSQL_BIN/mysql_install_db --basedir=$MYSQL_PREFIX \
+		--user=$MYSQL_USER --datadir=$MYSQL_LIB >/dev/null 2>&1 || exit 1
+fi
+
+install -d -o mysql -g root -m 0755 $MYSQL_RUN
+install -d -o mysql -g root -m 0755 $MYSQLD_RUN
+install -d -o mysql -g root -m 0750 $MYSQL_LOG
+
+exec mysqld_safe --pid-file=$MYSQL_RUN/mysqld.pid \
+       --log-error=$MYSQL_LOG/mysqld.log \
+       --user=$MYSQL_USER \
+       --basedir=$MYSQL_PREFIX \
+       --datadir=$MYSQL_LIB
