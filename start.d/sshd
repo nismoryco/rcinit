@@ -15,4 +15,4 @@ if [ "$KEYGEN" = "yes" ]; then
 	/usr/bin/ssh-keygen -A
 fi
 
-/usr/sbin/sshd -D
+exec /usr/sbin/sshd -D
