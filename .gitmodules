@@ -1,6 +1,6 @@
 [submodule "busybox"]
 	path = busybox
-	url = git://git.busybox.net/busybox
+	url = git@github.com:nismoryco/busybox.git
 [submodule "finit"]
 	path = finit
 	url = git@github.com:nismoryco/finit.git
