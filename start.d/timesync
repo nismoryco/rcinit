@@ -1,0 +1,4 @@
+#!/bin/sh
+
+initctl cond set timesync
+
