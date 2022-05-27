@@ -1,0 +1,3 @@
+#!/bin/sh
+
+killall sshd 2>/dev/null
