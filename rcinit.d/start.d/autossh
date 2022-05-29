@@ -1,10 +1,10 @@
 #!/bin/sh
 
-if [ "$AUTOSSH_PORT" = "" -o "$AUTOSSH_USER" = "" -o "$AUTOSSH_HOST" = "" ]; then
+if [ "$APORT" = "" -o "$AUSER" = "" -o "$AHOST" = "" ]; then
 	exit 1
 fi
 
 exec /usr/bin/autossh -M 0 -N -o "PubkeyAuthentication yes" -o "PasswordAuthentication no" \
         -o "ServerAliveInterval 30" -o "ServerAliveCountMax 3" -o "ExitOnForwardFailure yes" \
         -o "UserKnownHostsFile /dev/null" -o "StrictHostKeyChecking no" \
-        -i /root/.ssh/id_rsa -R ${AUTOSSH_PORT}:localhost:22 ${AUTOSSH_USER}@${AUTOSSH_HOST}
+        -i /root/.ssh/id_rsa -R ${APORT}:localhost:22 ${AUSER}@${AHOST}
