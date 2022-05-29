@@ -1,0 +1,5 @@
+#!/bin/sh
+
+install -d -m 0770 /var/log/httpd
+install -d -m 0775 /run/httpd
+/usr/sbin/httpd -k start
