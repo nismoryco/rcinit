@@ -1,0 +1,4 @@
+#!/bin/sh
+
+install -d -o $USER -g $GROUP -m 0770 /var/log/redis
+install -d -o $USER -g $GROUP -m 0775 /run/redis

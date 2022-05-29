@@ -1,23 +1,5 @@
 #!/bin/sh
 
-#!/usr/bin/bash
-#
-# redis
-#
-
-EXEC="/usr/bin/redis-server"
-CONF="/etc/redis.conf"
-RUNDIR="/run/redis"
-PIDFILE="$RUNDIR/redis.pid"
-LOGDIR="/var/log/redis"
-DBDIR="/var/lib/redis"
-USER="redis"
-GROUP="redis"
-
-install -d -o $USER -g $GROUP -m 0770 $LOGDIR
-install -d -o $USER -g $GROUP -m 0775 $RUNDIR
+cd /var/lib/redis
 umask 0007
-ulimit -n 10240
-start-stop-daemon -S -q -b -c $USER:$GROUP \
-	-d $DBDIR --umask 0007 --pidfile $PIDFILE \
-	--exec $EXEC -- $CONF
+exec /usr/bin/redis-server /etc/redis.conf
