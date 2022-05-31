@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/bin/sh
 
 NAME="acpid"
 EXEC="$(which $NAME)"

@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/bin/sh
 
 NAME="ntpd"
 EXEC=$(which $NAME)

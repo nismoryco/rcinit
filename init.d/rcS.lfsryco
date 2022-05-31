@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/bin/sh
 
 [ -r /etc/os-release ] && . /etc/os-release
 . /etc/init.d/functions

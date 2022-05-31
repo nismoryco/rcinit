@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/bin/sh
 
 NAME="php-fpm"
 php_fpm_BIN=$(which $NAME)
