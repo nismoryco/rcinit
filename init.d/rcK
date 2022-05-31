@@ -15,11 +15,13 @@ if [ -f /sys/class/backlight/rpi_backlight/bl_power ]; then
 fi
 
 killall5 -15 -o 1
-sleep 2
+sleep 3
 sync
 killall5 -9 -o 1
 sleep 2
-sync
 swapoff -a
+sync
 umount -a -r
-mount -o remount,ro /
+mount -n -o remount,ro -t dummytype dummydev /
+mount -n -o remount,ro dummydev /
+mount -n -o remount,ro /
