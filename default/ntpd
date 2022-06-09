@@ -1,2 +1,1 @@
 NTPD_SERVER="pool.ntp.org"
-ARGS="-p $NTPD_SERVER"
