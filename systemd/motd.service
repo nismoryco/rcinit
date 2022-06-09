@@ -1,0 +1,11 @@
+[Unit]
+Description=motd symlink
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+EnvironmentFile=/etc/os-release
+ExecStart=sh -c 'printf "Welcome to %%s %%s (%%s %%s %%s)\n" "$NAME" "$VERSION" "$(uname -o)" "$(uname -r)" "$(uname -m)" >/run/motd 2>/dev/null'
+
+[Install]
+WantedBy=multi-user.target

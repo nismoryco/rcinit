@@ -1,0 +1,10 @@
+[Unit]
+Description=ntp client daemon
+After=syslog.target network.target
+
+[Service]
+EnvironmentFile=/etc/default/ntpd
+ExecStart=/usr/sbin/ntpd -n -p $NTPD_SERVER
+
+[Install]
+WantedBy=multi-user.target
