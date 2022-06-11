@@ -15,7 +15,7 @@ KEY_FILES="ssh_host_dsa_key.pub ssh_host_ed25519_key ssh_host_rsa_key.pub ssh_ho
 [ -x "$KEYGEN_BIN" ] || exit 0
 [ -x "$SSHD_BIN" ] || exit 0
 
-. /etc/init.d/functions
+. /usr/share/rcinit/functions
 
 check_root
 

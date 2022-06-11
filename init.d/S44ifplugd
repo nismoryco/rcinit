@@ -9,7 +9,7 @@ IFPLUGD="$(which ifplugd)"
 
 CFG="/etc/ifplugd/ifplugd.conf"
 
-. /etc/init.d/functions
+. /usr/share/rcinit/functions
 
 # not using check_root
 if [ `id -u` != "0" ] && [ "$1" = "start" -o "$1" = "stop" ] ; then

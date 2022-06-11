@@ -13,7 +13,7 @@ LOCKDIR="/run/lock/subsys"
 RUNDIR="/run/samba"
 PIDFILE="$RUNDIR/smbd.pid"
 
-. /etc/init.d/functions
+. /usr/share/rcinit/functions
 
 [ -x "$EXEC" ] || exit 0
 [ -f "$CONF" ] || exit 0

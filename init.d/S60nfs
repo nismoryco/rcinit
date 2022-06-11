@@ -22,7 +22,7 @@ if [ -f "${CFG_FILE}" ]; then
 	. "${CFG_FILE}"
 fi
 
-. /etc/init.d/functions
+. /usr/share/rcinit/functions
 
 check_root
 

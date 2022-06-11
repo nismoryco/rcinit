@@ -7,7 +7,7 @@ HWCLOCK_FILE="/etc/fake-hwclock.data"
 HWCLOCK_EPOCH="2016-04-15 00:00:00"
 HWCLOCK_EPOCH_SEC="1460678400"
 
-. /etc/init.d/functions
+. /usr/share/rcinit/functions
 
 check_root
 

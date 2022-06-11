@@ -6,7 +6,7 @@ PIDFILE="/var/proftpd/proftpd.pid"
 
 [ -x "$EXEC" ] || exit 0
 
-. /etc/init.d/functions
+. /usr/share/rcinit/functions
 
 check_root
 

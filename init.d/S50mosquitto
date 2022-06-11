@@ -16,7 +16,7 @@ LOGDIR="/var/log/mosquitto"
 [ -r "/etc/default/$NAME" ] && . "/etc/default/$NAME"
 [ "x$MOSQUITTO_DISABLE" = "xyes" ] && exit 0
 
-. /etc/init.d/functions
+. /usr/share/rcinit/functions
 
 check_root
 

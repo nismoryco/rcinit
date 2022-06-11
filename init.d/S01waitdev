@@ -10,7 +10,7 @@ WAIT_DEVICE=
 # shellcheck source=/dev/null
 [ -r "/etc/default/$NAME" ] && . "/etc/default/$NAME"
 
-. /etc/init.d/functions
+. /usr/share/rcinit/functions
 
 start() {
 	if [ -n "$WAIT_DELAY" -a -n "$WAIT_DEVICE" ]; then

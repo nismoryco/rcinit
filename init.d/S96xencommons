@@ -1,6 +1,6 @@
 #!/bin/bash
 
-. /etc/init.d/functions
+. /usr/share/rcinit/functions
 
 check_root
 

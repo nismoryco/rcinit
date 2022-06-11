@@ -19,7 +19,7 @@ ARGS="--pid-file=$PIDFILE --user=$USER --group=$GROUP --log-facility=$LOGFILE"
 [ -f "$CONFFILE" ] || exit 0
 [ "x$DNSMASQ_DISABLE" == "xyes" ] && exit 0
 
-. /etc/init.d/functions
+. /usr/share/rcinit/functions
 
 check_root
 

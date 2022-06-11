@@ -12,7 +12,7 @@ PID_FILE="/run/$NAME.pid"
 
 [ -r "/etc/default/$NAME" ] && . "/etc/default/$NAME"
 
-. /etc/init.d/functions
+. /usr/share/rcinit/functions
 
 check_root
 

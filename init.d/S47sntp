@@ -15,7 +15,7 @@ SNTP_KEY_CACHE="/tmp/kod"
 
 [ -r "/etc/default/$NAME" ] && . "/etc/default/$NAME"
 
-. /etc/init.d/functions
+. /usr/share/rcinit/functions
 
 check_root
 

@@ -17,7 +17,7 @@ WAIT_DELAY=5
 [ "x$WPASUPPLICANT_DISABLE" = "xyes" ] && exit 0
 [ -z "$ARGS" ] && ARGS="-Dnl80211 -i$IFACE -c$CONFFILE -P$PIDFILE -s -B"
 
-. /etc/init.d/functions
+. /usr/share/rcinit/functions
 
 check_root
 

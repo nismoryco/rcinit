@@ -13,7 +13,7 @@ SOCKFILE=/run/$NAME.sock
 [ -r "/etc/default/$NAME" ] && . "/etc/default/$NAME"
 [ "x$GPSD_DISABLE" = "xyes" ] && exit 0
 
-. /etc/init.d/functions
+. /usr/share/rcinit/functions
 
 check_root
 
