@@ -6,7 +6,6 @@
 log_message()
 {
 	echo -n -e "${@}"
-	[ -f "/run/bootlog" ] && echo -n -e "${@}" >> /run/bootlog
 }
 
 log_start()
@@ -21,20 +20,12 @@ log_stop()
 
 status_ok()
 {
-	if [ -z "$CROND" ] ; then
-		log_message "\\033[72G\\033[1;30m[ \\033[1;32mOK\\033[1;30m ]\\033[0;39m\n"
-	else
-		echo -n -e "  OK\n"
-	fi
+	echo -n -e "  OK\n"
 }
 
 status_fail()
 {
-	if [ -z "$CROND" ] ; then
-		log_message "\\033[72G\\033[1;30m[\\033[1;31mFAIL\\033[1;30m]\\033[0;39m\n"
-	else
-		echo -n -e "  FAIL\n"
-	fi
+	echo -n -e "  FAIL\n"
 }
 
 check_status()
