@@ -1,0 +1,8 @@
+[Unit]
+Description=wpa supplicant for %I
+
+[Service]
+ExecStart=/usr/sbin/wpa_supplicant -Dnl80211 -i%i -c/etc/wpa_supplicant.conf -P/run/wpa_supplicant.%i.pid -s
+
+[Install]
+WantedBy=multi-user.target

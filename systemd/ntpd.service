@@ -1,0 +1,9 @@
+[Unit]
+Description=ntp daemon
+After=syslog.target network-online.target auditd.service
+
+[Service]
+ExecStart=/usr/sbin/ntpd -n -g
+
+[Install]
+WantedBy=multi-user.target

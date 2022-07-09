@@ -1,0 +1,9 @@
+[Unit]
+Description=Hardware RNG Entropy Gatherer Daemon
+
+[Service]
+EnvironmentFile=-/etc/default/rngd
+ExecStart=/usr/sbin/rngd -f $DAEMON_ARGS
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,13 @@
+[Unit]
+Description=lighttpd server
+After=network.target
+Wants=network.target
+
+[Service]
+Type=forking
+ExecStart=/usr/sbin/lighttpd -f /etc/lighttpd/lighttpd.conf
+ExecReload=/bin/kill -HUP $MAINPID
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

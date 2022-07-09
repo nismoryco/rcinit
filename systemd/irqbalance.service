@@ -1,0 +1,15 @@
+[Unit]
+Description=irqbalance daemon
+ConditionVirtualization=!container
+ConditionCPUs=>1
+
+[Service]
+EnvironmentFile=-/etc/default/irqbalance
+ExecStart=/usr/sbin/irqbalance --foreground $IRQBALANCE_ARGS
+ReadOnlyPaths=/
+ReadWritePaths=/proc/irq
+RestrictAddressFamilies=AF_UNIX
+RuntimeDirectory=irqbalance
+
+[Install]
+WantedBy=multi-user.target

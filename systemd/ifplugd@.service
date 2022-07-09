@@ -1,0 +1,8 @@
+[Unit]
+Description=ifplugd for %I
+
+[Service]
+ExecStart=/usr/sbin/ifplugd --iface=%i --no-daemon --no-syslog --ignore-fail --ignore-retval --delay-up=0 --delay-down=10
+
+[Install]
+WantedBy=multi-user.target

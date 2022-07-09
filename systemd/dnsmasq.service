@@ -1,0 +1,11 @@
+[Unit]
+Description=dnsmasq daemon
+After=syslog.target network.target auditd.service
+
+[Service]
+Type=forking
+ExecStart=/usr/sbin/dnsmasq --pid-file=/run/dnsmasq/dnsmasq.pid --user=dnsmasq --group=dnsmasq --log-facility=/var/log/dnsmasq/dnsmasq.log
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

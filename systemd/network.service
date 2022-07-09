@@ -1,0 +1,16 @@
+[Unit]
+Description=Network Connectivity
+Wants=network.target
+Before=network.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+TimeoutStartSec=5min
+ExecStart=/usr/sbin/ifup -a
+ExecStop=/usr/sbin/ifdown -a
+RuntimeDirectory=network
+RuntimeDirectoryMode=0755
+
+[Install]
+WantedBy=multi-user.target

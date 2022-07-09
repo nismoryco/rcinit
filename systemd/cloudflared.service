@@ -1,0 +1,9 @@
+[Unit]
+Description=cloudflare daemon
+After=syslog.target network.target auditd.service
+
+[Service]
+ExecStart=/usr/bin/cloudflared --config /etc/cloudflared/config.yml
+
+[Install]
+WantedBy=multi-user.target

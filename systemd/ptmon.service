@@ -1,0 +1,11 @@
+[Unit]
+Description=ptmon
+After=network.target
+
+[Service]
+Type=forking
+EnvironmentFile=/etc/default/ptmon
+ExecStart=/usr/sbin/ptmon --port $PTMON_PORT --conf $PTMON_CONF $PTMON_ARGS
+
+[Install]
+WantedBy=multi-user.target

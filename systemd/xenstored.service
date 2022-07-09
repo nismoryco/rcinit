@@ -1,0 +1,18 @@
+[Unit]
+Description=xenstore
+Requires=proc-xen.mount var-lib-xenstored.mount
+After=proc-xen.mount var-lib-xenstored.mount
+ConditionPathExists=/proc/xen/capabilities
+RefuseManualStop=true
+
+[Service]
+Type=notify
+NotifyAccess=all
+RemainAfterExit=true
+ExecStartPre=/usr/bin/grep -q control_d /proc/xen/capabilities
+ExecStart=/etc/xen/scripts/launch-xenstore
+
+[Install]
+WantedBy=multi-user.target
+Also=proc-xen.mount
+Also=var-lib-xenstored.mount

@@ -1,0 +1,13 @@
+[Unit]
+Description=Internet Dynamic DNS Client
+ConditionPathExists=/etc/inadyn.conf
+After=network-online.target
+Requires=network-online.target
+
+[Service]
+Type=simple
+EnvironmentFile=-/etc/default/inadyn
+ExecStart=/usr/sbin/inadyn --foreground --syslog --cache-dir=/var/lib/inadyn --config /etc/inadyn.conf --pidfile=/run/inadyn.pid --startup-delay=5 $INADYN_OPTS $INADYN_ARGS
+
+[Install]
+WantedBy=multi-user.target

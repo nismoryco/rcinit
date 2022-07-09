@@ -1,0 +1,18 @@
+[Unit]
+Description=unifi controller
+After=network.target
+
+[Service]
+Restart=always
+Type=forking
+TimeoutSec=15min
+Environment="PIDFILE=/run/unifi/unifi.pid"
+Environment="JAVA_HOME=/opt/java"
+ExecStartPre=!install -d -o unifi -g unifi -m 0755 /var/lib/unifi
+ExecStartPre=!install -d -o unifi -g unifi -m 0755 /var/log/unifi
+ExecStartPre=!install -d -o unifi -g unifi -m 0755 /run/unifi
+ExecStart=/usr/bin/jsvc -cwd /usr/lib/unifi -home /opt/java -cp /opt/commons-daemon/commons-daemon.jar:/usr/lib/unifi/lib/ace.jar -pidfile $PIDFILE -procname unifi -outfile SYSLOG -errfile SYSLOG -umask 027 -user unifi -Dunifi.datadir=/var/lib/unifi -Dunifi.logdir=/var/log/unifi -Dunifi.rundir=/run/unifi -Dunifi.core.enabled=false -Xmx1024M -Djava.awt.headless=true -Dfile.encoding=UTF-8 com.ubnt.ace.Launcher start
+ExecStop=/usr/bin/jsvc -cwd /usr/lib/unifi -home /opt/java -cp /opt/commons-daemon/commons-daemon.jar:/usr/lib/unifi/lib/ace.jar -pidfile $PIDFILE -procname unifi -outfile SYSLOG -errfile SYSLOG -umask 027 -user unifi -Dunifi.datadir=/var/lib/unifi -Dunifi.logdir=/var/log/unifi -Dunifi.rundir=/run/unifi -Dunifi.core.enabled=false -Xmx1024M -Djava.awt.headless=true -Dfile.encoding=UTF-8 -stop com.ubnt.ace.Launcher stop
+
+[Install]
+WantedBy=multi-user.target

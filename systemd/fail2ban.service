@@ -1,0 +1,9 @@
+[Unit]
+Description=fail2ban daemon
+After=syslog.target network.target auditd.service
+
+[Service]
+ExecStart=/usr/bin/fail2ban-server -xf start
+
+[Install]
+WantedBy=multi-user.target

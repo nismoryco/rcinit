@@ -1,0 +1,23 @@
+[Unit]
+Description=xendomains
+Requires=proc-xen.mount xenstored.service
+After=proc-xen.mount xenstored.service xenconsoled.service xen-init-dom0.service
+After=network-online.target
+After=remote-fs.target
+ConditionPathExists=/proc/xen/capabilities
+
+[Service]
+Type=forking
+Restart=no
+TimeoutSec=900
+IgnoreSIGPIPE=no
+KillMode=process
+GuessMainPID=no
+RemainAfterExit=true
+SuccessExitStatus=5 6
+ExecStartPre=/bin/grep -q control_d /proc/xen/capabilities
+ExecStart=-/usr/share/rcinit/S97xendomains start
+ExecStop=/usr/share/rcinit/S97xendomains stop
+
+[Install]
+WantedBy=multi-user.target

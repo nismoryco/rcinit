@@ -1,0 +1,9 @@
+[Unit]
+Description=vnstat daemon
+After=syslog.target network-online.target auditd.service
+
+[Service]
+ExecStart=/usr/sbin/vnstatd -n
+
+[Install]
+WantedBy=multi-user.target

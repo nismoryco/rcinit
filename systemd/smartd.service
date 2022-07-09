@@ -1,0 +1,11 @@
+[Unit]
+Description=Self Monitoring and Reporting Technology (SMART) Daemon
+
+[Service]
+Type=notify
+EnvironmentFile=-/etc/default/smartd
+ExecStart=/usr/sbin/smartd -n $smartd_opts
+ExecReload=/bin/kill -HUP $MAINPID
+
+[Install]
+WantedBy=multi-user.target

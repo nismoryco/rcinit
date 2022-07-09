@@ -1,0 +1,13 @@
+[Unit]
+Description=autossh
+After=syslog.target network-online.target auditd.service
+
+[Service]
+EnvironmentFile=/etc/default/autossh
+ExecStart=/usr/bin/autossh -M 0 -N -o "PubkeyAuthentication yes" -o "PasswordAuthentication no" -o "ServerAliveInterval 30" -o "ServerAliveCountMax 3" -o "ExitOnForwardFailure yes" -o "UserKnownHostsFile /dev/null" -o "StrictHostKeyChecking no" -i /root/.ssh/id_rsa -R ${APORT}:localhost:22 ${AUSER}@${AHOST}
+TimeoutSec=900
+Restart=always
+RestartSec=30
+
+[Install]
+WantedBy=multi-user.target

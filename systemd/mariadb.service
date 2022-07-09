@@ -1,0 +1,18 @@
+[Unit]
+Description=mariadb database server
+After=syslog.target network.target auditd.service
+
+[Service]
+ExecStartPre=/bin/sh -c 'test "`ls -1 /var/lib/mysql | wc -l`" != "0" || (mysql_install_db --basedir=/usr --datadir=/var/lib/mysql && chown -R mysql:mysql /var/lib/mysql)'
+ExecStartPre=!install -d -o mysql -g root -m 0755 /var/log/mysql
+ExecStartPre=!install -d -o mysql -g mysql -m 0755 /run/mysql
+ExecStartPre=!install -d -o mysql -g mysql -m 0755 /run/mysqld
+ExecStart=/usr/bin/mysqld_safe --log-error=/var/log/mysql/mysqld.log --pid-file=/run/mysql/mysqld.pid --user=mysql
+Restart=always
+Restart=on-abort
+RestartSec=5s
+TimeoutStartSec=900
+TimeoutStopSec=900
+
+[Install]
+WantedBy=multi-user.target
