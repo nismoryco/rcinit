@@ -3,6 +3,10 @@
 # xendomains
 #
 
+XENBR=xenbr0
+
+[ -r "/etc/default/xendomains" ] && . /etc/default/xendomains
+
 . /usr/share/rcinit/functions
 
 check_root
@@ -21,6 +25,7 @@ if test -f /proc/xen/capabilities && \
 fi
 
 start() {
+	wait_for_iface $XENBR
 	for f in $(ls /etc/xen/auto/*.cfg 2>/dev/null); do
 		DOM=$(cat $f | grep name | awk '{print $3}' | sed -e 's/"//g')
 		log_message "Starting xen domain $DOM ... "
